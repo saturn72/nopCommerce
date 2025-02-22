@@ -6,20 +6,17 @@ public class OrderController : KmApiControllerBase
     private readonly IWorkContext _workContext;
     private readonly IOrderService _orderService;
     private readonly IOrderApiModelFactory _orderApiModelFactory;
-    private readonly IStaticCacheManager _staticCacheManager;
     private readonly IStoreContext _storeContext;
 
     public OrderController(
         IWorkContext workContext,
         IOrderService orderService,
         IOrderApiModelFactory orderApiModelFactory,
-        IStaticCacheManager staticCacheManager,
         IStoreContext storeContext)
     {
         _workContext = workContext;
         _orderService = orderService;
         _orderApiModelFactory = orderApiModelFactory;
-        _staticCacheManager = staticCacheManager;
         _storeContext = storeContext;
     }
 

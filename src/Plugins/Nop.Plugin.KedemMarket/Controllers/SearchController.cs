@@ -1,4 +1,6 @@
-﻿namespace KedemMarket.Controllers;
+﻿using Nop.Core;
+
+namespace KedemMarket.Controllers;
 
 [Route("api/search")]
 public class SearchController : KmApiControllerBase
@@ -11,6 +13,7 @@ public class SearchController : KmApiControllerBase
     private readonly IPictureService _pictureService;
     private readonly IVideoService _videoService;
     private readonly MediaConvertor _mediaPreperar;
+    private readonly IWorkContext _workContext;
 
     public SearchController(
         IProductService productService,
@@ -20,7 +23,8 @@ public class SearchController : KmApiControllerBase
         CurrencySettings currencySettings,
         IPictureService pictureService,
         IVideoService videoService,
-        MediaConvertor mediaPreperar)
+        MediaConvertor mediaPreperar,
+        IWorkContext workContext)
     {
         _productService = productService;
         _urlRecordService = urlRecordService;
@@ -30,6 +34,7 @@ public class SearchController : KmApiControllerBase
         _videoService = videoService;
         _currencySettings = currencySettings;
         _mediaPreperar = mediaPreperar;
+        _workContext = workContext;
     }
 
     [HttpGet]
@@ -39,6 +44,10 @@ public class SearchController : KmApiControllerBase
         [FromQuery] int offset = 0,
         [FromQuery] int pageSize = 50)
     {
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        if (customer == default)
+            return BadRequest();
+
         var products = await _productService.SearchProductsAsync(
             offset,
             pageSize,

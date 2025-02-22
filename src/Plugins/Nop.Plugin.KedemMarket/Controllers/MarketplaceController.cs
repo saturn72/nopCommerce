@@ -4,26 +4,27 @@
 public class MarketplaceController : KmApiControllerBase
 {
     private readonly IStoreContext _storeContext;
-    private readonly IVendorService _vendorService;
-    private readonly IVendorApiModelFactory _vendorApiModelFactory;
     private readonly IDirectoryFactory _directoryFactory;
+    private readonly IWorkContext _workContext;
 
     public MarketplaceController(
         IStoreContext storeContext,
-        IVendorService vendorService,
-        IVendorApiModelFactory vendorApiModelFactory,
-        IDirectoryFactory directoryFactory)
+        IDirectoryFactory directoryFactory,
+        IWorkContext workContext)
     {
         _storeContext = storeContext;
-        _vendorService = vendorService;
-        _vendorApiModelFactory = vendorApiModelFactory;
         _directoryFactory = directoryFactory;
+        _workContext = workContext;
         _directoryFactory = directoryFactory;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetStoreInfoByStoreIdAsync()
     {
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        if (customer == default)
+            return BadRequest();
+
         var store = await _storeContext.GetCurrentStoreAsync();
         if (store == default)
             return BadRequest();

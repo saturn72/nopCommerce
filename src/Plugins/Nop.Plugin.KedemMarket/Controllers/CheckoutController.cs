@@ -5,18 +5,25 @@ public class CheckoutController : KmApiControllerBase
 {
     private readonly IKmOrderService _kmOrderService;
     private readonly IShoppingCartFactory _shoppingCartFactory;
+    private readonly IWorkContext _workContext;
 
     public CheckoutController(
         IKmOrderService kmOrderService,
-        IShoppingCartFactory shoppingCartFactory)
+        IShoppingCartFactory shoppingCartFactory,
+        IWorkContext workContext)
     {
         _kmOrderService = kmOrderService;
         _shoppingCartFactory = shoppingCartFactory;
+        _workContext = workContext;
     }
 
     [HttpPost]
     public async Task<IActionResult> SubmitOrder([FromBody] CartTransactionApiModel model)
     {
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        if (customer == default)
+            return BadRequest();
+
         if (!ModelState.IsValid)
             return BadRequest();
 

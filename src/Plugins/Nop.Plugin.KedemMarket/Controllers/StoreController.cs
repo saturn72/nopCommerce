@@ -20,6 +20,10 @@ public class StoreController : KmApiControllerBase
     [HttpGet]
     public async Task<IActionResult> GetVendorsAsync([FromQuery] int pageSize = 25, [FromQuery] int offset = 0)
     {
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        if (customer == default)
+            return BadRequest();
+
         var v1 = await _vendorService.GetAllVendorsAsync(pageIndex: offset / pageSize, pageSize: pageSize);
         var vvs = v1
             .Where(v => v.Active && !v.Deleted)
@@ -36,6 +40,9 @@ public class StoreController : KmApiControllerBase
     public async Task<IActionResult> GetCurrentUserStore()
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
+        if (customer == default)
+            return BadRequest();
+
         var vendors = await _vendorService.GetVendorsByCustomerIdsAsync([customer.Id]);
         if (vendors == default || vendors.Count == 0)
             return Ok();
@@ -47,6 +54,9 @@ public class StoreController : KmApiControllerBase
     public async Task<IActionResult> CreateOrUpdateStoreAsync([FromBody] VendorApiModel model)
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
+        if (customer == default)
+            return BadRequest();
+
         var vendors = await _vendorService.GetVendorsByCustomerIdsAsync([customer.Id]);
 
         var cur = vendors?.ElementAtOrDefault(0);

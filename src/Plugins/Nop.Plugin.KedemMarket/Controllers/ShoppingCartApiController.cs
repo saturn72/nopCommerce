@@ -8,7 +8,6 @@ public class ShoppingCartApiController : KmApiControllerBase
     private readonly IShoppingCartService _shoppingCartService;
     private readonly IProductService _productService;
     private readonly IStoreMappingService _storeMappingService;
-    private readonly IProductAttributeParser _productAttributeParser;
     private readonly IProductApiFactory _productApiFactory;
     private readonly IShoppingCartFactory _shoppingCartFactory;
 
@@ -18,7 +17,6 @@ public class ShoppingCartApiController : KmApiControllerBase
             IStoreMappingService storeMappingService,
             IWorkContext workContext,
             IStoreContext storeContext,
-            IProductAttributeParser productAttributeParser,
             IProductApiFactory productApiFactory,
             IShoppingCartFactory shoppingCartFactory)
     {
@@ -27,7 +25,6 @@ public class ShoppingCartApiController : KmApiControllerBase
         _storeMappingService = storeMappingService;
         _workContext = workContext;
         _storeContext = storeContext;
-        _productAttributeParser = productAttributeParser;
         _productApiFactory = productApiFactory;
         _shoppingCartFactory = shoppingCartFactory;
     }
@@ -131,6 +128,9 @@ public class ShoppingCartApiController : KmApiControllerBase
     public async Task<IActionResult> GetUserCart()
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
+        if (customer == default)
+            return BadRequest();
+
         var store = await _storeContext.GetCurrentStoreAsync();
 
         var cart = await _shoppingCartService.GetShoppingCartAsync(

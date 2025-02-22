@@ -43,13 +43,11 @@ public class ProductApiFactory : IProductApiFactory
     public async Task<IEnumerable<ProductInfoApiModel>> ToProductInfoApiModelAsync(IEnumerable<Product> products)
     {
         var m = new List<ProductInfoApiModel>();
-        var tasks = products.Select(async p =>
+        foreach (var product in products)
         {
-            var model = await _productModelFactory.PrepareProductDetailsModelAsync(p, null, false);
-            m.Add(await ToProductInfo(model, p));
-        });
-        await Task.WhenAll(tasks);
-
+            var model = await _productModelFactory.PrepareProductDetailsModelAsync(product, null, false);
+            m.Add(await ToProductInfo(model, product));
+        }
         return m;
 
     }
@@ -57,15 +55,12 @@ public class ProductApiFactory : IProductApiFactory
     public async Task<IEnumerable<ProductSlimApiModel>> ToProductSlimApiModelAsync(IEnumerable<Product> products)
     {
         var ps = new List<ProductSlimApiModel>();
-        var tasks = products.Select(async p =>
+        foreach (var p in products)
         {
             var model = await _productModelFactory.PrepareProductDetailsModelAsync(p, null, false);
             ps.Add(await ToProductSlim(model, p));
-        });
-        await Task.WhenAll(tasks);
-
+        }
         return ps;
-
     }
 
     private async Task<ProductSlimApiModel> ToProductSlim(ProductDetailsModel productDetails, Product product)
