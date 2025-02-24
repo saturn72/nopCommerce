@@ -1,4 +1,6 @@
-﻿namespace KedemMarket.Factories.Catalog;
+﻿using Nop.Core.Infrastructure.Mapper;
+
+namespace KedemMarket.Factories.Catalog;
 
 public class ProductApiFactory : IProductApiFactory
 {
@@ -82,6 +84,7 @@ public class ProductApiFactory : IProductApiFactory
             PriceWithDiscountText = productDetails.ProductPrice.PriceWithDiscount,
             PriceWithDiscount = productDetails.ProductPrice.PriceWithDiscountValue,
             Slug = productDetails.SeName,
+            TierPrices = productDetails.TierPrices?.Select(AutoMapperConfiguration.Mapper.Map<ProductDetailsModel.TierPriceModel, TierPriceApiModel>),
             Variants = variants,
         };
     }

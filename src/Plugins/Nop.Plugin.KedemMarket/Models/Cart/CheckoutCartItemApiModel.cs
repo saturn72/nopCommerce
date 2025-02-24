@@ -1,8 +1,4 @@
-﻿
-using KedemMarket.Models.Catalog;
-using Nop.Web.Models.ShoppingCart;
-
-namespace KedemMarket.Models.Cart;
+﻿namespace KedemMarket.Models.Cart;
 
 public record CheckoutCartItemApiModel : ShoppingCartModel.ShoppingCartItemModel
 {

@@ -1,6 +1,4 @@
-﻿using KedemMarket.Models.Media;
-
-namespace KedemMarket.Models.Catalog;
+﻿namespace KedemMarket.Models.Catalog;
 public record ProductInfoApiModel
 {
     public int Id { get; init; }

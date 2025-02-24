@@ -6,7 +6,7 @@ using KedemMarket.Services.Orders;
 
 namespace KedemMarket.Infrastructure;
 
-public class PluginNopStartup : INopStartup
+public class NopStartup : INopStartup
 {
     private const string CorsPolicy = "kedemmarket-api-cors";
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
