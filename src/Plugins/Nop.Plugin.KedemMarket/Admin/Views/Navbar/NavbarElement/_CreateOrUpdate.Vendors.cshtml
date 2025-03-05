@@ -45,6 +45,15 @@
     Editable = true,
     EditType = EditType.Number
     },
+    new ColumnProperty(nameof(NavbarElementVendorModel.PublishWhatsapp))
+    {
+    Title = T("Admin.NavbarElement.Vendors.Fields.PublishWhatsapp   ").Text,
+    Width = "150",
+    ClassName = NopColumnClassDefaults.CenterAll,
+    Render = new RenderBoolean(),
+    Editable = true,
+    EditType = EditType.Checkbox
+    },
     new ColumnProperty(nameof(NavbarElementVendorModel.VendorId))
     {
     Title = T("Admin.Common.View").Text,

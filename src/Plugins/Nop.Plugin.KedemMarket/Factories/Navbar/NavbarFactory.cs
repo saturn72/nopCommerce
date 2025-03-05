@@ -1,4 +1,5 @@
-﻿namespace KedemMarket.Factories.Navbar;
+﻿
+namespace KedemMarket.Factories.Navbar;
 
 public class NavbarFactory : INavbarFactory
 {
@@ -56,7 +57,8 @@ public class NavbarFactory : INavbarFactory
         var elements = new List<Models.Navbar.NavbarElementModel>();
 
         var allVendorAttributes = await _vendorAttributeService.GetAllAttributesAsync();
-        var shortDescriptionAttribute = allVendorAttributes.First(va => va.Name == KmConsts.VendorAttributeNames.ShortDescription);
+        var shortDescriptionAttribute = allVendorAttributes.FirstOrDefault(va => va.Name == KmConsts.VendorAttributeNames.ShortDescription);
+        var whatsappAttribute = allVendorAttributes.FirstOrDefault(va => va.Name == KmConsts.VendorAttributeNames.Whatsapp);
 
         foreach (var e in elms)
         {
@@ -87,10 +89,16 @@ public class NavbarFactory : INavbarFactory
             foreach (var v in vendors)
             {
                 var selectedVendorAttributes = await _genericAttributeService.GetAttributeAsync<string>(v, NopVendorDefaults.VendorAttributes);
-                var shortDescription = _vendorAttributeParser.ParseValues(selectedVendorAttributes, shortDescriptionAttribute.Id).FirstOrDefault();
+
+                var shortDescription = GetAttributeValueOrNull(selectedVendorAttributes, shortDescriptionAttribute);
+
                 _ = gitTemp.TryGetValue(v.Id, out var pic);
 
                 var productSlims = await _productApiFactory.ToProductSlimApiModelAsync(await vpTemp[v.Id]);
+                var navbarVendor = nevs.First(nev => nev.VendorId == v.Id);
+                var whatsapp = navbarVendor.PublishWhatsapp ?
+                    GetAttributeValueOrNull(selectedVendorAttributes, whatsappAttribute) :
+                    null;
 
                 vendorModels.Add(new()
                 {
@@ -98,6 +106,7 @@ public class NavbarFactory : INavbarFactory
                     Name = v.Name,
                     Picture = pic?.Result,
                     ShortDescription = shortDescription,
+                    Whatsapp = whatsapp,
                     Products = productSlims
                 });
             }
@@ -125,5 +134,12 @@ public class NavbarFactory : INavbarFactory
         await _staticCacheManager.SetAsync(key, nam);
 
         return nam;
+    }
+
+    private string? GetAttributeValueOrNull(string attributesXml, VendorAttribute? attribute)
+    {
+        return attribute != null ?
+            _vendorAttributeParser.ParseValues(attributesXml, attribute.Id).FirstOrDefault() :
+            null;
     }
 }

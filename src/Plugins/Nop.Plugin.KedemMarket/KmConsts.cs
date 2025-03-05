@@ -10,6 +10,7 @@ public class KmConsts
     public sealed class VendorAttributeNames
     {
         public const string ShortDescription = "Short Description";
+        public const string Whatsapp = "Whatsapp";
     }
 
     internal const string USER_ID = "U-ID";

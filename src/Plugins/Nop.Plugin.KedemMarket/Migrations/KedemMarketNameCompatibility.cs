@@ -1,6 +1,6 @@
 ﻿namespace KedemMarket.Migrations;
 
-public partial class NameCompatibility : INameCompatibility
+public partial class KedemMarketNameCompatibility : INameCompatibility
 {
     public Dictionary<Type, string> TableNames => new()
     {

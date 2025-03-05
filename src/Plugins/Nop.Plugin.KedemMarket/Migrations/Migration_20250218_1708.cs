@@ -8,12 +8,12 @@ namespace KedemMarket.Migrations;
 public class Migration_20250218_1708 : Migration
 {
     protected readonly INopDataProvider _dataProvider;
-    private readonly NameCompatibility _nameCompatibility;
+    private readonly KedemMarketNameCompatibility _nameCompatibility;
 
     public Migration_20250218_1708(INopDataProvider dataProvider)
     {
         _dataProvider = dataProvider;
-        _nameCompatibility = new NameCompatibility();
+        _nameCompatibility = new KedemMarketNameCompatibility();
     }
 
     /// <summary>

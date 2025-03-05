@@ -1,9 +1,5 @@
 ﻿using KedemMarket.Documents;
-using KedemMarket.Domain.Checkout;
-using KedemMarket.Services.Checkout;
 using KedemMarket.Services.Orders;
-using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Orders;
 using Nop.Services.Logging;
 using Nop.Services.ScheduleTasks;
 

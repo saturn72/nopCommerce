@@ -6,5 +6,6 @@ public record NavbarVendorModel
     public string Name { get; init; }
     public GalleryItemModel Picture { get; init; }
     public string ShortDescription { get; init; }
+    public string Whatsapp { get; init; }
     public IEnumerable<ProductSlimApiModel> Products { get; init; }
 }
