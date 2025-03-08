@@ -1,4 +1,6 @@
-﻿using Nop.Core.Infrastructure.Mapper;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Nop.Core.Infrastructure.Mapper;
 
 namespace KedemMarket.Factories.Catalog;
 
@@ -15,6 +17,8 @@ public class ProductApiFactory : IProductApiFactory
     private readonly IPriceFormatter _priceFormatter;
     private readonly IWorkContext _workContext;
     private readonly IStoreContext _storeContext;
+    private readonly IJsonLdModelFactory _jsonLdModelFactory;
+    private readonly JsonSerializerOptions _jso = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull};
 
     public ProductApiFactory(
         IProductService productService,
@@ -27,7 +31,8 @@ public class ProductApiFactory : IProductApiFactory
         IProductModelFactory productModelFactory,
         IPriceFormatter priceFormatter,
         IWorkContext workContext,
-        IStoreContext storeContext)
+        IStoreContext storeContext,
+        IJsonLdModelFactory jsonLdModelFactory)
     {
         _productService = productService;
         _pictureService = pictureService;
@@ -40,6 +45,7 @@ public class ProductApiFactory : IProductApiFactory
         _workContext = workContext;
         _storeContext = storeContext;
         _productAttributeService = productAttributeService;
+        _jsonLdModelFactory = jsonLdModelFactory;
     }
 
     public async Task<IEnumerable<ProductInfoApiModel>> ToProductInfoApiModelAsync(IEnumerable<Product> products)
@@ -65,17 +71,21 @@ public class ProductApiFactory : IProductApiFactory
         return ps;
     }
 
+
     private async Task<ProductSlimApiModel> ToProductSlim(ProductDetailsModel productDetails, Product product)
     {
         var banners = await GetBannerAsync(productDetails, product);
         var image = (await GetProductGalleryAsync(product))?.FirstOrDefault();
         var variants = await GetProductVariantsAsync(productDetails, product);
+        var jsonLdModel = await _jsonLdModelFactory.PrepareJsonLdProductAsync(productDetails);
+        var jsonLd = System.Text.Json.JsonSerializer.Serialize(jsonLdModel,_jso);
 
         return new()
         {
             Id = product.Id,
             Banners = banners,
             Gallery = image == null ? [] : [image],
+            JsonLd = jsonLd,
             Name = productDetails.Name,
             Price = productDetails.ProductPrice.PriceValue,
             PriceText = productDetails.ProductPrice.Price,

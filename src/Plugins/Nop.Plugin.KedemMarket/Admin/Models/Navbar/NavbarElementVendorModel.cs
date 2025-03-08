@@ -11,6 +11,8 @@ public record NavbarElementVendorModel : BaseNopEntityModel
     public string VendorName { get; set; }
     [NopResourceDisplayName("Admin.NavbarElement.Vendors.Fields.Published")]
     public bool Published { get; set; }
+    [NopResourceDisplayName("Admin.NavbarElement.Vendors.Fields.PublishPhone")]
+    public bool PublishPhone { get; set; }
     [NopResourceDisplayName("Admin.NavbarElement.Vendors.Fields.PublishWhatsapp")]
     public bool PublishWhatsapp { get; set; }
     public int NavbarElementId { get; set; }

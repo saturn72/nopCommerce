@@ -1,8 +1,5 @@
-﻿
-
-using KedemMarket.Admin.Models.Navbar;
+﻿using KedemMarket.Admin.Models.Navbar;
 using KedemMarket.Middlewares;
-using KedemMarket.Services.Orders;
 
 namespace KedemMarket.Infrastructure;
 
@@ -40,6 +37,9 @@ public class NopStartup : INopStartup
         services.AddScoped<IOrderApiModelFactory, OrderApiModelFactory>();
         services.AddScoped<IDirectoryFactory, DirectoryFactory>();
 
+        services.AddScoped<IAnalyticsService, AnalyticsService>();
+        EventDataModelValidator:
+        services.AddTransient<IValidator<EventDataModel>, EventDataModelValidator>();
 
         //new KM.Common.Infrastructure.NopStartup().ConfigureServices(services, configuration);
         services.AddScoped<INavbarService, NavbarService>();

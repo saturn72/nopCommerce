@@ -59,6 +59,7 @@ public class NavbarFactory : INavbarFactory
         var allVendorAttributes = await _vendorAttributeService.GetAllAttributesAsync();
         var shortDescriptionAttribute = allVendorAttributes.FirstOrDefault(va => va.Name == KmConsts.VendorAttributeNames.ShortDescription);
         var whatsappAttribute = allVendorAttributes.FirstOrDefault(va => va.Name == KmConsts.VendorAttributeNames.Whatsapp);
+        var phoneAttribute = allVendorAttributes.FirstOrDefault(va => va.Name == KmConsts.VendorAttributeNames.Phone);
 
         foreach (var e in elms)
         {
@@ -96,18 +97,18 @@ public class NavbarFactory : INavbarFactory
 
                 var productSlims = await _productApiFactory.ToProductSlimApiModelAsync(await vpTemp[v.Id]);
                 var navbarVendor = nevs.First(nev => nev.VendorId == v.Id);
-                var whatsapp = navbarVendor.PublishWhatsapp ?
-                    GetAttributeValueOrNull(selectedVendorAttributes, whatsappAttribute) :
-                    null;
+                var whatsapp = navbarVendor.PublishWhatsapp ? GetAttributeValueOrNull(selectedVendorAttributes, whatsappAttribute) : null;
+                var phone = navbarVendor.PublishPhone ? GetAttributeValueOrNull(selectedVendorAttributes, phoneAttribute) : null;
 
                 vendorModels.Add(new()
                 {
                     Id = v.Id,
                     Name = v.Name,
+                    Phone = phone,
                     Picture = pic?.Result,
+                    Products = productSlims,
                     ShortDescription = shortDescription,
                     Whatsapp = whatsapp,
-                    Products = productSlims
                 });
             }
 

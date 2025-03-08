@@ -1,9 +1,8 @@
-﻿
-{
+﻿{
   "Group": "Kedem Market",
   "FriendlyName": "Kedem Market plugin",
   "SystemName": "KedemMarket",
-  "Version": "1.0.3",
+  "Version": "1.0.6",
   "SupportedVersions": [ "4.80" ],
   "Author": "Saturn72",
   "DisplayOrder": 1,

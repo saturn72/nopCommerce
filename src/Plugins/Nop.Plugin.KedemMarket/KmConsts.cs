@@ -11,6 +11,7 @@ public class KmConsts
     {
         public const string ShortDescription = "Short Description";
         public const string Whatsapp = "Whatsapp";
+        public const string Phone = "Phone";
     }
 
     internal const string USER_ID = "U-ID";

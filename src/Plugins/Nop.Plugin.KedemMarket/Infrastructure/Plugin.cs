@@ -425,6 +425,12 @@ public class Plugin : BasePlugin, IWidgetPlugin
             new LocaleStringResource
             {
                 LanguageId = languageId,
+                ResourceName = "Admin.NavbarElement.Vendors.Fields.PublishPhone",
+                ResourceValue = "Published Phone"
+            },
+            new LocaleStringResource
+            {
+                LanguageId = languageId,
                 ResourceName = "Admin.NavbarElement.Vendors.Fields.PublishWhatsapp",
                 ResourceValue = "Published Whatsapp"
             },

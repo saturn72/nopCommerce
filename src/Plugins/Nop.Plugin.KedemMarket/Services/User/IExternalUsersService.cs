@@ -1,7 +1,4 @@
-﻿using KedemMarket.Domain.User;
-using Nop.Core.Domain.Common;
-
-namespace KedemMarket.Services.User;
+﻿namespace KedemMarket.Services.User;
 public interface IExternalUsersService
 {
     Task<KmUserCustomerMap> GetUserIdCustomerMapByInternalCustomerId(int customerId);

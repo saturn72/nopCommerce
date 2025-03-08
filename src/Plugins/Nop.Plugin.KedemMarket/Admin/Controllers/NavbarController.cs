@@ -357,6 +357,7 @@ public class NavbarController : BaseAdminController
         nev.DisplayOrder = model.DisplayOrder;
         nev.IsFeaturedVendor = model.IsFeaturedVendor;
         nev.Published = model.Published;
+        nev.PublishPhone = model.PublishPhone;
         nev.PublishWhatsapp = model.PublishWhatsapp;
         await _navbarInfoService.UpdateNavbarElementVendorAsync(nev);
 

@@ -5,6 +5,7 @@ public class NavbarElementVendor : BaseEntity
     public bool IsFeaturedVendor { get; set; }
     public int NavbarElementId { get; set; }
     public bool Published { get; set; }
+    public bool PublishPhone { get; set; }
     public bool PublishWhatsapp { get; set; }
     public int VendorId { get; set; }
     public Vendor Vendor { get; set; }

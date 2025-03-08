@@ -199,7 +199,7 @@ public partial class FirebaseExternalUsersService : IExternalUsersService
             return map;
         });
 
-        if (aquired && map!=null)
+        if (aquired && map != null)
         {
             var key2 = BuildCustomerCacheKey(map.CustomerId);
             _ = _cache.GetAsync(key2, () => map);
@@ -228,7 +228,5 @@ public partial class FirebaseExternalUsersService : IExternalUsersService
             _ = _cache.GetAsync(key2, () => map);
         }
         return map;
-
-
     }
 }
