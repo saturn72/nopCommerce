@@ -8,6 +8,7 @@ namespace KedemMarket.Migrations;
 public class Migration_20250308_1842 : Migration
 {
     protected readonly INopDataProvider _dataProvider;
+    KedemMarketNameCompatibility _nc = new();
 
     public Migration_20250308_1842(INopDataProvider dataProvider)
     {
@@ -19,13 +20,16 @@ public class Migration_20250308_1842 : Migration
     /// </summary>
     public override void Up()
     {
-        Delete.Table("eventdata");
-        Create.TableFor<EventData>();
-}
+        if (Schema.Table("eventdata").Exists())
+            Delete.Table("eventdata");
+
+        if (!Schema.Table(_nc.TableNames[typeof(EventData)]).Exists())
+            Create.TableFor<EventData>();
+    }
     public override void Down()
     {
-        var nc = new KedemMarketNameCompatibility();
-        Delete.Table(nc.TableNames[typeof(EventData)]);
+        if (Schema.Table(_nc.TableNames[typeof(EventData)]).Exists())
+            Delete.Table(_nc.TableNames[typeof(EventData)]);
         //Create.TableFor<EventData>();
     }
 }

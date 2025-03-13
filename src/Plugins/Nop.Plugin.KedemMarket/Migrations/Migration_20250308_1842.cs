@@ -19,10 +19,14 @@ public class Migration_20250306_2212 : Migration
     /// </summary>
     public override void Up()
     {
-        Create.TableFor<EventData>();
-}
+        var nc = new KedemMarketNameCompatibility();
+        if (!Schema.Table(nc.TableNames[typeof(EventData)]).Exists())
+            Create.TableFor<EventData>();
+    }
     public override void Down()
     {
-        Delete.Table(nameof(EventData));
+
+        if (Schema.Table(nameof(EventData)).Exists())
+            Delete.Table(nameof(EventData));
     }
 }

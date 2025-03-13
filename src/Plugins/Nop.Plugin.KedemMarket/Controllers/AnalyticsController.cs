@@ -1,6 +1,7 @@
-﻿using System.Text.Json;
+﻿using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
 using Microsoft.AspNetCore.Authorization;
-using static LinqToDB.Reflection.Methods.LinqToDB.Insert;
 
 namespace KedemMarket.Controllers;
 
@@ -35,7 +36,7 @@ public class AnalyticsController : KmApiControllerBase
         var customer = await _workContext.GetCurrentCustomerAsync();
         var map = customer != default ? await _externalUsersService.GetUserIdCustomerMapByInternalCustomerId(customer.Id) : default;
 
-        var ed = new EventData
+        var eventData = new EventData
         {
             EventName = model.EventName,
             PerformedByNopUserId = customer?.Id,
@@ -50,11 +51,13 @@ public class AnalyticsController : KmApiControllerBase
                 AllowTrailingCommas = true,
                 PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase,
                 WriteIndented = false,
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.All, UnicodeRanges.All),
             };
-            ed.Data = System.Text.Json.JsonSerializer.Serialize(model.Data, jso);
+
+            eventData.Data = System.Text.Json.JsonSerializer.Serialize(model.Data, jso);
         }
 
-        await _analyticsService.ReportEventAsync(ed);
+        await _analyticsService.ReportEventAsync(eventData);
 
         return Accepted();
     }

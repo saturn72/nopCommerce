@@ -9,5 +9,6 @@ public class KmApiConsts
         internal const string Facebook = "facebook";
         internal const string Instagram = "instagram";
         internal const string Linktr = "linktr";
+        internal const string YouTube = "youtube";
     }
 }

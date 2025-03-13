@@ -43,6 +43,7 @@ public class MarketplaceController : KmApiControllerBase
                 { KmApiConsts.SocialLinkNames.Facebook , "https://www.facebook.com/KedemMarket.co.il" },
                 { KmApiConsts.SocialLinkNames.Instagram , "https://www.instagram.com/kedemmarket.co.il/"},
                 { KmApiConsts.SocialLinkNames.Linktr , "https://linktr.ee/kedemmarket" },
+                { KmApiConsts.SocialLinkNames.YouTube, "https://www.youtube.com/@kedem-market" },
             }
         };
         return ToJsonResult(data);
