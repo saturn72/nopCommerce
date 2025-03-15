@@ -1,6 +1,6 @@
-﻿using KM.Api.Extensions;
-using KM.Api.Models.Directory;
-using KM.Api.Models.Media;
+﻿using KedemMarket.Common;
+using KedemMarket.Common.Models.Cart;
+using KedemMarket.Common.Services.Media;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
@@ -15,9 +15,8 @@ using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
-using static LinqToDB.Reflection.Methods.LinqToDB.Insert;
 
-namespace KM.Api.Factories;
+namespace KedemMarket.Api.Factories;
 
 public class ShoppingCartFactory : ShoppingCartModelFactory, IShoppingCartFactory
 {
@@ -145,7 +144,7 @@ public class ShoppingCartFactory : ShoppingCartModelFactory, IShoppingCartFactor
         var product = await _productService.GetProductByIdAsync(sci.ProductId);
         var sciPicture = await _pictureService.GetProductPictureAsync(product, sci.AttributesXml);
         var thumbnail = sciPicture != default ?
-            await _mediaConvertor.ToThumbnail(sciPicture.Id)
+            await _mediaConvertor.GetDownloadLinkAsync(sciPicture.Id, KmConsts.MediaTypes.Image)
             : default;
 
         return new()

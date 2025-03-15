@@ -1,11 +1,11 @@
-﻿using KM.Api.Factories;
+﻿using KedemMarket.Common.Services.Media;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Seo;
 
-namespace KM.Api.Controllers;
+namespace KedemMarket.Api.Controllers;
 
 [Route("api/search")]
 public class SearchController : KmApiControllerBase

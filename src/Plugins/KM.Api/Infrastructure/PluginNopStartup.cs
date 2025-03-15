@@ -1,7 +1,10 @@
-﻿using KM.Api.Middlewares;
-using KM.Api.Services.Media;
+﻿using KedemMarket.Api.Middlewares;
+using KedemMarket.Common.Factories;
+using KedemMarket.Common.Services.Media;
+using KM.Api.Factories;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace KM.Api.Infrastructure;
+namespace KedemMarket.Api.Infrastructure;
 
 public class PluginNopStartup : INopStartup
 {
@@ -31,7 +34,6 @@ public class PluginNopStartup : INopStartup
         });
 
         services.AddMemoryCache();
-        services.AddSingleton<MediaConvertor>();
 
         services.AddScoped<IExternalUsersService, FirebaseExternalUsersService>();
         services.AddTransient<IValidator<CartTransactionApiModel>, CartTransactionApiModelValidator>();
@@ -41,33 +43,14 @@ public class PluginNopStartup : INopStartup
         services.AddScoped<IUserProfileDocumentStore, UserProfileDocumentStore>();
         services.AddScoped(typeof(IDocumentStore<>), typeof(FirebaseDocumentStore<>));
         services.AddSingleton<FirebaseAdapter>();
-        services.AddScoped<IProductApiFactory, ProductApiFactory>();
         services.AddScoped<IVendorApiModelFactory, VendorApiModelFactory>();
-        services.AddSingleton<MediaConvertor>();
         services.AddScoped<IShoppingCartFactory, ShoppingCartFactory>();
         services.AddScoped<IOrderApiModelFactory, OrderApiModelFactory>();
         services.AddScoped<IDirectoryFactory, DirectoryFactory>();
 
         services.AddSignalR();
-        services.AddScoped<IStorageManager, GcpStorageManager>();
-
-        services.Configure<GcpOptions>(options =>
-        {
-            var bn = configuration["gcpOptions:bucketName"];
-            if (string.IsNullOrEmpty(bn) || string.IsNullOrWhiteSpace(bn))
-                throw new ArgumentException(nameof(GcpOptions.BucketName));
-            options.BucketName = bn;
-        });
-
+        
         services.AddSingleton<IPriorityQueue, PriorityQueue>();
-        services.AddEasyCaching(option =>
-        {
-            option.UseFasterKv(config =>
-            {
-                config.SerializerName = "msg";
-            })
-            .WithMessagePack("msg");
-        });
     }
 
     public void Configure(IApplicationBuilder application)

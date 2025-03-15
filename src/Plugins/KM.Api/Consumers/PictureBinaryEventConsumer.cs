@@ -1,9 +1,9 @@
-﻿using KM.Api.Services.Media;
+﻿using KedemMarket.Common.Services.Media;
 using Nop.Services.Media;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 
-namespace KM.Api.Consumer;
+namespace KedemMarket.Api.Consumer;
 
 public class PictureBinaryEventConsumer :
     IConsumer<EntityInsertedEvent<PictureBinary>>,
@@ -72,7 +72,7 @@ public class PictureBinaryEventConsumer :
 
         foreach (var ro in _resizeOptions)
         {
-            var p = _storageManager.BuildWebpPath(ro.Key, product.Id);
+            var p = _storageManager.GetWebpPath(ro.Key, product.Id);
             using var inStream = new MemoryStream(pictureBinary.BinaryData);
             using var image = await Image.LoadAsync(inStream);
             using var outStream = new MemoryStream();
@@ -93,7 +93,7 @@ public class PictureBinaryEventConsumer :
         var tasks = new List<Task>();
         _queue.Dequeue(BuildCacheKey(eventMessage.Entity.Id));
         foreach (var roKey in _resizeOptions.Keys)
-            tasks.Add(_storageManager.DeleteAsync(_storageManager.BuildWebpPath(roKey, eventMessage.Entity.Id)));
+            tasks.Add(_storageManager.DeleteAsync(_storageManager.GetWebpPath(roKey, eventMessage.Entity.Id)));
 
         return Task.WhenAll(tasks);
     }
