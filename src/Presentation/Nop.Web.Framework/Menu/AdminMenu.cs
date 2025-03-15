@@ -18,7 +18,7 @@ public partial class AdminMenu : IAdminMenu
 {
     #region Fields
 
-    private static AdminMenuItem _baseRootMenuItem;
+    protected AdminMenuItem _baseRootMenuItem;
     protected AdminMenuItem _rootItem;
 
     protected readonly IActionContextAccessor _actionContextAccessor;
@@ -1042,7 +1042,7 @@ public partial class AdminMenu : IAdminMenu
 
         if (await _permissionService.AuthorizeAsync(StandardPermission.Configuration.MANAGE_PLUGINS, customer))
         {
-            await _eventPublisher.PublishAsync(new ThirdPartyPluginsMenuItemCreatedEvent(this, root.GetItemBySystem("Third party plugins")));
+            await _eventPublisher.PublishAsync(new ThirdPartyPluginsMenuItemCreatedEvent(this, root.GetItemBySystemName("Third party plugins")));
             
             var adminMenuPlugins = await _adminMenuPluginManager.LoadAllPluginsAsync(customer);
 
