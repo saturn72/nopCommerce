@@ -1,7 +1,4 @@
-﻿
-using Nop.Services.Security;
-
-namespace KedemMarket.Security;
+﻿namespace KedemMarket.Security;
 
 public partial class NavPermissionConfigManager : IPermissionConfigManager
 {

@@ -38,7 +38,6 @@ public class NopStartup : INopStartup
         services.AddScoped<IDirectoryFactory, DirectoryFactory>();
 
         services.AddScoped<IAnalyticsService, AnalyticsService>();
-        EventDataModelValidator:
         services.AddTransient<IValidator<EventDataModel>, EventDataModelValidator>();
 
         //new KM.Common.Infrastructure.NopStartup().ConfigureServices(services, configuration);

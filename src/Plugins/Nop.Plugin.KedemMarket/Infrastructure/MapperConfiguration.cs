@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using KedemMarket.Admin.Models.Navbar;
 using Nop.Core.Infrastructure.Mapper;
-using Nop.Web.Models.Catalog;
 
 namespace KedemMarket.Infrastructure;
 

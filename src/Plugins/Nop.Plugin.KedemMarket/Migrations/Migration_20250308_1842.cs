@@ -4,7 +4,7 @@ using Nop.Data.Migrations;
 
 namespace KedemMarket.Migrations;
 
-[NopMigration("2025/03/06 23:09:08:9037678", "KedemMarket schema", MigrationProcessType.Update)]
+[NopMigration("2025/03/08 18:42:08:9037678", "KedemMarket schema", MigrationProcessType.Update)]
 public class Migration_20250306_2212 : Migration
 {
     protected readonly INopDataProvider _dataProvider;

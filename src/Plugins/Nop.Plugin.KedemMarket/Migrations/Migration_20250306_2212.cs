@@ -4,11 +4,10 @@ using Nop.Data.Migrations;
 
 namespace KedemMarket.Migrations;
 
-[NopMigration("2025/03/08 18:42:08:9037678", "KedemMarket schema", MigrationProcessType.Update)]
+[NopMigration("2025/03/06 22:12:08:9037678", "KedemMarket schema", MigrationProcessType.Update)]
 public class Migration_20250308_1842 : Migration
 {
     protected readonly INopDataProvider _dataProvider;
-    KedemMarketNameCompatibility _nc = new();
 
     public Migration_20250308_1842(INopDataProvider dataProvider)
     {
@@ -20,16 +19,20 @@ public class Migration_20250308_1842 : Migration
     /// </summary>
     public override void Up()
     {
-        if (Schema.Table("eventdata").Exists())
-            Delete.Table("eventdata");
+        KedemMarketNameCompatibility nc = new();
+        var tableName = nc.TableNames[typeof(EventData)];
+        if (Schema.Table(tableName).Exists())
+            Delete.Table(tableName);
 
-        if (!Schema.Table(_nc.TableNames[typeof(EventData)]).Exists())
+        if (!Schema.Table(tableName).Exists())
             Create.TableFor<EventData>();
     }
     public override void Down()
     {
-        if (Schema.Table(_nc.TableNames[typeof(EventData)]).Exists())
-            Delete.Table(_nc.TableNames[typeof(EventData)]);
-        //Create.TableFor<EventData>();
+        KedemMarketNameCompatibility nc = new();
+        var tableName = nc.TableNames[typeof(EventData)];
+
+        if (Schema.Table(tableName).Exists())
+            Delete.Table(tableName);
     }
 }

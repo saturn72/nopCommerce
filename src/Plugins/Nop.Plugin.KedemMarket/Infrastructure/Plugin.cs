@@ -70,12 +70,6 @@ public class Plugin : BasePlugin, IWidgetPlugin
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Navbars.List.SearchStore",
-                ResourceValue = "Store"
-            },
-            new LocaleStringResource
-            {
-                LanguageId = languageId,
                 ResourceName ="Admin.Navbar.List.SearchPublished.All",
               ResourceValue = "All"
             },
@@ -131,14 +125,14 @@ public class Plugin : BasePlugin, IWidgetPlugin
             {
                 LanguageId = languageId,
                 ResourceName = "Admin.Navbars.Fields.Description",
-                ResourceValue = "Published"
+                ResourceValue = "Description"
             },
 
             new LocaleStringResource
             {
                 LanguageId = languageId,
                 ResourceName = "Admin.Navbars.Fields.PageSize",
-                ResourceValue = "Published"
+                ResourceValue = "PageSize"
             },
             new LocaleStringResource
             {

@@ -71,11 +71,13 @@ public class KmOrderService : IKmOrderService
             await CreateOrUpdateCustomerAddress(customer, request.ShippingInfo, AddressType.ShippingAddress);
 
         var store = await _storeContext.GetCurrentStoreAsync();
-        var processPaymentRequest = new ProcessPaymentRequest();
-        await _paymentService.GenerateOrderGuidAsync(processPaymentRequest);
-        processPaymentRequest.StoreId = store.Id;
-        processPaymentRequest.CustomerId = customer.Id;
-        processPaymentRequest.PaymentMethodSystemName = request.PaymentMethod;
+        var processPaymentRequest = new ProcessPaymentRequest
+        {
+            OrderGuid = Guid.NewGuid(),
+            StoreId = store.Id,
+            CustomerId = customer.Id,
+            PaymentMethodSystemName = request.PaymentMethod
+        };
 
         var placeOrderResult = await _orderProcessingService.PlaceOrderAsync(processPaymentRequest);
         if (placeOrderResult.Errors.NotNullAndNotNotEmpty())
