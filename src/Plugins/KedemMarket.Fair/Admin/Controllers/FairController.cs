@@ -1,11 +1,4 @@
-﻿using KedemMarket.Fair.Admin.Factories;
-using KedemMarket.Fair.Admin.Models;
-using KedemMarket.Fair.Security;
-using Nop.Services.Localization;
-using Nop.Services.Messages;
-using Nop.Web.Areas.Admin.Controllers;
-using Nop.Web.Framework.Mvc.Filters;
-
+﻿
 namespace KedemMarket.Fair.Admin.Controllers;
 
 public class FairController : BaseAdminController
@@ -37,6 +30,7 @@ public class FairController : BaseAdminController
         return base.View(GetViewPath(viewName), model);
     }
 
+    #region Fair
     public virtual IActionResult Index([FromQuery] int offset = 0, [FromQuery] int pageSize = 25)
     {
         return RedirectToAction(nameof(List), new { offset, pageSize });
@@ -93,7 +87,6 @@ public class FairController : BaseAdminController
     }
 
 
-
     [CheckPermission(FairPermissions.FAIRS_EDIT)]
     public virtual async Task<IActionResult> Edit(int id)
     {
@@ -109,7 +102,6 @@ public class FairController : BaseAdminController
     [CheckPermission(FairPermissions.FAIRS_EDIT)]
     public virtual async Task<IActionResult> Edit(FairInfoAdminModel model, bool continueEditing)
     {
-        //try to get a fairinfo with the specified id
         var fair = await _fairService.GetFairInfoByIdAsync(model.Id);
         if (fair == null || fair.Deleted)
             return RedirectToAction("List");
@@ -136,4 +128,62 @@ public class FairController : BaseAdminController
         model = await _fairFactory.PrepareFairInfoAdminModelAsync(model, fair);
         return View("Edit.cshtml", model);
     }
+
+    #endregion
+
+    #region Vendors    
+    [HttpPost]
+    [CheckPermission(FairPermissions.FAIRS_EDIT)]
+    [CheckPermission(FairPermissions.FAIRS_DELETE)]
+    public virtual async Task<IActionResult> FairVendorList(FairVendorSearchModel searchModel)
+    {
+        var fair = await _fairService.GetFairInfoByIdAsync(searchModel.FairInfoId)
+            ?? throw new ArgumentException("No fair info found with the specified id");
+
+        var list = await _fairFactory.PrepareFairInfoVendorListModelAsync(searchModel, fair);
+        return Json(list);
+    }
+    [CheckPermission(FairPermissions.FAIRS_EDIT)]
+    public virtual async Task<IActionResult> EditFairVendor(int id)
+    {
+        throw new NotImplementedException();
+        //var e = await _fairService.GetFairVendorsByIdAsync(id);
+        //var model = e.ToModel<CreateOrUpdateFairVendorModel>();
+        //model.FairVendorId = id;
+        //await _fairFactory.PrepareCreateOrUpdateFairVendorModelAsync(model);
+        //return View("FairVendor/Edit.cshtml", model);
+    }
+
+    [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+    [CheckPermission(FairPermissions.FAIRS_EDIT)]
+    public virtual async Task<IActionResult> EditFairVendor(object/*CreateOrUpdateFairVendorModel */model, bool continueEditing)
+    {
+        throw new NotImplementedException();
+        //if (ModelState.IsValid)
+        //{
+        //    var fairVendor = model.ToEntity<FairVendor>();
+        //    await _fairInfoService.UpdateFairVendorAsync(fairVendor);
+        //    var msg = await _localizationService.GetResourceAsync("Admin.Fairs.Vendors.Updated");
+        //    _notificationService.SuccessNotification(msg);
+        //}
+        //if (continueEditing)
+        //    return RedirectToAction(nameof(EditFairVendor), new { id = model.Id });
+        //return RedirectToAction("Edit", new { id = model.FairInfoId });
+    }
+
+    [HttpPost]
+    [CheckPermission(FairPermissions.FAIRS_DELETE)]
+    public virtual async Task<IActionResult> DeleteFairVendor(FairVendorModel model)
+    {
+        throw new NotImplementedException();
+        //if (ModelState.IsValid)
+        //{
+        //    var fairVendor = model.ToEntity<FairVendor>();
+        //    await _fairInfoService.DeleteFairVendorAsync(fairVendor);
+        //    var msg = await _localizationService.GetResourceAsync("Admin.Fairs.Vendor.Deleted");
+        //    _notificationService.SuccessNotification(msg);
+        //}
+        //return new NullJsonResult();
+    }
+    #endregion
 }

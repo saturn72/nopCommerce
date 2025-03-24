@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using KedemMarket.Fair.Admin.Models;
-
 
 namespace KedemMarket.Fair.Infrastructure;
 public  class MapperConfiguration : Profile, IOrderedMapperProfile

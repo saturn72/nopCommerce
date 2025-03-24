@@ -1,0 +1,127 @@
+﻿@model FairInfoAdminModel
+
+@if (Model.Id > 0)
+{
+    <div class="card-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
+   {
+       Name = "fair-vendors-grid",
+       UrlRead = new DataUrl(nameof(FairController.FairVendorList), "Fair", new RouteValueDictionary
+       {
+           [nameof(Model.FairVendorSearchModel.FairInfoId)] = Model.Id
+       }),
+       UrlDelete = new DataUrl(nameof(FairController.DeleteFairVendor), "Fair", new RouteValueDictionary
+       {
+           [nameof(Model.FairVendorSearchModel.FairInfoId)] = Model.Id
+       }),
+       UrlUpdate = new DataUrl(nameof(FairController.EditFairVendor), "Fair", new RouteValueDictionary
+       {
+           [nameof(Model.FairVendorSearchModel.FairInfoId)] = Model.Id
+       }),
+       Length = Model.FairVendorSearchModel.PageSize,
+       LengthMenu = Model.FairVendorSearchModel.AvailablePageSizes,
+       ColumnCollection = new List<ColumnProperty>
+    {
+
+    new ColumnProperty(nameof(FairVendorModel.Name))
+    {
+    Title = T("Admin.Vendors.Fields.Name").Text,
+    Width = "150",
+    ClassName = NopColumnClassDefaults.CenterAll,
+    Editable = true,
+    EditType = EditType.String
+    },
+
+    new ColumnProperty(nameof(FairVendorModel.DisplayOrder))
+    {
+    Title = T("Admin.FairVendor.Fields.Alt").Text,
+    Width = "150",
+    ClassName = NopColumnClassDefaults.CenterAll,
+    Editable = true,
+    EditType = EditType.String
+    },
+
+    //new ColumnProperty(nameof(FairVendorModel.Icon))
+    //{
+    //Title = T("Admin.FairVendor.Fields.Icon").Text,
+    //Width = "150",
+    //ClassName = NopColumnClassDefaults.CenterAll,
+    //Editable = true,
+    //EditType = EditType.String
+    //},
+
+    //new ColumnProperty(nameof(FairVendorModel.ActiveIcon))
+    //{
+    //Title = T("Admin.FairVendor.Fields.ActiveIcon").Text,
+    //Width = "150",
+    //ClassName = NopColumnClassDefaults.CenterAll,
+    //Editable = true,
+    //EditType = EditType.String
+    //},
+
+    //new ColumnProperty(nameof(FairVendorModel.Index))
+    //{
+    //Title = T("Admin.FairVendor.Fields.Index").Text,
+    //Width = "150",
+    //ClassName = NopColumnClassDefaults.CenterAll,
+    //Editable = true,
+    //EditType = EditType.Number
+    //},
+
+    //new ColumnProperty(nameof(FairVendorModel.Tags))
+    //{
+    //Title = T("Admin.FairVendor.Fields.Tags").Text,
+    //Width = "150",
+    //ClassName = NopColumnClassDefaults.CenterAll,
+    //Editable = true,
+    //EditType = EditType.String
+    //},
+
+    //new ColumnProperty(nameof(FairVendorModel.Type))
+    //{
+    //Title = T("Admin.FairVendor.Fields.Type").Text,
+    //Width = "150",
+    //ClassName = NopColumnClassDefaults.CenterAll,
+    //Editable = true,
+    //EditType = EditType.String,
+    //},
+
+    //new ColumnProperty(nameof(FairVendorModel.Value))
+    //{
+    //Title = T("Admin.FairVendor.Fields.Value").Text,
+    //Width = "150",
+    //ClassName = NopColumnClassDefaults.CenterAll,
+    //Editable = true,
+    //EditType = EditType.String
+    //},
+    new ColumnProperty(nameof(FairVendorModel.Id))
+    {
+    Title = T("Admin.Common.Edit").Text,
+    Width = "200",
+    ClassName =  NopColumnClassDefaults.Button,
+    Render = new RenderButtonEdit(new DataUrl("~/Admin/Fair/EditFairVendor", nameof(FairVendorModel.Id))),
+    },
+    new ColumnProperty(nameof(FairVendorModel.Id))
+    {
+    Title = T("Admin.Common.Delete").Text,
+    Width = "100",
+    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+    ClassName = NopColumnClassDefaults.Button
+    }
+    }
+   })
+    </div>
+    <div class="card-footer">
+        <a asp-action="FairVendorCreate" asp-route-fairInfoId="@Model.Id" class="btn btn-primary">
+            <i class="fas fa-square-plus"></i>
+            @T("Admin.Fairs.Vendors.AddNew")
+        </a>
+    </div>
+}
+else
+{
+    <div class="card-body">
+        @T("Admin.Fairs.Vendors.SaveBeforeEdit")
+    </div>
+}
+

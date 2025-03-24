@@ -141,38 +141,50 @@ public class Plugin : BasePlugin
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fairs.Fields.Description",
+                ResourceName = "Admin.Fair.Fields.Description",
                 ResourceValue = "Description"
             },
 
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fairs.Fields.PageSize",
+                ResourceName = "Admin.Fair.Fields.PageSize",
                 ResourceValue = "PageSize"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fairs.Fields.AllowCustomersToSelectPageSize",
+                ResourceName = "Admin.Fair.Fields.AllowCustomersToSelectPageSize",
                 ResourceValue = "Allow Customers To Select Page Size"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fairs.Fields.PageSizeOptions",
+                ResourceName = "Admin.Fair.Fields.PageSizeOptions",
                 ResourceValue = "Page Size Options"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fairs.Fields.Deleted",
+                ResourceName = "Admin.Fair.Fields.Vendors",
+                ResourceValue = "Vendors"
+            },
+            new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.Fair.Fields.Vendors.None",
+                ResourceValue = "-"
+            },
+            new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.Fair.Fields.Deleted",
                 ResourceValue = "Deleted"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fairs.Fields.LimitedToStores",
+                ResourceName = "Admin.Fair.Fields.LimitedToStores",
                 ResourceValue = "Limited To Stores"
             },
             new LocaleStringResource
@@ -452,7 +464,10 @@ public class Plugin : BasePlugin
     {
         await base.InstallAsync();
         await InsertLocaleResourcesAsync();
-        await _customerService.InsertCustomerRoleAsync(_fairManagerCustomerRole);
+
+        var fmr = await _customerService.GetCustomerRoleBySystemNameAsync(_fairManagerCustomerRole.SystemName);
+        if (fmr == null)
+            await _customerService.InsertCustomerRoleAsync(_fairManagerCustomerRole);
     }
 
     public override async Task UninstallAsync()

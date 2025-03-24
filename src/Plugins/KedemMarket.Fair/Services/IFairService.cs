@@ -4,6 +4,7 @@ public interface IFairService
     Task<IPagedList<FairInfo>> GetAllFairInfosAsync(string? name, string? datesFilter, bool? publishedFilter, bool? deletedFilter, int pageIndex, int pageSize);
     Task<FairInfo> GetFairInfoByIdAsync(int id);
     Task<IEnumerable<FairInfo>> GetFairInfosByNameAsync(string name);
+    Task<IPagedList<FairVendorMap>> GetFairVendorsByFairInfoIdAsync(int fairId, int pageIndex = 0, int pageSize = int.MaxValue);
     Task InsertFairInfoAsync(FairInfo fair);
     Task UpdateFairInfoAsync(FairInfo fair);
 }

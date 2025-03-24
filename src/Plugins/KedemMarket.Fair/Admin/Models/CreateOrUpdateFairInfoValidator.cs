@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 
 namespace KedemMarket.Fair.Admin.Models;
@@ -19,7 +18,7 @@ public class CreateOrUpdateFairInfoValidator : BaseNopValidator<FairInfoAdminMod
             .MustAwait(async (f, ct) =>
             {
                 var fairs = await fairService.GetFairInfosByNameAsync(f.Name);
-                return fairs == null || fairs.Count() == 1;
+                return fairs == null || fairs.Count() == 0;
             })
             .WithMessageAwait(localizationService.GetResourceAsync("Admin.Fair.Fields.Name.Unique"));
 

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-
-namespace KedemMarket.Fair.Admin.Models;
+﻿namespace KedemMarket.Fair.Admin.Models;
 public record FairInfoAdminModel : BaseNopEntityModel
 {
     public string Name { get; set; }
@@ -11,6 +9,6 @@ public record FairInfoAdminModel : BaseNopEntityModel
     public DateTime? EndsOnUtc { get; set; }
     public Address Address { get; set; }
     public IList<int> AdminIds { get; set; }
-    public IList<int> VendorIds { get; set; }
-    public IList<SelectListItem> AvailableVendors { get; set; }
+    public IList<VendorModel> Vendors { get; set; } = [];
+    public FairVendorSearchModel FairVendorSearchModel { get; set; } = new();
 }

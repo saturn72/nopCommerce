@@ -6,12 +6,14 @@ namespace KedemMarket.Fair.Services;
 public class FairService : IFairService
 {
     private readonly IRepository<FairInfo> _fairInfoRepository;
+    private readonly IRepository<FairVendorMap> _fairVendorMapRepository;
     private readonly TimeProvider _timeProvider;
     private readonly IShortTermCacheManager _shortTermCacheManager;
     private readonly FairCacheSettings _fairCacheSettings;
 
     public FairService(
         IRepository<FairInfo> fairInfoRepository,
+        IRepository<FairVendorMap> fairVendorMapRepository,
         TimeProvider timeProvider,
         IShortTermCacheManager shortTermCacheManager,
         FairCacheSettings fairCacheSettings)
@@ -20,6 +22,7 @@ public class FairService : IFairService
         _timeProvider = timeProvider;
         _shortTermCacheManager = shortTermCacheManager;
         _fairCacheSettings = fairCacheSettings;
+        _fairVendorMapRepository = fairVendorMapRepository;
     }
 
     public async Task<IPagedList<FairInfo>> GetAllFairInfosAsync(
@@ -30,7 +33,7 @@ public class FairService : IFairService
         int pageIndex,
         int pageSize)
     {
-        var fairInfos = await _fairInfoRepository.GetAllAsync(async query =>
+        var fairInfos = await _fairInfoRepository.GetAllAsync(query =>
         {
             if (!string.IsNullOrWhiteSpace(name))
                 query = query.Where(c => c.Name.Contains(name));
@@ -62,6 +65,15 @@ public class FairService : IFairService
     {
         var cacheKey = _shortTermCacheManager.PrepareKeyForDefaultCache(_fairCacheSettings.GetCacheKeyByFairName(name));
         return await _shortTermCacheManager.GetAsync(() => _fairInfoRepository.Table.Where(c => c.Name == name).ToListAsync(), cacheKey);
+    }
+
+    public async Task<IPagedList<FairVendorMap>> GetFairVendorsByFairInfoIdAsync(int fairInfoId, int pageIndex = 0, int pageSize = int.MaxValue)
+    {
+        if (fairInfoId <= 0)
+            return new PagedList<FairVendorMap>(new List<FairVendorMap>(), pageIndex, pageSize);
+
+        var query = _fairVendorMapRepository.Table.Where(nbe => nbe.FairInfoId == fairInfoId);
+        return await query.ToPagedListAsync(pageIndex, pageSize);
     }
 
     public async Task InsertFairInfoAsync(FairInfo fair)
