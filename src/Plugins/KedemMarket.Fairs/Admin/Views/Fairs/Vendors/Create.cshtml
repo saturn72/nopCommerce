@@ -1,0 +1,32 @@
+@model CreateOrUpdateFairVendorModel
+
+@{
+    Layout = "_AdminLayout";
+    ViewBag.PageTitle = T("Admin.Fairs.Vendors.AddNew").Text;
+}
+
+<form asp-controller="Fair"
+      asp-action="CreateFairVendor"
+      method="post"
+      id="fair-vendor-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Fairs.AddNew")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="Edit" asp-route-id="@Model.FairId">@T("Admin.Fairs.BackToFair")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-floppy-disk"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+    @await Html.PartialAsync(FairController.GetViewPath("Vendors/_CreateOrUpdate.cshtml"), Model)
+</form>

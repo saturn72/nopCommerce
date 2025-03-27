@@ -1,0 +1,8 @@
+﻿namespace KedemMarket.Fairs.Domain;
+
+public class FairVendorMap : BaseEntity
+{
+    public int FairId { get; set; }
+    public int VendorId { get; set; }
+    public int DisplayOrder { get; set; }
+}

@@ -1,0 +1,41 @@
+@using Nop.Web.Areas.Admin.Components
+
+@model CreateOrUpdateFairVendorModel
+
+@{
+    var customer = await WorkContext.GetCurrentCustomerAsync();
+
+    //const string hideInfoBlockAttributeName = "FairVendorPage.HideInfoBlock";
+    //var hideInfoBlock = await GenericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+
+    const string hideInfoBlockAttributeName = "FairVendorPage.HideInfoBlock";
+    var hideInfoBlock = await GenericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="FairId" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-md-12 clearfix">
+                    <div class="float-left">
+                        @await Component.InvokeAsync(typeof(SettingModeViewComponent), new { modeName = "fair-advanced-mode" })
+                    </div>
+                </div>
+            </div>
+
+            <nop-cards id="fair-vendor-cards">
+                    <nop-card asp-name="fair-vendor-info"
+                              asp-icon="fas fa-info"
+                              asp-title="@T("Admin.Fairs.Vendor.Info")"
+                              asp-hide-block-attribute-name="@hideInfoBlockAttributeName"
+                              asp-hide="@hideInfoBlock"
+                              asp-advanced="false">
+                        @await Html.PartialAsync(FairController.GetViewPath("Vendors/_CreateOrUpdate.Info.cshtml"), Model)
+                    </nop-card>
+                </nop-cards>
+        </div>
+    </div>
+</section>

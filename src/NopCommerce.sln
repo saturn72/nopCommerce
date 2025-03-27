@@ -81,7 +81,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KM.MediaUploader", "Plugins
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KedemMarket", "Plugins\Nop.Plugin.KedemMarket\KedemMarket.csproj", "{661424D5-8FF4-4118-99CA-4755926C19C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KedemMarket.Fair", "Plugins\KedemMarket.Fair\KedemMarket.Fair.csproj", "{F2A2496B-B28D-4779-836D-0E3BE955CC10}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KedemMarket.Fairs", "Plugins\KedemMarket.Fairs\KedemMarket.Fairs.csproj", "{4213C203-B36E-4EA0-895F-672F02488F8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -435,18 +435,18 @@ Global
 		{661424D5-8FF4-4118-99CA-4755926C19C1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{661424D5-8FF4-4118-99CA-4755926C19C1}.Release|x86.ActiveCfg = Release|Any CPU
 		{661424D5-8FF4-4118-99CA-4755926C19C1}.Release|x86.Build.0 = Release|Any CPU
-		{F2A2496B-B28D-4779-836D-0E3BE955CC10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F2A2496B-B28D-4779-836D-0E3BE955CC10}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F2A2496B-B28D-4779-836D-0E3BE955CC10}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{F2A2496B-B28D-4779-836D-0E3BE955CC10}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{F2A2496B-B28D-4779-836D-0E3BE955CC10}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F2A2496B-B28D-4779-836D-0E3BE955CC10}.Debug|x86.Build.0 = Debug|Any CPU
-		{F2A2496B-B28D-4779-836D-0E3BE955CC10}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F2A2496B-B28D-4779-836D-0E3BE955CC10}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F2A2496B-B28D-4779-836D-0E3BE955CC10}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{F2A2496B-B28D-4779-836D-0E3BE955CC10}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{F2A2496B-B28D-4779-836D-0E3BE955CC10}.Release|x86.ActiveCfg = Release|Any CPU
-		{F2A2496B-B28D-4779-836D-0E3BE955CC10}.Release|x86.Build.0 = Release|Any CPU
+		{4213C203-B36E-4EA0-895F-672F02488F8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4213C203-B36E-4EA0-895F-672F02488F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4213C203-B36E-4EA0-895F-672F02488F8F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4213C203-B36E-4EA0-895F-672F02488F8F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4213C203-B36E-4EA0-895F-672F02488F8F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4213C203-B36E-4EA0-895F-672F02488F8F}.Debug|x86.Build.0 = Debug|Any CPU
+		{4213C203-B36E-4EA0-895F-672F02488F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4213C203-B36E-4EA0-895F-672F02488F8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4213C203-B36E-4EA0-895F-672F02488F8F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4213C203-B36E-4EA0-895F-672F02488F8F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4213C203-B36E-4EA0-895F-672F02488F8F}.Release|x86.ActiveCfg = Release|Any CPU
+		{4213C203-B36E-4EA0-895F-672F02488F8F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -487,7 +487,7 @@ Global
 		{9EED49C3-3A61-4294-90FF-725C7044B9AB} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{51D46E21-29BC-4152-94FF-4C401E1A4DF1} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{661424D5-8FF4-4118-99CA-4755926C19C1} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
-		{F2A2496B-B28D-4779-836D-0E3BE955CC10} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
+		{4213C203-B36E-4EA0-895F-672F02488F8F} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE72A8B2-332A-4175-9319-6726D36E9D25}

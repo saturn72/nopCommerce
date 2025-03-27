@@ -1,0 +1,100 @@
+@model CreateOrUpdateFairVendorModel
+
+<div class="card-body">
+    @if (Model.Id == 0)
+    {
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="VendorId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="VendorName" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="VendorName" html-attributes="@(new { disabled = true })" />
+            </div>
+        </div>
+    }
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="DisplayOrder" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayOrder" />
+            <span asp-validation-for="DisplayOrder"></span>
+        </div>
+    </div>
+</div>
+@*
+                <div>
+                    <div class="form-group row @(Model.? null : "advanced-setting")">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SelectedProductTags" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="SelectedProductTags" asp-items="Model.AvailableProductTags" asp-multiple="true" />
+                            <span asp-validation-for="SelectedProductTags"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <nop-label asp-for="Alt" />
+                        </div>
+                        <div class="col-sm-9">
+                            <nop-editor asp-for="Alt" asp-postfix="@Model.Alt" />
+                            <span asp-validation-for="Alt"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <nop-label asp-for="Icon" />
+                        </div>
+                        <div class="col-sm-9">
+                            <nop-editor asp-for="Icon" asp-postfix="@Model.Icon" />
+                            <span asp-validation-for="Icon"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <nop-label asp-for="ActiveIcon" />
+                        </div>
+                        <div class="col-sm-9">
+                            <nop-editor asp-for="ActiveIcon" asp-postfix="@Model.ActiveIcon" />
+                            <span asp-validation-for="ActiveIcon"></span>
+                        </div>
+                    </div>
+        <div class="form-group row">
+                    <div class="col-sm-3">
+                        <nop-label asp-for="Value" />
+                    </div>
+                    <div class="col-sm-9">
+                        <nop-editor asp-for="Value" asp-postfix="@Model.Value" />
+                        <span asp-validation-for="Value"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                        <nop-label asp-for="Index" />
+                    </div>
+                    <div class="col-sm-9">
+                        <nop-editor asp-for="Index" asp-postfix="@Model.Index" />
+                        <span asp-validation-for="Index"></span>
+                    </div>
+                </div>
+
+        </div>
+    </div>
+*@
