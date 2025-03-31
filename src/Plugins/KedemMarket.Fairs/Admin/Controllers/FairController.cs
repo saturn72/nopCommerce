@@ -1,9 +1,4 @@
-﻿
-using DocumentFormat.OpenXml.EMMA;
-using KedemMarket.Fairs.Domain;
-using Nop.Web.Framework.Mvc;
-
-namespace KedemMarket.Fairs.Admin.Controllers;
+﻿namespace KedemMarket.Fairs.Admin.Controllers;
 
 public class FairController : BaseAdminController
 {
@@ -115,9 +110,9 @@ public class FairController : BaseAdminController
             fair.UpdatedOnUtc = DateTime.UtcNow;
             fair.Name = model.Name;
 
-
-            fair = model.ToEntity(fair);
+            fair.Address = fair.IsVirtual? null: model.Address.ToEntity<Address>();
             fair.UpdatedOnUtc = DateTime.UtcNow;
+
             await _fairService.UpdateFairAsync(fair);
 
             var msg = await _localizationService.GetResourceAsync("Admin.Fairs.Updated");

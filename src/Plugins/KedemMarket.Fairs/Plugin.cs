@@ -50,8 +50,18 @@ public class Plugin : BasePlugin
             },
         new LocaleStringResource {
             LanguageId = languageId,
-            ResourceName =  "admin.fairs.info",
-            ResourceValue ="Fair Info",
+            ResourceName =  "Admin.Fairs.Info",
+            ResourceValue ="Fair Information",
+        },
+        new LocaleStringResource {
+            LanguageId = languageId,
+            ResourceName =  "Admin.Fairs.Location",
+            ResourceValue ="Location",
+        },
+        new LocaleStringResource {
+            LanguageId = languageId,
+            ResourceName =  "Admin.Fairs.Vendors",
+            ResourceValue ="Vendors",
         },
         new LocaleStringResource
         {

@@ -37,4 +37,4 @@ global using Nop.Web.Areas.Admin.Models.Vendors;
 global using Nop.Core.Domain.Vendors;
 global using Nop.Services.Vendors;
 global using Nop.Web.Areas.Admin.Factories;
-
+global using Nop.Web.Areas.Admin.Models.Common;

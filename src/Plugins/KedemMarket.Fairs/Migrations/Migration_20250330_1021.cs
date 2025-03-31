@@ -3,13 +3,13 @@ using Nop.Data.Migrations;
 
 namespace KedemMarket.Fairs.Migrations;
 
-[NopMigration("2025/03/19 22:33:08:9037678", "KedemMarket Fair schema", MigrationProcessType.NoMatter)]
+[NopMigration("2025/03/30 10:21:08:9037678", "KedemMarket Fair schema", MigrationProcessType.NoMatter)]
 
-public class Migration_20250320_1740 : Migration
+public class Migration_20250330_1021 : Migration
 {
     protected readonly INopDataProvider _dataProvider;
 
-    public Migration_20250320_1740(INopDataProvider dataProvider)
+    public Migration_20250330_1021(INopDataProvider dataProvider)
     {
         _dataProvider = dataProvider;
     }
@@ -20,14 +20,12 @@ public class Migration_20250320_1740 : Migration
     public override void Up()
     {
         KedemMarketFairNameCompatibility nc = new();
-        if (!Schema.Table(nc.TableNames[typeof(Domain.Fair)]).Exists())
-            Create.TableFor<Fair>();
-
+        if (!Schema.Table(nc.TableNames[typeof(FairAddressMap)]).Exists())
+            Create.TableFor<FairAddressMap>();
     }
     public override void Down()
     {
         KedemMarketFairNameCompatibility nc = new();
-        var tableName = nc.TableNames[typeof(Fair)];
-        Delete.Table(tableName);
+        Delete.Table(nc.TableNames[typeof(FairAddressMap)]);
     }
 }

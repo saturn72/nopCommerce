@@ -46,9 +46,17 @@ public class FairFactory : IFairFactory
             model.StartsOnUtc = _timeProvider.GetUtcNow().LocalDateTime;
             model.EndsOnUtc = _timeProvider.GetUtcNow().LocalDateTime.AddHours(_fairSettings.DefaultFairLengthInHours);
         }
+        else
+        {
+            model.Address = fair.Address?.ToModel<AddressModel>();
+        }
         model.FairVendorSearchModel.AvailablePageSizes = _fairSettings.PageSizeOptions;
         model.FairVendorSearchModel.SetGridPageSize();
 
+        //model.Address = new AddressModel()
+        //{
+        //    //CustomAddressAttributes = []
+        //};
         return Task.FromResult(model);
     }
 

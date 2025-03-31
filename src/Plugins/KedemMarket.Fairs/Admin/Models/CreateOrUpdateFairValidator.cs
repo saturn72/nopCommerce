@@ -20,7 +20,8 @@ public class CreateOrUpdateFairValidator : BaseNopValidator<FairAdminModel>
             {
                 var currentCustomer = await workContext.GetCurrentCustomerAsync();
                 var fairs = await fairService.GetFairsByNameAsync(f.Name, currentCustomer.Id);
-                return fairs == null || fairs.Count() == 0;
+                return fairs == null || fairs.Count() == 0 || (fairs.Count() == 1 && fairs.First().Id == f.Id);
+                ;
             })
             .WithMessageAwait(localizationService.GetResourceAsync("Admin.Fair.Fields.Name.Unique"));
 

@@ -7,10 +7,10 @@
     var hideInfoBlock = await GenericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
 
     const string hideVendorsBlockAttributeName = "FairPage.HideVendorsBlock";
-    var hideProductsBlock = await GenericAttributeService.GetAttributeAsync<bool>(customer, hideVendorsBlockAttributeName, defaultValue: true);
+    var hideVendorsBlock = await GenericAttributeService.GetAttributeAsync<bool>(customer, hideVendorsBlockAttributeName, defaultValue: true);
 
-    const string hideDisplayBlockAttributeName = "FairPage.HideDisplayBlock";
-    var hideDisplayBlock = await GenericAttributeService.GetAttributeAsync<bool>(customer, hideDisplayBlockAttributeName, defaultValue: true);
+    const string hideLocationAttributeName = "FairPage.HideLocation";
+    var hideLocationBlock = await GenericAttributeService.GetAttributeAsync<bool>(customer, hideLocationAttributeName, defaultValue: true);
 
     const string hideMappingsBlockAttributeName = "FairPage.HideMappingsBlock";
     var hideMappingsBlock = await GenericAttributeService.GetAttributeAsync<bool>(customer, hideMappingsBlockAttributeName, defaultValue: true);
@@ -35,7 +35,8 @@
 
             <nop-cards id="fair-cards">
                 <nop-card asp-name="fair-info" asp-icon="fas fa-info" asp-title="@T("Admin.Fairs.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync(FairController.GetViewPath("_CreateOrUpdate.Info.cshtml"), Model)</nop-card>
-                <nop-card asp-name="fair-vendors" asp-icon="fas fa-store" asp-title="@T("Admin.Fairs.Vendors")" asp-hide-block-attribute-name="@hideVendorsBlockAttributeName " asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync(FairController.GetViewPath("_CreateOrUpdate.Vendors.cshtml"), Model)</nop-card>
+                <nop-card asp-name="fair-vendors" asp-icon="fa-solid fa-location-dot" asp-title="@T("Admin.Fairs.Location")" asp-hide-block-attribute-name="@hideVendorsBlockAttributeName " asp-hide="@hideLocationBlock" asp-advanced="true">@await Html.PartialAsync(FairController.GetViewPath("_CreateOrUpdate.Location.cshtml"), Model)</nop-card>
+                <nop-card asp-name="fair-vendors" asp-icon="fas fa-store" asp-title="@T("Admin.Fairs.Vendors")" asp-hide-block-attribute-name="@hideVendorsBlockAttributeName " asp-hide="@hideVendorsBlock" asp-advanced="false">@await Html.PartialAsync(FairController.GetViewPath("_CreateOrUpdate.Vendors.cshtml"), Model)</nop-card>
                 @* <nop-card asp-name="fair-display" asp-icon="fas fa-tv" asp-title="@T("Admin.Fairs.Display")" asp-hide-block-attribute-name="@hideDisplayBlockAttributeName" asp-hide="@hideDisplayBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Display", Model)</nop-card> *@
                 @* <nop-card asp-name="fair-mappings" asp-icon="fas fa-bookmark" asp-title="@T("Admin.Fairs.Mappings")" asp-hide-block-attribute-name="@hideMappingsBlockAttributeName" asp-hide="@hideMappingsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Mappings", Model)</nop-card> *@
                 @* <nop-card asp-name="fair-seo" asp-icon="fas fa-magnifying-glass-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-card> *@
