@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
-using KedemMarket.Fairs.Admin.Models;
+using KedemMarket.Common.Infrastructure;
+using KedemMarket.Common.Services.Media;
+using KedemMarket.Fairs.Factories;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace KedemMarket.Fairs.Infrastructure;
@@ -15,9 +17,11 @@ public class NopStartup : INopStartup
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         services.TryAddSingleton(TimeProvider.System);
-        services.AddScoped<KedemMarket.Fairs.Admin.Factories.IFairFactory, KedemMarket.Fairs.Admin.Factories.FairFactory>();
+        services.AddScoped<IFairFactory, FairFactory>();
         services.AddScoped<IFairService, FairService>();
         services.AddTransient<IValidator<FairAdminModel>, CreateOrUpdateFairValidator>();
         services.AddSingleton<FairCacheSettings>();
+        services.AddTransient<IFairApiFactory, FairApiFactory>();
+        new CommonServiceConfigurar().ConfigureServices(services, configuration);
     }
 }

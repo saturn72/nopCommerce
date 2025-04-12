@@ -1,5 +1,4 @@
 ﻿using Nop.Core.Caching;
-using static KedemMarket.Fairs.Services.FairConsts;
 
 namespace KedemMarket.Fairs.Services;
 
@@ -38,31 +37,36 @@ public class FairService : IFairService
     }
 
     public async Task<IPagedList<Fair>> GetAllFairsAsync(
-        string? name,
-        string? datesFilter,
-        bool? publishedFilter,
-        bool? deletedFilter,
-        int pageIndex,
-        int pageSize)
+        string? name = null,
+        bool? isPublished = true,
+        bool? isDeleted = null,
+        DateTime? fromUtc = null,
+        DateTime? untilUtc = null,
+        int pageSize = 100,
+        int skip = int.MaxValue)
     {
         var fairs = await _fairRepository.GetAllAsync(query =>
         {
             if (!string.IsNullOrWhiteSpace(name))
                 query = query.Where(c => c.Name.Contains(name));
 
-            if (datesFilter != null || datesFilter != FairDateFilter.All)
-                query = FilterByFairDates(query, datesFilter);
+            if (isPublished.HasValue)
+                query = query.Where(f => f.Published == isPublished);
 
-            if (publishedFilter.HasValue)
-                query = query.Where(c => c.Published == publishedFilter.Value);
+            if (isDeleted.HasValue)
+                query = query.Where(f => f.Deleted == isDeleted);
 
-            if (deletedFilter.HasValue)
-                query = query.Where(c => c.Deleted == deletedFilter.Value);
+            if (!fromUtc.HasValue)
+                fromUtc = _timeProvider.GetUtcNow().UtcDateTime;
+            query = query.Where(f => fromUtc <= f.StartsOnUtc);
+
+            if (untilUtc.HasValue)
+                query = query.Where(f => untilUtc <= f.EndsOnUtc);
 
             return query;
         });
 
-        return new PagedList<Fair>(fairs, pageIndex, pageSize);
+        return new PagedList<Fair>(fairs, skip / pageSize, pageSize);
     }
 
     public async Task<Fair> GetFairByIdAsync(int id)
@@ -78,7 +82,6 @@ public class FairService : IFairService
 
         return fair;
     }
-
     public async Task<IEnumerable<Fair>> GetFairsByNameAsync(string name, int customerId)
     {
         var cacheKey = _shortTermCacheManager.PrepareKeyForDefaultCache(_fairCacheSettings.GetCacheKeyByFairName(name, customerId));
@@ -159,17 +162,5 @@ public class FairService : IFairService
         ThrowIfNull(fairVendorMap, nameof(fairVendorMap));
         await _fairVendorMapRepository.UpdateAsync(fairVendorMap);
         _shortTermCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Fair>.Prefix);
-    }
-
-    private IQueryable<Fair> FilterByFairDates(IQueryable<Fair> query, string fairDateFilter)
-    {
-        var curDate = _timeProvider.GetUtcNow().DateTime;
-        return fairDateFilter switch
-        {
-            FairDateFilter.ShowActiveOnly => query.Where(f => f.EndsOnUtc >= curDate),
-            FairDateFilter.ShowEndedOnly => query.Where(f => f.EndsOnUtc < curDate),
-            FairDateFilter.ShowFutureOnly => query.Where(f => f.StartsOnUtc > curDate),
-            _ => query,
-        };
     }
 }

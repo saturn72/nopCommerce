@@ -87,19 +87,17 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
     <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj" />
+    <ProjectReference Include="..\KM.Common\KM.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
     <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Consumers\" />
-    <Folder Include="Controllers\" />
     <Folder Include="Documents\" />
     <Folder Include="Extensions\" />
-    <Folder Include="Factories\" />
     <Folder Include="Mapping\" />
     <Folder Include="Middlewares\" />
-    <Folder Include="Models\" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target -->

@@ -1,6 +1,4 @@
-﻿using Nop.Web.Areas.Admin.Models.Common;
-
-namespace KedemMarket.Fairs.Admin.Models;
+﻿namespace KedemMarket.Fairs.Admin.Models;
 public record FairAdminModel : BaseNopEntityModel
 {
     public string Name { get; set; }
@@ -11,6 +9,7 @@ public record FairAdminModel : BaseNopEntityModel
     public DateTime? StartsOnUtc { get; set; }
     public DateTime? EndsOnUtc { get; set; }
     public AddressModel Address { get; set; }
+    public string Url { get; set; }
     public IList<int> AdminIds { get; set; }
     public IList<VendorModel> Vendors { get; set; } = [];
     public FairVendorSearchModel FairVendorSearchModel { get; set; } = new();

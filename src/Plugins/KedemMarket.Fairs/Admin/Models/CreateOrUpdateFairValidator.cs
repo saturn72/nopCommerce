@@ -25,14 +25,28 @@ public class CreateOrUpdateFairValidator : BaseNopValidator<FairAdminModel>
             })
             .WithMessageAwait(localizationService.GetResourceAsync("Admin.Fair.Fields.Name.Unique"));
 
+
+        RuleFor(x => x.StartsOnUtc)
+            .Must((fi, startsOnUtc) =>
+            {
+                return startsOnUtc.HasValue && startsOnUtc >= timeProvider.GetUtcNow().UtcDateTime;
+            })
+            .WithMessageAwait(async () => await localizationService.GetResourceAsync("Admin.Fair.Fields.StartsOnUtc.PastDateNotAllowed"));
+
         RuleFor(x => x.EndsOnUtc)
             .Must((fi, endsOnUtc) =>
             {
+                return endsOnUtc.HasValue && endsOnUtc >= timeProvider.GetUtcNow().UtcDateTime;
+            })
+            .WithMessageAwait(async () => await localizationService.GetResourceAsync("Admin.Fair.Fields.EndsOnUtc.PastDateNotAllowed"));
 
-                if (endsOnUtc.HasValue)
+        RuleFor(x => x.EndsOnUtc)
+            .Must((fi, endsOnUtc) =>
+            {
+                if (endsOnUtc.HasValue && fi.StartsOnUtc.HasValue)
                 {
-                    var startDate = fi.StartsOnUtc ?? timeProvider.GetUtcNow().UtcDateTime;
-                    return endsOnUtc.Value >= startDate.AddHours(fairSettings.DefaultFairLengthInHours);
+                    var fromUtc = fi.StartsOnUtc.Value.AddHours(fairSettings.DefaultFairLengthInHours);
+                    return endsOnUtc.Value >= fromUtc;
                 }
                 return false;
             })

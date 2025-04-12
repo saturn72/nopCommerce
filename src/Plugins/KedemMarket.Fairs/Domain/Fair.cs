@@ -8,8 +8,8 @@ public class Fair : BaseEntity
     public bool Deleted { get; set; }
     public string Description { get; set; }
     public bool Published { get; set; }
-    public DateTime StartsOnUtc { get; set; }
-    public DateTime EndsOnUtc { get; set; }
+    public DateTime? StartsOnUtc { get; set; }
+    public DateTime? EndsOnUtc { get; set; }
     public IList<int> AdminIds { get; set; }
     public IList<int> VendorIds { get; set; }
     public DateTime CreatedOnUtc { get; set; }

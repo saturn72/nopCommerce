@@ -107,10 +107,11 @@ public class FairController : BaseAdminController
 
         if (ModelState.IsValid)
         {
-            fair.UpdatedOnUtc = DateTime.UtcNow;
             fair.Name = model.Name;
-
             fair.Address = fair.IsVirtual? null: model.Address.ToEntity<Address>();
+            fair.StartsOnUtc = model.StartsOnUtc;
+            fair.EndsOnUtc = model.EndsOnUtc;
+            fair.Published = model.Published;
             fair.UpdatedOnUtc = DateTime.UtcNow;
 
             await _fairService.UpdateFairAsync(fair);

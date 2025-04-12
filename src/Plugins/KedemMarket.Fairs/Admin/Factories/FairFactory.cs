@@ -53,10 +53,6 @@ public class FairFactory : IFairFactory
         model.FairVendorSearchModel.AvailablePageSizes = _fairSettings.PageSizeOptions;
         model.FairVendorSearchModel.SetGridPageSize();
 
-        //model.Address = new AddressModel()
-        //{
-        //    //CustomAddressAttributes = []
-        //};
         return Task.FromResult(model);
     }
 
@@ -66,11 +62,11 @@ public class FairFactory : IFairFactory
 
         var fairs = await _fairService.GetAllFairsAsync(
         name: searchModel.Name,
-        datesFilter: searchModel.DateFilter,
-        publishedFilter: searchModel.PublishedFilter,
-        deletedFilter: searchModel.DeletedFilter,
-        pageIndex: searchModel.Page - 1,
-        pageSize: searchModel.PageSize);
+        isDeleted: searchModel.IsDeleted,
+        startsOnUtc: searchModel.StartsOnUtc,
+        endsOnUtc: searchModel.StartsOnUtc,
+        pageSize: searchModel.PageSize,
+        skip: int.MaxValue);
 
         var model = new FairAdminListModel().PrepareToGrid(searchModel, fairs, () => fairs.Select(nb => nb.ToModel<FairAdminModel>()));
         return model;
@@ -104,7 +100,8 @@ public class FairFactory : IFairFactory
                     Name = vendor.Name,
                     DisplayOrder = fvm.DisplayOrder,
                 });
-            };
+            }
+            ;
             return list;
         });
     }
