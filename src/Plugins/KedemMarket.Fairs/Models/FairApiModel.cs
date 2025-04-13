@@ -1,8 +1,9 @@
 ﻿using KedemMarket.Common.Models.Media;
 
 namespace KedemMarket.Fairs.Models;
-public record FairApiModel : BaseNopEntityModel
+public record FairApiModel
 {
+    public virtual int Id { get; set; }
     public string Name { get; set; }
     public string Location { get; set; }
     public DateTime? StartsOnUtc { get; set; }

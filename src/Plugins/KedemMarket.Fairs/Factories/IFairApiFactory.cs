@@ -5,5 +5,6 @@ namespace KedemMarket.Fairs.Factories;
 
 public interface IFairApiFactory
 {
-    Task<IEnumerable<FairApiModel>> PrepareFairListModel(IEnumerable<Fair> fairs);
+    Task<FairListApiModel> PrepareFairApiModelListAsync(IEnumerable<Fair> fairs);
+    Task<FairApiModel> PrepareFairApiModelAsync(Fair fair);
 }

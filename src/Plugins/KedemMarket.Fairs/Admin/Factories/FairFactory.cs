@@ -44,7 +44,7 @@ public class FairFactory : IFairFactory
             model.Published = false;
             model.Deleted = false;
             model.StartsOnUtc = _timeProvider.GetUtcNow().LocalDateTime;
-            model.EndsOnUtc = _timeProvider.GetUtcNow().LocalDateTime.AddHours(_fairSettings.DefaultFairLengthInHours);
+            model.EndsOnUtc = _timeProvider.GetUtcNow().LocalDateTime.AddHours(_fairSettings.DefaultMinimumFairLengthInHours);
         }
         else
         {
@@ -62,11 +62,12 @@ public class FairFactory : IFairFactory
 
         var fairs = await _fairService.GetAllFairsAsync(
         name: searchModel.Name,
+        isPublished: searchModel.IsPublished,
         isDeleted: searchModel.IsDeleted,
-        startsOnUtc: searchModel.StartsOnUtc,
-        endsOnUtc: searchModel.StartsOnUtc,
+        fromUtc: searchModel.FromUtc,
+        untilUtc: searchModel.UntilUtc,
         pageSize: searchModel.PageSize,
-        skip: int.MaxValue);
+        pageIndex: searchModel.Page - 1);
 
         var model = new FairAdminListModel().PrepareToGrid(searchModel, fairs, () => fairs.Select(nb => nb.ToModel<FairAdminModel>()));
         return model;

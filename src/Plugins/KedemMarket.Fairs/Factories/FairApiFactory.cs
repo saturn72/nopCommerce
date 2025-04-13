@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using KedemMarket.Common.Services.Media;
+﻿using KedemMarket.Common.Services.Media;
 using KedemMarket.Fairs.Models;
 
 namespace KedemMarket.Fairs.Factories;
@@ -11,17 +10,19 @@ public class FairApiFactory : IFairApiFactory
     {
         _mediaConvertor = mediaConvertor;
     }
-
-    public async Task<IEnumerable<FairApiModel>> PrepareFairListModel(IEnumerable<Fair> fairs)
+    public async Task<FairListApiModel> PrepareFairApiModelListAsync(IEnumerable<Fair> fairs)
     {
         var fams = new List<FairApiModel>();
         foreach (var fair in fairs)
-            fams.Add(await ToApiModel(fair));
+            fams.Add(await PrepareFairApiModelAsync(fair));
 
-        return fams;
+        return new()
+        {
+            Fairs = fams
+        };
     }
 
-    private Task<FairApiModel> ToApiModel(Fair fair)
+    public Task<FairApiModel> PrepareFairApiModelAsync(Fair fair)
     {
         var fam = new FairApiModel
         {

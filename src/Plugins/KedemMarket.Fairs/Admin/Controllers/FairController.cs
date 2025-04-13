@@ -51,7 +51,6 @@ public class FairController : BaseAdminController
         return Json(model);
     }
 
-
     [CheckPermission(FairPermissions.CREATE)]
     public virtual async Task<IActionResult> Create()
     {
@@ -67,7 +66,7 @@ public class FairController : BaseAdminController
     {
         if (ModelState.IsValid)
         {
-            var fair = model.ToEntity<Domain.Fair>();
+            var fair = model.ToEntity<Fair>();
             fair.CreatedOnUtc = DateTime.UtcNow;
 
             await _fairService.InsertFairAsync(fair);
@@ -76,7 +75,7 @@ public class FairController : BaseAdminController
             _notificationService.SuccessNotification(msg);
 
             if (!continueEditing || fair.Id == 0)
-                return RedirectToAction("List");
+                return RedirectToAction(nameof(List));
 
             return RedirectToAction("Edit", new { id = fair.Id });
         }
@@ -108,7 +107,7 @@ public class FairController : BaseAdminController
         if (ModelState.IsValid)
         {
             fair.Name = model.Name;
-            fair.Address = fair.IsVirtual? null: model.Address.ToEntity<Address>();
+            fair.Address = fair.IsVirtual ? null : model.Address.ToEntity<Address>();
             fair.StartsOnUtc = model.StartsOnUtc;
             fair.EndsOnUtc = model.EndsOnUtc;
             fair.Published = model.Published;
@@ -127,6 +126,19 @@ public class FairController : BaseAdminController
 
         model = await _fairFactory.PrepareFairAdminModelAsync(model, fair);
         return View("Edit.cshtml", model);
+    }
+
+    [HttpPost]
+    [CheckPermission(FairPermissions.DELETE)]
+    public virtual async Task<IActionResult> DeleteFair(int id)
+    {
+        var fair = await _fairService.GetFairByIdAsync(id);
+
+        if (fair == null)
+            return NotFound();
+
+        await _fairService.DeleteFairAsync(fair);
+        return RedirectToAction(nameof(List));
     }
 
     #endregion

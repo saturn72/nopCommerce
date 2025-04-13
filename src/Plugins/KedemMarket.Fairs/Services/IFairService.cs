@@ -5,10 +5,10 @@ public interface IFairService
         string? name = null,
         bool? isPublished = true,
         bool? isDeleted = null,
-        DateTime? startsOnUtc = null,
-        DateTime? endsOnUtc = null,
+        DateTime? fromUtc = null,
+        DateTime? untilUtc = null,
         int pageSize = int.MaxValue,
-        int skip = 0);
+        int pageIndex = 0);
     Task<Fair> GetFairByIdAsync(int id);
     Task<IEnumerable<Fair>> GetFairsByNameAsync(string name, int customerId);
     Task<IEnumerable<FairVendorMap>> GetFairVendorMapsByFairIdAsync(int fairId, int pageIndex = 0, int pageSize = int.MaxValue);
@@ -16,6 +16,7 @@ public interface IFairService
     Task InsertFairAsync(Fair fair);
     Task InsertFairVendorMapAsync(FairVendorMap fairVendorMap);
     Task UpdateFairAsync(Fair fair);
+    Task DeleteFairAsync(Fair fair);
     Task UpdateFairVendorMapAsync(FairVendorMap fairVendorMap);
     Task DeleteFairVendorMapAsync(FairVendorMap fairVendorMap);
 }

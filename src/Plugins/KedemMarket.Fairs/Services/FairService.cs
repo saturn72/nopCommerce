@@ -1,4 +1,7 @@
-﻿using Nop.Core.Caching;
+﻿using KedemMarket.Fairs.Domain;
+using Nop.Core.Caching;
+using Nop.Core.Events;
+using Nop.Services.Events;
 
 namespace KedemMarket.Fairs.Services;
 
@@ -11,6 +14,7 @@ public class FairService : IFairService
     private readonly TimeProvider _timeProvider;
     private readonly IShortTermCacheManager _shortTermCacheManager;
     private readonly FairCacheSettings _fairCacheSettings;
+    private readonly IEventPublisher _eventPublisher;
 
     public FairService(
         IRepository<Fair> fairRepository,
@@ -19,7 +23,8 @@ public class FairService : IFairService
         TimeProvider timeProvider,
         IShortTermCacheManager shortTermCacheManager,
         FairCacheSettings fairCacheSettings,
-        IRepository<Address> addressRepository)
+        IRepository<Address> addressRepository,
+        IEventPublisher eventPublisher)
     {
         _fairRepository = fairRepository;
         _fairAddressMapRepository = fairAddressMapRepository;
@@ -28,6 +33,18 @@ public class FairService : IFairService
         _shortTermCacheManager = shortTermCacheManager;
         _fairCacheSettings = fairCacheSettings;
         _addressRepository = addressRepository;
+        _eventPublisher = eventPublisher;
+    }
+
+    public async Task DeleteFairAsync(Fair fair)
+    {
+        ThrowIfNull(fair, nameof(fair));
+        fair.Deleted = true;
+        fair.Published = false;
+        fair.DeletedOnUtc = _timeProvider.GetUtcNow().UtcDateTime;
+
+        await _fairRepository.UpdateAsync(fair, false);
+        await _eventPublisher.EntityDeletedAsync(fair);
     }
 
     public async Task DeleteFairVendorMapAsync(FairVendorMap fairVendorMap)
@@ -42,8 +59,8 @@ public class FairService : IFairService
         bool? isDeleted = null,
         DateTime? fromUtc = null,
         DateTime? untilUtc = null,
-        int pageSize = 100,
-        int skip = int.MaxValue)
+        int pageSize = int.MaxValue,
+        int pageIndex = 0)
     {
         var fairs = await _fairRepository.GetAllAsync(query =>
         {
@@ -66,7 +83,7 @@ public class FairService : IFairService
             return query;
         });
 
-        return new PagedList<Fair>(fairs, skip / pageSize, pageSize);
+        return new PagedList<Fair>(fairs, pageIndex, pageSize);
     }
 
     public async Task<Fair> GetFairByIdAsync(int id)
@@ -105,12 +122,10 @@ public class FairService : IFairService
     public async Task InsertFairAsync(Fair fair)
     {
         await _fairRepository.InsertAsync(fair);
-        _shortTermCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Fair>.Prefix);
     }
     public async Task InsertFairVendorMapAsync(FairVendorMap fairVendorMap)
     {
         await _fairVendorMapRepository.InsertAsync(fairVendorMap);
-        _shortTermCacheManager.RemoveByPrefix(NopEntityCacheDefaults<FairVendorMap>.Prefix);
     }
 
     public async Task UpdateFairAsync(Fair fair)
@@ -154,13 +169,11 @@ public class FairService : IFairService
                 }
             }
         }
-        _shortTermCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Fair>.Prefix);
     }
 
     public async Task UpdateFairVendorMapAsync(FairVendorMap fairVendorMap)
     {
         ThrowIfNull(fairVendorMap, nameof(fairVendorMap));
         await _fairVendorMapRepository.UpdateAsync(fairVendorMap);
-        _shortTermCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Fair>.Prefix);
     }
 }

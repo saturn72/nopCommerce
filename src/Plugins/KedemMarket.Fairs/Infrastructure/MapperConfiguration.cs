@@ -5,7 +5,8 @@ public class MapperConfiguration : Profile, IOrderedMapperProfile
 {
     public MapperConfiguration()
     {
-        CreateMap<Fair, FairAdminModel>();
+        CreateMap<Fair, FairAdminModel>()
+            .ReverseMap();
         CreateMap<CreateOrUpdateFairVendorModel, FairVendorMap>();
     }
     public int Order => 10;

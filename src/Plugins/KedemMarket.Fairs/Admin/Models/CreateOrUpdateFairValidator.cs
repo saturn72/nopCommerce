@@ -25,18 +25,18 @@ public class CreateOrUpdateFairValidator : BaseNopValidator<FairAdminModel>
             })
             .WithMessageAwait(localizationService.GetResourceAsync("Admin.Fair.Fields.Name.Unique"));
 
-
+        var curUtc = timeProvider.GetUtcNow().UtcDateTime;
         RuleFor(x => x.StartsOnUtc)
             .Must((fi, startsOnUtc) =>
             {
-                return startsOnUtc.HasValue && startsOnUtc >= timeProvider.GetUtcNow().UtcDateTime;
+                return startsOnUtc.HasValue && startsOnUtc >= curUtc;
             })
             .WithMessageAwait(async () => await localizationService.GetResourceAsync("Admin.Fair.Fields.StartsOnUtc.PastDateNotAllowed"));
 
         RuleFor(x => x.EndsOnUtc)
             .Must((fi, endsOnUtc) =>
             {
-                return endsOnUtc.HasValue && endsOnUtc >= timeProvider.GetUtcNow().UtcDateTime;
+                return endsOnUtc.HasValue && endsOnUtc >= curUtc;
             })
             .WithMessageAwait(async () => await localizationService.GetResourceAsync("Admin.Fair.Fields.EndsOnUtc.PastDateNotAllowed"));
 
@@ -45,7 +45,7 @@ public class CreateOrUpdateFairValidator : BaseNopValidator<FairAdminModel>
             {
                 if (endsOnUtc.HasValue && fi.StartsOnUtc.HasValue)
                 {
-                    var fromUtc = fi.StartsOnUtc.Value.AddHours(fairSettings.DefaultFairLengthInHours);
+                    var fromUtc = fi.StartsOnUtc.Value.AddHours(fairSettings.DefaultMinimumFairLengthInHours);
                     return endsOnUtc.Value >= fromUtc;
                 }
                 return false;
@@ -53,7 +53,7 @@ public class CreateOrUpdateFairValidator : BaseNopValidator<FairAdminModel>
             .WithMessageAwait(async () =>
             {
                 var format = await localizationService.GetResourceAsync("Admin.Fair.Fields.EndsOnUtc.MinimumLength");
-                return string.Format(format, fairSettings.DefaultFairLengthInHours.ToString());
+                return string.Format(format, fairSettings.DefaultMinimumFairLengthInHours.ToString());
             });
 
         RuleFor(x => x.Published)
