@@ -9,6 +9,7 @@ public partial class KedemMarketFairNameCompatibility : INameCompatibility
         {typeof(Fair), "km_fair" },
         {typeof(FairVendorMap), "km_fairvendormap" },
         {typeof(FairAddressMap), "km_fairaddressmap" },
+        {typeof(FairCustomerFavoriteMap), "km_fair_customer_favorite_map" },
     };
 
     public Dictionary<(Type, string), string> ColumnName => new();

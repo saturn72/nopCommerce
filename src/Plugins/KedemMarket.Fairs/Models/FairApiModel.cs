@@ -14,4 +14,5 @@ public record FairApiModel
     public string Url { get; set; }
     public bool IsVirtual { get; set; }
     public bool IsFavorite { get; set; }
+    public IEnumerable<FairVendorApiModel>? Vendors { get; set; }
 }

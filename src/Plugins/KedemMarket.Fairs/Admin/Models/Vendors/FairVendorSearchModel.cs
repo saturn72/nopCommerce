@@ -2,7 +2,7 @@
 
 namespace KedemMarket.Fairs.Admin.Models.Vendors;
 
-public record  ProductVendorListModel:BasePagedListModel<FairVendorModel>
+public record  ProductVendorListModel:BasePagedListModel<FairVendorAdminModel>
 {
 }
 
@@ -16,5 +16,5 @@ public record FairVendorSearchModel : BaseSearchModel
     //[NopResourceDisplayName("Admin.Fair.Fields.PageSizeOptions")]
     //public string PageSizeOptions { get; set; }
     [NopResourceDisplayName("Admin.Fair.Fields.Vendors")]
-    public IList<FairVendorModel> Vendors { get; set; } = [];
+    public IList<FairVendorAdminModel> Vendors { get; set; } = [];
 }

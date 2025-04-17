@@ -1,4 +1,6 @@
-﻿namespace KedemMarket.Fairs.Admin.Controllers;
+﻿using Nop.Services.Media;
+
+namespace KedemMarket.Fairs.Admin.Controllers;
 
 public class FairController : BaseAdminController
 {
@@ -9,19 +11,25 @@ public class FairController : BaseAdminController
     private readonly IWorkContext _workContext;
     private readonly ILocalizationService _localizationService;
     private readonly INotificationService _notificationService;
+    private readonly TimeProvider _timeProvider;
+    private readonly IPictureService _pictureService;
 
     public FairController(
         IFairFactory fairFactory,
         IFairService fairService,
         IWorkContext workContext,
         ILocalizationService localizationService,
-        INotificationService notificationService)
+        INotificationService notificationService,
+        TimeProvider timeProvider,
+        IPictureService pictureService)
     {
         _fairFactory = fairFactory;
         _fairService = fairService;
         _workContext = workContext;
         _localizationService = localizationService;
         _notificationService = notificationService;
+        _timeProvider = timeProvider;
+        _pictureService = pictureService;
     }
     public static string GetViewPath(string viewName) => VIEW_PATH + viewName;
     public override ViewResult View(string viewName, object model)
@@ -70,6 +78,8 @@ public class FairController : BaseAdminController
             fair.CreatedOnUtc = DateTime.UtcNow;
 
             await _fairService.InsertFairAsync(fair);
+            
+            await UpdatePictureSeoNamesAsync(fair);
 
             var msg = await _localizationService.GetResourceAsync("Admin.Fairs.Added");
             _notificationService.SuccessNotification(msg);
@@ -106,14 +116,19 @@ public class FairController : BaseAdminController
 
         if (ModelState.IsValid)
         {
-            fair.Name = model.Name;
-            fair.Address = fair.IsVirtual ? null : model.Address.ToEntity<Address>();
-            fair.StartsOnUtc = model.StartsOnUtc;
-            fair.EndsOnUtc = model.EndsOnUtc;
-            fair.Published = model.Published;
-            fair.UpdatedOnUtc = DateTime.UtcNow;
+            var prevPictureId = fair.PictureId;
+            fair = model.ToEntity(fair);
+            fair.UpdatedOnUtc = _timeProvider.GetUtcNow().UtcDateTime;
 
             await _fairService.UpdateFairAsync(fair);
+            if (prevPictureId > 0 && prevPictureId != fair.PictureId)
+            {
+                var prevPicture = await _pictureService.GetPictureByIdAsync(prevPictureId);
+                if (prevPicture != null)
+                    await _pictureService.DeletePictureAsync(prevPicture);
+            }
+
+            await UpdatePictureSeoNamesAsync(fair);
 
             var msg = await _localizationService.GetResourceAsync("Admin.Fairs.Updated");
             _notificationService.SuccessNotification(msg);
@@ -232,4 +247,11 @@ public class FairController : BaseAdminController
 
     }
     #endregion
+
+    protected virtual async Task UpdatePictureSeoNamesAsync(Fair fair)
+    {
+        var picture = await _pictureService.GetPictureByIdAsync(fair.PictureId);
+        if (picture != null)
+            await _pictureService.SetSeoFilenameAsync(picture.Id, await _pictureService.GetPictureSeNameAsync(fair.Name));
+    }
 }

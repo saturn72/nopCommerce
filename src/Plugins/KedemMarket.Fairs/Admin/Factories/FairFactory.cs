@@ -5,24 +5,24 @@ public class FairFactory : IFairFactory
     private readonly IFairService _fairService;
     private readonly FairSettings _fairSettings;
     private readonly TimeProvider _timeProvider;
-    private readonly IVendorService _vendorService;
     private readonly IBaseAdminModelFactory _baseAdminModelFactory;
     private readonly ILocalizationService _localizationService;
+    private readonly IVendorService _vendorService;
 
     public FairFactory(
         IFairService fairService,
         FairSettings fairSettings,
         TimeProvider timeProvider,
-        IVendorService vendorService,
         IBaseAdminModelFactory baseAdminModelFactory,
-        ILocalizationService localizationService)
+        ILocalizationService localizationService,
+        IVendorService vendorService)
     {
         _fairService = fairService;
         _fairSettings = fairSettings;
         _timeProvider = timeProvider;
-        _vendorService = vendorService;
         _baseAdminModelFactory = baseAdminModelFactory;
         _localizationService = localizationService;
+        _vendorService = vendorService;
     }
     public Task PrepareFairSearchModelAsync(FairSearchModel searchModel)
     {
@@ -81,25 +81,18 @@ public class FairFactory : IFairFactory
         var pageIndex = searchModel.Page - 1;
         var pageSize = searchModel.PageSize;
 
-        var fvms = await _fairService.GetFairVendorMapsByFairIdAsync(
-            fairId: fair.Id,
-            pageIndex,
-            pageSize);
-
-        var allVendors = fvms.Any() ? (await _vendorService.GetAllVendorsAsync()).ToList() : new List<Vendor>();
-
-        var objList = await fvms.AsQueryable().ToPagedListAsync(pageIndex, pageSize);
+        var vendors = await _fairService.GetVendorsByFairIdAsync(fair.Id);
+        var objList = await vendors.AsQueryable().ToPagedListAsync(pageIndex, pageSize);
         return new ProductVendorListModel().PrepareToGrid(searchModel, objList, () =>
         {
-            var list = new List<FairVendorModel>();
-            foreach (var fvm in fvms)
+            var list = new List<FairVendorAdminModel>();
+            foreach (var vendor in vendors)
             {
-                var vendor = allVendors.FirstOrDefault(x => x.Id == fvm.VendorId);
-                list.Add(new FairVendorModel
+                list.Add(new FairVendorAdminModel
                 {
-                    Id = fvm.Id,
+                    Id = vendor.Id,
                     Name = vendor.Name,
-                    DisplayOrder = fvm.DisplayOrder,
+                    DisplayOrder = vendor.DisplayOrder,
                 });
             }
             ;
@@ -115,27 +108,27 @@ public class FairFactory : IFairFactory
             model.VendorName = v.Name;
             return;
         }
-        var fvms = await _fairService.GetFairVendorMapsByFairIdAsync(model.FairId);
+        var fairVendors = await _fairService.GetVendorsByFairIdAsync(model.FairId);
 
-        var av = new List<SelectListItem>();
-        await _baseAdminModelFactory.PrepareVendorsAsync(av);
+        var vendorList = new List<SelectListItem>();
+        await _baseAdminModelFactory.PrepareVendorsAsync(vendorList);
 
-        if (fvms?.Any() == true)
+        if (fairVendors?.Any() == true)
         {
-            var vendorIds = fvms.Select(f => f.VendorId).Where(x => x != model.VendorId).ToList();
-            av = av.Where(d => !vendorIds.Contains(int.Parse(d.Value))).ToList();
+            var vendorIds = fairVendors.Select(f => f.Id).Where(x => x != model.VendorId).ToList();
+            vendorList = vendorList.Where(d => !vendorIds.Contains(int.Parse(d.Value))).ToList();
         }
 
         if (model.VendorId != 0)
         {
-            av.First(x => model.VendorId == int.Parse(x.Value)).Selected = true;
+            vendorList.First(x => model.VendorId == int.Parse(x.Value)).Selected = true;
         }
-        if (av.Count > 1)
+        if (vendorList.Count > 1)
         {
-            av.RemoveAt(0);
-            av.First().Selected = true;
+            vendorList.RemoveAt(0);
+            vendorList.First().Selected = true;
         }
 
-        model.AvailableVendors = av;
+        model.AvailableVendors = vendorList;
     }
 }

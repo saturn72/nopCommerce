@@ -199,7 +199,7 @@ public class ProductApiFactory : IProductApiFactory
                     {
                         var isp = await _pictureService.GetPictureByIdAsync(attValEntity.ImageSquaresPictureId);
                         if (isp != default)
-                            image = await _mediaConvertor.ToGalleryItemModel(isp, 0);
+                            image = await _mediaConvertor.ToGalleryItemModelAsync(isp, 0);
 
                     }
 
@@ -253,7 +253,7 @@ public class ProductApiFactory : IProductApiFactory
         for (var i = 0; i < pictures.Count(); i++)
         {
             var p = pictures.ElementAt(i);
-            res.Add(await _mediaConvertor.ToGalleryItemModel(p, i));
+            res.Add(await _mediaConvertor.ToGalleryItemModelAsync(p, i));
         }
 
         var videos = await _videoService.GetVideosByProductIdAsync(product.Id);

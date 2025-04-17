@@ -27,7 +27,7 @@ public sealed class MediaConvertor
 
         return await _staticCache.GetAsync(key, async () => await _storageManager.CreateDownloadLinkAsync(path));
     }
-    public async Task<GalleryItemModel> ToGalleryItemModel(Picture picture, int index)
+    public async Task<GalleryItemModel> ToGalleryItemModelAsync(Picture picture, int index)
     {
         picture.ThrowArgumentNullException(nameof(picture));
 
@@ -42,7 +42,7 @@ public sealed class MediaConvertor
         };
     }
 
-    public async Task<GalleryItemModel> ToGalleryItemModel(PictureModel picture, int index)
+    public async Task<GalleryItemModel> ToGalleryItemModelAsync(PictureModel picture, int index)
     {
         return new()
         {

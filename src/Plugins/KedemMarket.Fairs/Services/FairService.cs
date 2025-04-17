@@ -1,7 +1,5 @@
-﻿using KedemMarket.Fairs.Domain;
-using Nop.Core.Caching;
+﻿using Nop.Core.Caching;
 using Nop.Core.Events;
-using Nop.Services.Events;
 
 namespace KedemMarket.Fairs.Services;
 
@@ -10,7 +8,10 @@ public class FairService : IFairService
     private readonly IRepository<Fair> _fairRepository;
     private readonly IRepository<FairAddressMap> _fairAddressMapRepository;
     private readonly IRepository<FairVendorMap> _fairVendorMapRepository;
+    private readonly IRepository<Vendor> _vendorRepository;
     private readonly IRepository<Address> _addressRepository;
+    private readonly IRepository<FairCustomerFavoriteMap> _fairCustomerFavoriteMap;
+
     private readonly TimeProvider _timeProvider;
     private readonly IShortTermCacheManager _shortTermCacheManager;
     private readonly FairCacheSettings _fairCacheSettings;
@@ -24,7 +25,9 @@ public class FairService : IFairService
         IShortTermCacheManager shortTermCacheManager,
         FairCacheSettings fairCacheSettings,
         IRepository<Address> addressRepository,
-        IEventPublisher eventPublisher)
+        IEventPublisher eventPublisher,
+        IRepository<FairCustomerFavoriteMap> fairCustomerFavoriteMap,
+        IRepository<Vendor> vendorRepository)
     {
         _fairRepository = fairRepository;
         _fairAddressMapRepository = fairAddressMapRepository;
@@ -34,6 +37,8 @@ public class FairService : IFairService
         _fairCacheSettings = fairCacheSettings;
         _addressRepository = addressRepository;
         _eventPublisher = eventPublisher;
+        _fairCustomerFavoriteMap = fairCustomerFavoriteMap;
+        _vendorRepository = vendorRepository;
     }
 
     public async Task DeleteFairAsync(Fair fair)
@@ -105,18 +110,18 @@ public class FairService : IFairService
         return await _shortTermCacheManager.GetAsync(() => _fairRepository.Table.Where(c => c.CustomerId == customerId && c.Name == name).ToListAsync(), cacheKey);
     }
 
-    public async Task<FairVendorMap> GetFairVendorMapByIdAsync(int fairVendorMapId)
+    public async Task<FairVendorMap> GetFairVendorMapByIdAsync(int id)
     {
-        return await _fairVendorMapRepository.GetByIdAsync(fairVendorMapId);
+        return await _fairVendorMapRepository.GetByIdAsync(id);
     }
 
-    public async Task<IEnumerable<FairVendorMap>> GetFairVendorMapsByFairIdAsync(int fairId, int pageIndex = 0, int pageSize = int.MaxValue)
+    public async Task<IEnumerable<Vendor>> GetVendorsByFairIdAsync(int fairId)
     {
-        if (fairId <= 0)
-            return [];
-
-        var query = _fairVendorMapRepository.Table.Where(fvm => fvm.FairId == fairId);
-        return await query.ToListAsync();
+        var maps = await _fairVendorMapRepository.Table
+            .Where(x => x.FairId == fairId)
+            .ToListAsync();
+        var vendorIds = maps.Select(x => x.VendorId).ToList();
+        return await _vendorRepository.GetByIdsAsync(vendorIds);
     }
 
     public async Task InsertFairAsync(Fair fair)
@@ -126,6 +131,32 @@ public class FairService : IFairService
     public async Task InsertFairVendorMapAsync(FairVendorMap fairVendorMap)
     {
         await _fairVendorMapRepository.InsertAsync(fairVendorMap);
+    }
+
+    public async Task SetFairFavoriteAsync(Customer customer, Fair fair, bool value)
+    {
+        ThrowIfNull(customer, nameof(customer));
+        ThrowIfNull(fair, nameof(fair));
+
+        var f = await _fairCustomerFavoriteMap.Table.FirstOrDefaultAsync(c => c.CustomerId == customer.Id && c.FairId == fair.Id);
+
+        if (!value)
+        {
+            if (f != null)
+                await _fairCustomerFavoriteMap.DeleteAsync(f);
+        }
+        else
+        {
+            if (f == null)
+            {
+                f = new FairCustomerFavoriteMap
+                {
+                    CustomerId = customer.Id,
+                    FairId = fair.Id,
+                };
+                await _fairCustomerFavoriteMap.InsertAsync(f);
+            }
+        }
     }
 
     public async Task UpdateFairAsync(Fair fair)
