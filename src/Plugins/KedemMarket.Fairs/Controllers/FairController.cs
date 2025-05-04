@@ -10,15 +10,18 @@ public class FairController : KedemMarketApiControllerBase
     private readonly IFairService _fairService;
     private readonly IFairApiFactory _fairApiFactory;
     private readonly IWorkContext _workContext;
+    private readonly IVendorService _vendorService;
 
     public FairController(
         IFairService fairService,
         IFairApiFactory fairApiFactory,
-        IWorkContext workContext)
+        IWorkContext workContext,
+        IVendorService vendorService)
     {
         _fairService = fairService;
         _fairApiFactory = fairApiFactory;
         _workContext = workContext;
+        _vendorService = vendorService;
     }
 
     [HttpGet]
@@ -53,7 +56,7 @@ public class FairController : KedemMarketApiControllerBase
     }
 
     [HttpPut("favorite")]
-    public async Task<IActionResult> SetFairFavoriteAsync([FromBody]SetFairFavoriteRequest request)
+    public async Task<IActionResult> SetFairFavoriteAsync([FromBody] SetFairFavoriteRequest request)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -70,4 +73,26 @@ public class FairController : KedemMarketApiControllerBase
 
         return Ok();
     }
+
+    #region vendor
+    [HttpGet("{fairId}/vendor/{vendorId}")]
+    public async Task<IActionResult> GetVendorFairInfoAsync(int fairId, int vendorId)
+    {
+        var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
+        if (vendor == default)
+            return BadRequest();
+
+        var fair = await _fairService.GetFairByIdAsync(fairId);
+        if (fair == null)
+            return BadRequest();
+
+        var maps = await _fairService.GetFairVendorMapsAsync(fair);
+        var m = maps?.FirstOrDefault();
+        if (m == default)
+            return BadRequest();
+
+        var data = await _fairApiFactory.PrepareFairVendorApiModelAsync(fair, vendor);
+        return ToJsonResult(data);
+    }
+    #endregion
 }

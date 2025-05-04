@@ -1,5 +1,9 @@
 @model CreateOrUpdateFairVendorModel
 
+
+@{
+    var vendor = await WorkContext.GetCurrentVendorAsync();
+}
 <div class="card-body">
     @if (Model.Id == 0)
     {
@@ -23,6 +27,20 @@
             </div>
         </div>
     }
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="AutoApproveProducts" />
+        </div>
+        <div class="col-md-9">
+
+            @{
+                var ha = vendor == default ? new object() : new { disabled = true };
+            }
+            <nop-editor asp-for="AutoApproveProducts" html-attributes="@(ha)" />
+            <span asp-validation-for="AutoApproveProducts"></span>
+        </div>
+    </div>
 
     <div class="form-group row">
         <div class="col-md-3">

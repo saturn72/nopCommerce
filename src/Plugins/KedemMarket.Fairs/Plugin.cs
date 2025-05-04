@@ -265,227 +265,51 @@ public class Plugin : BasePlugin
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fairs.BackTofAIR",
+                ResourceName = "Admin.Fairs.BackToFair",
                 ResourceValue = "Back to Fair"
             },
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.Fairs.Vendors.AddNew",
-            //    ResourceValue = "Add Fair Vendor"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.Fairs.Vendors.Edit",
-            //    ResourceValue = "Edit Fair Vendor"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.Fairs.Vendors.Vendors.AddNew",
-            //    ResourceValue = "Add Vendor to Fair Vendor"
-            //},
-           
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.Fairs.Vendors.Vendors.Deleted",
-            //    ResourceValue = "Vendor was removed from Fair Vendor"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.Fairs.Vendors.Vendors.SaveBeforeEdit",
-            //    ResourceValue = "Save Before Edit"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.Fairs.Vendors.Added",
-            //    ResourceValue = "Fair Vendor Added successfuly"
-            //},
-            
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.Fairs.Vendors.Edit",
-            //    ResourceValue = "Edit Fair Vendor"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Fields.Alt",
-            //    ResourceValue = "Alt"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Fields.Icon",
-            //    ResourceValue = "Icon"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Fields.Icon.Required",
-            //    ResourceValue = "Icon is required"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Fields.ActiveIcon",
-            //    ResourceValue = "Active Icon"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Fields.ActiveIcon.Required",
-            //    ResourceValue = "Active Icon is required"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Fields.Type",
-            //    ResourceValue = "Type"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Fields.Type.Invalid",
-            //    ResourceValue = "Value is invalid"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Fields.Type.Required",
-            //    ResourceValue = "Value is required"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Fields.Value.Required",
-            //    ResourceValue = "Value is required"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Fields.FairInfoId.Required",
-            //    ResourceValue = "Fair Id is required"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Fields.Index",
-            //    ResourceValue = "Index"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Fields.Caption",
-            //    ResourceValue = "Caption"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Fields.Caption.Required",
-            //    ResourceValue = "Caption is required"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Fields.Caption.Unique",
-            //    ResourceValue = "Caption should be unique for fair"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Fields.Tags",
-            //    ResourceValue = "Tags"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Fields.Type",
-            //    ResourceValue = "Type"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Fields.Value",
-            //    ResourceValue = "Value"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Fields.Vendors",
-            //    ResourceValue = "Vendors"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Vendors.Fields.VendorName",
-            //    ResourceValue = "Vendor Name"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Vendors.Fields.IsFeaturedVendor",
-            //    ResourceValue = "Featured Vendor"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Vendors.Fields.DisplayOrder",
-            //    ResourceValue = "Display Order"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.Fairs.Vendors.Info",
-            //    ResourceValue = "Info"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.Fairs.Vendors.Vendors",
-            //    ResourceValue = "Vendors"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.Fairs.Vendors.Vendors.List.SearchVendorName",
-            //    ResourceValue = "Vendor Name"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.Fairs.Vendors.Vendors.List.SearchFairVendor",
-            //    ResourceValue = "Fair Vendor"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.Fairs.Vendors.Vendors.List.SearchVendorId",
-            //    ResourceValue = "Vendor Id"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName ="Admin.FairVendor.Vendors.Fields.Published",
-            //    ResourceValue = "Published"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Vendors.Fields.PublishPhone",
-            //    ResourceValue = "Published Phone"
-            //},
-            //new LocaleStringResource
-            //{
-            //    LanguageId = languageId,
-            //    ResourceName = "Admin.FairVendor.Vendors.Fields.PublishWhatsapp",
-            //    ResourceValue = "Published Whatsapp"
-            //},
+            new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.FairVendor.Fields.Name",
+                ResourceValue = "Name"
+            },
+            new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.FairVendor.Fields.DisplayOrder",
+                ResourceValue = "Display Order"
+            },
+            new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.FairVendor.Fields.AutoApproveProducts",
+                ResourceValue = "Auto Approve Products"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "admin.addproducttofairvendor.fields.searchproductname",
+                ResourceValue = "Product Name"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "admin.addproducttofairvendor.fields.searchproducttypeid",
+                ResourceValue = "Product Type"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "admin.addproducttofairvendor.fields.searchcategory",
+                ResourceValue = "Category"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "admin.addproducttofairvendor.fields.searchmanufacturerid\r\n\r\n",
+                ResourceValue = "Manufacturer"
+            },
         };
     }
 

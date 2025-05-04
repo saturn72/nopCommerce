@@ -6,8 +6,8 @@ public record FairApiModel
     public virtual int Id { get; set; }
     public string Name { get; set; }
     public string Location { get; set; }
-    public DateTime? StartsOnUtc { get; set; }
-    public DateTime? EndsOnUtc { get; set; }
+    public DateTime? StartsOnLocalDateTime { get; set; }
+    public DateTime? EndsOnLocalDateTime { get; set; }
     public GalleryItemModel? Image { get; set; }
     public string? Description { get; set; }
     public IEnumerable<string>? Tags { get; set; }

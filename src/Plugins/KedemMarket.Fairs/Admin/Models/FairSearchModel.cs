@@ -13,4 +13,6 @@ public record FairSearchModel : BaseSearchModel
     public bool? IsPublished { get; set; }
     [NopResourceDisplayName("Admin.Fairs.List.SearchDeletedFilter")]
     public bool? IsDeleted { get; set; } = false;
+    [NopResourceDisplayName("Admin.Fairs.List.SearchVendorsFilter")]
+    public List<int> VendorIds { get; set; } = [];
 }

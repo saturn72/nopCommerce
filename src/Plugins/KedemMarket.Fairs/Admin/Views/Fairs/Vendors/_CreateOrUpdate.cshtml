@@ -1,12 +1,11 @@
+@using KedemMarket.Fairs.Admin.Models.FairVendor
 @using Nop.Web.Areas.Admin.Components
 
 @model CreateOrUpdateFairVendorModel
 
 @{
     var customer = await WorkContext.GetCurrentCustomerAsync();
-
-    //const string hideInfoBlockAttributeName = "FairVendorPage.HideInfoBlock";
-    //var hideInfoBlock = await GenericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+    var vendor = await WorkContext.GetCurrentVendorAsync();
 
     const string hideInfoBlockAttributeName = "FairVendorPage.HideInfoBlock";
     var hideInfoBlock = await GenericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
@@ -33,7 +32,8 @@
                               asp-hide-block-attribute-name="@hideInfoBlockAttributeName"
                               asp-hide="@hideInfoBlock"
                               asp-advanced="false">
-                        @await Html.PartialAsync(FairController.GetViewPath("Vendors/_CreateOrUpdate.Info.cshtml"), Model)
+                    @await Html.PartialAsync(FairController.GetViewPath("Vendors/_CreateOrUpdate.Info.cshtml"), Model)
+                    @await Html.PartialAsync(FairController.GetViewPath("Vendors/_CreateOrUpdate.Products.cshtml"), Model)
                     </nop-card>
                 </nop-cards>
         </div>

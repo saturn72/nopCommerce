@@ -1,7 +1,13 @@
-﻿using Nop.Services.Media;
+﻿using DocumentFormat.OpenXml.EMMA;
+using KedemMarket.Fairs.Domain;
+using Nop.Core.Domain.Vendors;
+using Nop.Services.Catalog;
+using Nop.Services.Media;
+using Nop.Web.Areas.Admin.Models.Catalog;
+using Nop.Web.Framework.Controllers;
 
 namespace KedemMarket.Fairs.Admin.Controllers;
-
+[AutoValidateAntiforgeryToken]
 public class FairController : BaseAdminController
 {
     private const string VIEW_PATH = "~/Plugins/KedemMarket.Fairs/Admin/Views/Fairs/";
@@ -13,6 +19,8 @@ public class FairController : BaseAdminController
     private readonly INotificationService _notificationService;
     private readonly TimeProvider _timeProvider;
     private readonly IPictureService _pictureService;
+    private readonly IVendorService _vendorService;
+    private readonly IProductService _productService;
 
     public FairController(
         IFairFactory fairFactory,
@@ -21,7 +29,9 @@ public class FairController : BaseAdminController
         ILocalizationService localizationService,
         INotificationService notificationService,
         TimeProvider timeProvider,
-        IPictureService pictureService)
+        IPictureService pictureService,
+        IVendorService vendorService,
+        IProductService productService)
     {
         _fairFactory = fairFactory;
         _fairService = fairService;
@@ -30,6 +40,8 @@ public class FairController : BaseAdminController
         _notificationService = notificationService;
         _timeProvider = timeProvider;
         _pictureService = pictureService;
+        _vendorService = vendorService;
+        _productService = productService;
     }
     public static string GetViewPath(string viewName) => VIEW_PATH + viewName;
     public override ViewResult View(string viewName, object model)
@@ -43,7 +55,7 @@ public class FairController : BaseAdminController
         return RedirectToAction(nameof(List), new { offset, pageSize });
     }
 
-    [CheckPermission(FairPermissions.VIEW)]
+    [CheckPermission(FairPermissions.ADMIN_VIEW)]
     public virtual async Task<IActionResult> List([FromQuery] int offset = 0, [FromQuery] int pageSize = 25)
     {
         var model = new FairSearchModel();
@@ -52,14 +64,18 @@ public class FairController : BaseAdminController
     }
 
     [HttpPost]
-    [CheckPermission(FairPermissions.VIEW)]
+    [CheckPermission(FairPermissions.ADMIN_VIEW)]
     public virtual async Task<IActionResult> List(FairSearchModel searchModel)
     {
+        var vendor = await _workContext.GetCurrentVendorAsync();
+        if (vendor != default)
+            searchModel.VendorIds = [vendor.Id];
+
         var model = await _fairFactory.PrepareFairAdminListModelAsync(searchModel);
         return Json(model);
     }
 
-    [CheckPermission(FairPermissions.CREATE)]
+    [CheckPermission(FairPermissions.ADMIN_CREATE)]
     public virtual async Task<IActionResult> Create()
     {
         var model = new FairAdminModel();
@@ -69,7 +85,7 @@ public class FairController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-    [CheckPermission(FairPermissions.CREATE)]
+    [CheckPermission(FairPermissions.ADMIN_CREATE)]
     public virtual async Task<IActionResult> Create(FairAdminModel model, bool continueEditing)
     {
         if (ModelState.IsValid)
@@ -78,7 +94,7 @@ public class FairController : BaseAdminController
             fair.CreatedOnUtc = DateTime.UtcNow;
 
             await _fairService.InsertFairAsync(fair);
-            
+
             await UpdatePictureSeoNamesAsync(fair);
 
             var msg = await _localizationService.GetResourceAsync("Admin.Fairs.Added");
@@ -95,7 +111,7 @@ public class FairController : BaseAdminController
     }
 
 
-    [CheckPermission(FairPermissions.EDIT)]
+    [CheckPermission(FairPermissions.ADMIN_EDIT)]
     public virtual async Task<IActionResult> Edit(int id)
     {
         var fair = await _fairService.GetFairByIdAsync(id);
@@ -107,7 +123,7 @@ public class FairController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-    [CheckPermission(FairPermissions.EDIT)]
+    [CheckPermission(FairPermissions.ADMIN_EDIT)]
     public virtual async Task<IActionResult> Edit(FairAdminModel model, bool continueEditing)
     {
         var fair = await _fairService.GetFairByIdAsync(model.Id);
@@ -144,7 +160,7 @@ public class FairController : BaseAdminController
     }
 
     [HttpPost]
-    [CheckPermission(FairPermissions.DELETE)]
+    [CheckPermission(FairPermissions.ADMIN_DELETE)]
     public virtual async Task<IActionResult> DeleteFair(int id)
     {
         var fair = await _fairService.GetFairByIdAsync(id);
@@ -160,8 +176,8 @@ public class FairController : BaseAdminController
 
     #region Vendors    
     [HttpPost]
-    [CheckPermission(FairPermissions.EDIT)]
-    [CheckPermission(FairPermissions.DELETE)]
+    [CheckPermission(FairPermissions.ADMIN_EDIT)]
+    [CheckPermission(FairPermissions.ADMIN_DELETE)]
     public virtual async Task<IActionResult> FairVendorList(FairVendorSearchModel searchModel)
     {
         var fair = await _fairService.GetFairByIdAsync(searchModel.FairId)
@@ -171,7 +187,7 @@ public class FairController : BaseAdminController
         return Json(list);
     }
 
-    [CheckPermission(FairPermissions.CREATE)]
+    [CheckPermission(FairPermissions.ADMIN_CREATE)]
     public virtual async Task<IActionResult> FairVendorCreate(int fairId)
     {
         var model = new CreateOrUpdateFairVendorModel
@@ -184,7 +200,7 @@ public class FairController : BaseAdminController
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-    [CheckPermission(FairPermissions.CREATE)]
+    [CheckPermission(FairPermissions.ADMIN_CREATE)]
     public virtual async Task<IActionResult> CreateFairVendor(CreateOrUpdateFairVendorModel model, bool continueEditing)
     {
         if (ModelState.IsValid)
@@ -200,7 +216,7 @@ public class FairController : BaseAdminController
         return RedirectToAction(nameof(Edit), new { id = model.FairId });
     }
 
-    [CheckPermission(FairPermissions.EDIT)]
+    [CheckPermission(FairPermissions.ADMIN_EDIT)]
     public virtual async Task<IActionResult> EditFairVendor(int id)
     {
         var fvm = await _fairService.GetFairVendorMapByIdAsync(id);
@@ -210,19 +226,21 @@ public class FairController : BaseAdminController
             VendorId = fvm.VendorId,
             FairId = fvm.FairId,
             DisplayOrder = fvm.DisplayOrder,
+            AutoApproveProducts = fvm.AutoApproveProducts,
         };
         await _fairFactory.PrepareCreateOrUpdateFairVendorModelAsync(model);
         return View("Vendors/Edit.cshtml", model);
     }
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-    [CheckPermission(FairPermissions.EDIT)]
+    [CheckPermission(FairPermissions.ADMIN_EDIT)]
     public virtual async Task<IActionResult> EditFairVendor(CreateOrUpdateFairVendorModel model, bool continueEditing)
     {
         if (ModelState.IsValid)
         {
             var fvm = await _fairService.GetFairVendorMapByIdAsync(model.Id);
             fvm.DisplayOrder = model.DisplayOrder;
+            fvm.AutoApproveProducts = model.AutoApproveProducts;
 
             await _fairService.UpdateFairVendorMapAsync(fvm);
             var msg = await _localizationService.GetResourceAsync("Admin.Fairs.Vendors.Vendor.Updated");
@@ -235,7 +253,7 @@ public class FairController : BaseAdminController
     }
 
     [HttpPost]
-    [CheckPermission(FairPermissions.DELETE)]
+    [CheckPermission(FairPermissions.ADMIN_DELETE)]
     public virtual async Task<IActionResult> DeleteFairVendor(int id)
     {
         var fvm = await _fairService.GetFairVendorMapByIdAsync(id);
@@ -246,6 +264,110 @@ public class FairController : BaseAdminController
         return RedirectToAction("Edit", new { id = fvm.FairId });
 
     }
+
+    [HttpPost]
+    [CheckPermission(FairPermissions.ADMIN_VIEW)]
+    [CheckPermission(FairPermissions.ADMIN_EDIT)]
+    public virtual async Task<IActionResult> GetFairVendorProductList(FairVendorProductSearchModel searchModel)
+    {
+        searchModel.Fair = await _fairService.GetFairByIdAsync(searchModel.FairId);
+        if (searchModel.Fair == null)
+            return BadRequest();
+
+        searchModel.Vendor = await _vendorService.GetVendorByIdAsync(searchModel.VendorId);
+        if (searchModel.Vendor == null)
+            return BadRequest();
+
+        var data = await _fairFactory.PrepareFairVendorProductListModelAsync(searchModel);
+        return Json(data);
+    }
+
+    [CheckPermission(FairPermissions.ADMIN_VIEW)]
+    [CheckPermission(FairPermissions.ADMIN_EDIT)]
+    public virtual async Task<IActionResult> FairVendorProductAddPopup(int fairId, int vendorId)
+    {
+        var model = new AddProductToFairVendorSearchModel
+        {
+            FairId = fairId,
+            VendorId = vendorId
+        };
+        await _fairFactory.PrepareAddProductToFairVendorSearchModelAsync(model);
+
+        return View("Vendors/FairVendorProductAddPopup.cshtml", model);
+    }
+    [HttpPost]
+    [CheckPermission(FairPermissions.ADMIN_VIEW)]
+    [CheckPermission(FairPermissions.ADMIN_EDIT)]
+    public virtual async Task<IActionResult> FairVendorProductAddPopupList(AddProductToFairVendorSearchModel searchModel)
+    {
+        //prepare model
+        var model = await _fairFactory.PrepareAddFairVendorProductAddPopupListAsync(searchModel);
+        return Json(model);
+    }
+
+    [HttpPost]
+    [FormValueRequired("save")]
+    [CheckPermission(FairPermissions.ADMIN_VIEW)]
+    [CheckPermission(FairPermissions.ADMIN_EDIT)]
+    public virtual async Task<IActionResult> FairVendorProductAddPopup(AddProductToFairVendorModel model)
+    {
+        var errorModel = new AddProductToFairVendorSearchModel
+        {
+            FairId = model.FairId,
+            VendorId = model.VendorId
+        };
+
+        var vendor = await _vendorService.GetVendorByIdAsync(model.VendorId);
+        if (vendor == default)
+            return await FairVendorProductAddPopupErrorViewAsync(errorModel, "Admin.Fairs.AddProductToFairVendorModel.InvalidVendor");
+
+        var fair = await _fairService.GetFairByIdAsync(model.FairId);
+        if (fair == null)
+            return await FairVendorProductAddPopupErrorViewAsync(errorModel, "Admin.Fairs.AddProductToFairVendorModel.InvalidFair");
+
+        var productIds = model.SelectedProductIds.ToArray();
+        var vendors = await _vendorService.GetVendorsByProductIdsAsync(productIds);
+        if (vendors?.Count != 1 || vendors.FirstOrDefault() != vendor)
+            return await FairVendorProductAddPopupErrorViewAsync(errorModel, "Admin.Fairs.AddProductToFairVendorModel.InvalidVendor");
+
+        var selectedProducts = await _productService.GetProductsByIdsAsync(productIds);
+        if (selectedProducts.Any())
+        {
+            var maps = await _fairService.GetFairVendorProductMapsAsync(fair, vendor);
+            foreach (var product in selectedProducts)
+            {
+                if (maps.FirstOrDefault(m => m.ProductId == product.Id) != null)
+                    continue;
+
+                //insert the new product category mapping
+                await _fairService.InserFairVendorProductMapAsync(new FairVendorProductMap
+                {
+                    FairId = fair.Id,
+                    VendorId = vendor.Id,
+                    ProductId = product.Id,
+                });
+            }
+        }
+
+        ViewBag.RefreshPage = true;
+        var m = new AddProductToFairVendorSearchModel
+        {
+            FairId = model.FairId,
+            VendorId = model.VendorId
+        };
+        await _fairFactory.PrepareAddProductToFairVendorSearchModelAsync(m);
+        return View("Vendors/FairVendorProductAddPopup.cshtml", m);
+    }
+
+    private async Task<IActionResult> FairVendorProductAddPopupErrorViewAsync(AddProductToFairVendorSearchModel model, string resourceKey)
+    {
+        await _fairFactory.PrepareAddProductToFairVendorSearchModelAsync(model);
+        var msg = await _localizationService.GetResourceAsync(resourceKey);
+        _notificationService.ErrorNotification(msg);
+
+        return View("Vendors/FairVendorProductAddPopup.cshtml", model);
+    }
+
     #endregion
 
     protected virtual async Task UpdatePictureSeoNamesAsync(Fair fair)

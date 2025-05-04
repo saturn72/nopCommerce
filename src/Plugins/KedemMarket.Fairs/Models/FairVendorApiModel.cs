@@ -9,4 +9,5 @@ public record FairVendorApiModel
     public GalleryItemModel? Image { get; set; }
     public string? Description { get; set; }
     public IEnumerable<string>? Tags { get; set; }
+    public IEnumerable<FairVendorProductApiModel>? Products { get; set; }
 }

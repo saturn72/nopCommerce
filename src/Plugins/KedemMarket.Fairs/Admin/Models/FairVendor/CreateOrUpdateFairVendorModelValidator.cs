@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Nop.Web.Framework.Validators;
 
-namespace KedemMarket.Fairs.Admin.Models.Vendors;
+namespace KedemMarket.Fairs.Admin.Models.FairVendor;
 
 public class CreateOrUpdateFairVendorModelValidator : BaseNopValidator<CreateOrUpdateFairVendorModel>
 {

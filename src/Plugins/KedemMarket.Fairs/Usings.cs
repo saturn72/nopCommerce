@@ -1,7 +1,7 @@
 ﻿global using static System.ArgumentNullException;
 global using KedemMarket.Fairs.Admin.Factories;
 global using KedemMarket.Fairs.Admin.Models;
-global using KedemMarket.Fairs.Admin.Models.Vendors;
+global using KedemMarket.Fairs.Admin.Models.FairVendor;
 global using KedemMarket.Fairs.Domain;
 global using KedemMarket.Fairs.Security;
 global using KedemMarket.Fairs.Services;

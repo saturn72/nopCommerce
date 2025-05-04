@@ -10,7 +10,8 @@ public class FairService : IFairService
     private readonly IRepository<FairVendorMap> _fairVendorMapRepository;
     private readonly IRepository<Vendor> _vendorRepository;
     private readonly IRepository<Address> _addressRepository;
-    private readonly IRepository<FairCustomerFavoriteMap> _fairCustomerFavoriteMap;
+    private readonly IRepository<FairCustomerFavoriteMap> _fairCustomerFavoriteMapRepository;
+    private readonly IRepository<FairVendorProductMap> _fairVendorProductMapRepository;
 
     private readonly TimeProvider _timeProvider;
     private readonly IShortTermCacheManager _shortTermCacheManager;
@@ -26,8 +27,9 @@ public class FairService : IFairService
         FairCacheSettings fairCacheSettings,
         IRepository<Address> addressRepository,
         IEventPublisher eventPublisher,
-        IRepository<FairCustomerFavoriteMap> fairCustomerFavoriteMap,
-        IRepository<Vendor> vendorRepository)
+        IRepository<FairCustomerFavoriteMap> fairCustomerFavoriteMapRepository,
+        IRepository<Vendor> vendorRepository,
+        IRepository<FairVendorProductMap> fairVendorProductMapRepository)
     {
         _fairRepository = fairRepository;
         _fairAddressMapRepository = fairAddressMapRepository;
@@ -37,8 +39,9 @@ public class FairService : IFairService
         _fairCacheSettings = fairCacheSettings;
         _addressRepository = addressRepository;
         _eventPublisher = eventPublisher;
-        _fairCustomerFavoriteMap = fairCustomerFavoriteMap;
+        _fairCustomerFavoriteMapRepository = fairCustomerFavoriteMapRepository;
         _vendorRepository = vendorRepository;
+        _fairVendorProductMapRepository = fairVendorProductMapRepository;
     }
 
     public async Task DeleteFairAsync(Fair fair)
@@ -62,12 +65,13 @@ public class FairService : IFairService
         string? name = null,
         bool? isPublished = true,
         bool? isDeleted = null,
+        IEnumerable<int> vendorIds = null,
         DateTime? fromUtc = null,
         DateTime? untilUtc = null,
         int pageSize = int.MaxValue,
         int pageIndex = 0)
     {
-        var fairs = await _fairRepository.GetAllAsync(query =>
+        var fairs = await _fairRepository.GetAllAsync(async query =>
         {
             if (!string.IsNullOrWhiteSpace(name))
                 query = query.Where(c => c.Name.Contains(name));
@@ -78,12 +82,22 @@ public class FairService : IFairService
             if (isDeleted.HasValue)
                 query = query.Where(f => f.Deleted == isDeleted);
 
-            if (!fromUtc.HasValue)
-                fromUtc = _timeProvider.GetUtcNow().UtcDateTime;
-            query = query.Where(f => fromUtc <= f.StartsOnUtc);
+            fromUtc ??= _timeProvider.GetUtcNow().UtcDateTime;
+            query = query.Where(f => fromUtc <= f.StartsOnLocalDateTime);
 
             if (untilUtc.HasValue)
-                query = query.Where(f => untilUtc <= f.EndsOnUtc);
+                query = query.Where(f => untilUtc <= f.EndsOnLocalDateTime);
+
+            if (vendorIds?.Any() == true)
+            {
+                var fairIds = await _fairVendorMapRepository.Table
+                    .Where(m => vendorIds.Contains(m.VendorId))
+                    .Select(m => m.FairId)
+                    .Distinct()
+                    .ToListAsync();
+
+                query = query.Where(c => fairIds.Contains(c.Id));
+            }
 
             return query;
         });
@@ -106,13 +120,25 @@ public class FairService : IFairService
     }
     public async Task<IEnumerable<Fair>> GetFairsByNameAsync(string name, int customerId)
     {
-        var cacheKey = _shortTermCacheManager.PrepareKeyForDefaultCache(_fairCacheSettings.GetCacheKeyByFairName(name, customerId));
+        var cacheKey = _shortTermCacheManager.PrepareKeyForDefaultCache(_fairCacheSettings.GetFairCacheKeyByFairName(name, customerId));
         return await _shortTermCacheManager.GetAsync(() => _fairRepository.Table.Where(c => c.CustomerId == customerId && c.Name == name).ToListAsync(), cacheKey);
     }
 
     public async Task<FairVendorMap> GetFairVendorMapByIdAsync(int id)
     {
         return await _fairVendorMapRepository.GetByIdAsync(id);
+    }
+
+    public async Task<IEnumerable<FairVendorMap>> GetFairVendorMapsAsync(Fair fair)
+    {
+        ThrowIfNull(fair);
+
+        var ck = _fairCacheSettings.GetFairVendorMapsCacheKeyByFairId(fair.Id);
+        var cacheKey = _shortTermCacheManager.PrepareKeyForDefaultCache(ck);
+
+        return await _shortTermCacheManager.GetAsync(
+            () => _fairVendorMapRepository.Table.Where(m => m.FairId == fair.Id).ToListAsync(),
+            cacheKey);
     }
 
     public async Task<IEnumerable<Vendor>> GetVendorsByFairIdAsync(int fairId)
@@ -138,12 +164,12 @@ public class FairService : IFairService
         ThrowIfNull(customer, nameof(customer));
         ThrowIfNull(fair, nameof(fair));
 
-        var f = await _fairCustomerFavoriteMap.Table.FirstOrDefaultAsync(c => c.CustomerId == customer.Id && c.FairId == fair.Id);
+        var f = await _fairCustomerFavoriteMapRepository.Table.FirstOrDefaultAsync(c => c.CustomerId == customer.Id && c.FairId == fair.Id);
 
         if (!value)
         {
             if (f != null)
-                await _fairCustomerFavoriteMap.DeleteAsync(f);
+                await _fairCustomerFavoriteMapRepository.DeleteAsync(f);
         }
         else
         {
@@ -154,7 +180,7 @@ public class FairService : IFairService
                     CustomerId = customer.Id,
                     FairId = fair.Id,
                 };
-                await _fairCustomerFavoriteMap.InsertAsync(f);
+                await _fairCustomerFavoriteMapRepository.InsertAsync(f);
             }
         }
     }
@@ -206,5 +232,30 @@ public class FairService : IFairService
     {
         ThrowIfNull(fairVendorMap, nameof(fairVendorMap));
         await _fairVendorMapRepository.UpdateAsync(fairVendorMap);
+    }
+
+    public async Task<IList<FairVendorProductMap>> GetFairVendorProductMapsAsync(
+        Fair fair,
+        Vendor vendor,
+        bool? isApprovedFilter = null,
+        int pageSize = int.MaxValue,
+        int pageIndex = 0)
+    {
+        //at this point we ignore pagination
+        var p = _fairCacheSettings.GetFairVendorProductMapCacheKey(fair.Name, vendor.Id, pageIndex, pageSize);
+        var cacheKey = _shortTermCacheManager.PrepareKeyForDefaultCache(p);
+
+        return await _shortTermCacheManager.GetAsync(
+            () => _fairVendorProductMapRepository.Table
+                .Where(m => m.FairId == fair.Id && m.VendorId == vendor.Id)
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize)
+                .ToListAsync()
+            , cacheKey);
+    }
+
+    public async Task InserFairVendorProductMapAsync(FairVendorProductMap map)
+    {
+        await _fairVendorProductMapRepository.InsertAsync(map);
     }
 }

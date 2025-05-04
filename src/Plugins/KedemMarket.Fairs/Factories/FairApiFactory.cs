@@ -1,6 +1,8 @@
 ﻿using KedemMarket.Common.Models.Media;
 using KedemMarket.Common.Services.Media;
 using KedemMarket.Fairs.Models;
+using Nop.Core.Domain.Catalog;
+using Nop.Services.Catalog;
 using Nop.Services.Media;
 
 namespace KedemMarket.Fairs.Factories;
@@ -12,6 +14,7 @@ public class FairApiFactory : IFairApiFactory
     private readonly IRepository<Vendor> _vendorRepository;
     private readonly IFairService _fairService;
     private readonly IPictureService _pictureService;
+    private readonly IProductService _productService;
 
     public FairApiFactory(
         MediaConvertor mediaConvertor,
@@ -19,7 +22,8 @@ public class FairApiFactory : IFairApiFactory
         IRepository<FairCustomerFavoriteMap> fairCustomerFavoriteMapRepository,
         IRepository<Vendor> vendorRepository,
         IFairService fairService,
-        IPictureService pictureService)
+        IPictureService pictureService,
+        IProductService productService)
     {
         _mediaConvertor = mediaConvertor;
         _workContext = workContext;
@@ -27,6 +31,7 @@ public class FairApiFactory : IFairApiFactory
         _vendorRepository = vendorRepository;
         _fairService = fairService;
         _pictureService = pictureService;
+        _productService = productService;
     }
     public async Task<FairListApiModel> PrepareFairApiModelListAsync(IEnumerable<Fair> fairs)
     {
@@ -60,17 +65,58 @@ public class FairApiFactory : IFairApiFactory
         return fam;
     }
 
+    public async Task<FairVendorApiModel> PrepareFairVendorApiModelAsync(Fair fair, Vendor vendor)
+    {
+        var pic = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
+        var vi = await _mediaConvertor.ToGalleryItemModelAsync(pic, 0);
+        var maps = await _fairService.GetFairVendorProductMapsAsync(fair, vendor);
+
+        var prodctIds = maps?.Select(map => map.ProductId).ToArray() ?? [];
+        var vendorProducts = await _productService.GetProductsByIdsAsync(prodctIds);
+
+        var products = await vendorProducts.SelectAwait(async vp => await ToFaiVendorProductApiModelAsync(vp)).ToListAsync();
+
+        return new FairVendorApiModel
+        {
+            Id = vendor.Id,
+            Name = vendor.Name,
+            Description = vendor.Description,
+            Image = vi,
+            Products = products
+            //Url = v.Url
+        };
+    }
+
+    private async Task<FairVendorProductApiModel> ToFaiVendorProductApiModelAsync(Product product)
+    {
+
+        var gmi = default(GalleryItemModel);
+        var allProductPictures = await _productService.GetProductPicturesByProductIdAsync(product.Id);
+        var productPicture = allProductPictures?.MinBy(x => x.DisplayOrder);
+        if (productPicture != null)
+        {
+            var picture = await _pictureService.GetPictureByIdAsync(productPicture.PictureId);
+            gmi = await _mediaConvertor.ToGalleryItemModelAsync(picture, 0);
+        }
+
+        return new FairVendorProductApiModel
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Price = product.Price,
+            Description = product.FullDescription,
+            Picture = gmi,
+        };
+    }
 
     private async Task<FairApiModel> BuildCustomerFairApiModel(Fair fair, bool isFavorite, IEnumerable<Vendor> vendors)
     {
-        var vs = vendors?.Select(v => new FairVendorApiModel
+        var vs = new List<FairVendorApiModel>();
+        foreach (var v in vendors)
         {
-            Id = v.Id,
-            Name = v.Name,
-            Description = v.Description,
-            //Image = await _mediaConvertor.ToGalleryItemModel(v.Picture),
-            //Url = v.Url
-        }).ToList();
+            var fvam = await PrepareFairVendorApiModelAsync(fair, v);
+            vs.Add(fvam);
+        }
 
         GalleryItemModel image = null;
         var fairPicture = await _pictureService.GetPictureByIdAsync(fair.PictureId);
@@ -82,14 +128,14 @@ public class FairApiFactory : IFairApiFactory
             Id = fair.Id,
             Name = fair.Name,
             Description = fair.Description,
-            StartsOnUtc = fair.StartsOnUtc,
-            EndsOnUtc = fair.EndsOnUtc,
+            StartsOnLocalDateTime = fair.StartsOnLocalDateTime,
+            EndsOnLocalDateTime = fair.EndsOnLocalDateTime,
             //Tags = fair.Tags,
             Image = image,
             IsVirtual = fair.IsVirtual,
             IsFavorite = isFavorite,
             //Url = fair.Url
-            Vendors = vs ?? [],
+            Vendors = vs,
         };
     }
 }

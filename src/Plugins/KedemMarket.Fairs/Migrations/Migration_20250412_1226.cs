@@ -22,12 +22,12 @@ public class Migration_20250412_1226 : Migration
         KedemMarketFairNameCompatibility nc = new();
         var table = nc.TableNames[typeof(Fair)];
 
-        Alter.Column(nameof(Fair.StartsOnUtc))
+        Alter.Column(nameof(Fair.StartsOnLocalDateTime))
             .OnTable(table)
             .AsDateTime()
             .Nullable();
 
-        Alter.Column(nameof(Fair.EndsOnUtc))
+        Alter.Column(nameof(Fair.EndsOnLocalDateTime))
             .OnTable(table)
             .AsDateTime()
             .Nullable();
@@ -37,11 +37,11 @@ public class Migration_20250412_1226 : Migration
         KedemMarketFairNameCompatibility nc = new();
         var table = nc.TableNames[typeof(Fair)];
 
-        Alter.Column(nameof(Fair.StartsOnUtc))
+        Alter.Column(nameof(Fair.StartsOnLocalDateTime))
             .OnTable(table)
             .AsDateTime();
 
-        Alter.Column(nameof(Fair.EndsOnUtc))
+        Alter.Column(nameof(Fair.EndsOnLocalDateTime))
             .OnTable(table)
             .AsDateTime();
     }

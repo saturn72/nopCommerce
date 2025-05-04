@@ -9,8 +9,8 @@ public class Fair : BaseEntity
     public string Description { get; set; }
     public int PictureId { get; internal set; }
     public bool Published { get; set; }
-    public DateTime? StartsOnUtc { get; set; }
-    public DateTime? EndsOnUtc { get; set; }
+    public DateTime? StartsOnLocalDateTime { get; set; }
+    public DateTime? EndsOnLocalDateTime { get; set; }
     public IList<int> AdminIds { get; set; }
     public IList<int> VendorIds { get; set; } = [];
     public DateTime CreatedOnUtc { get; set; }

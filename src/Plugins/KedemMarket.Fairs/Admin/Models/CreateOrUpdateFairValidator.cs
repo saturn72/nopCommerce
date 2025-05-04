@@ -26,26 +26,26 @@ public class CreateOrUpdateFairValidator : BaseNopValidator<FairAdminModel>
             .WithMessageAwait(localizationService.GetResourceAsync("Admin.Fair.Fields.Name.Unique"));
 
         var curUtc = timeProvider.GetUtcNow().UtcDateTime;
-        RuleFor(x => x.StartsOnUtc)
-            .Must((fi, startsOnUtc) =>
+        RuleFor(x => x.StartsOnLocalDateTime)
+            .Must((fi, sonld) =>
             {
-                return startsOnUtc.HasValue && startsOnUtc >= curUtc;
+                return sonld.HasValue && sonld >= curUtc;
             })
             .WithMessageAwait(async () => await localizationService.GetResourceAsync("Admin.Fair.Fields.StartsOnUtc.PastDateNotAllowed"));
 
-        RuleFor(x => x.EndsOnUtc)
-            .Must((fi, endsOnUtc) =>
+        RuleFor(x => x.EndsOnLocalDateTime)
+            .Must((fi, eold) =>
             {
-                return endsOnUtc.HasValue && endsOnUtc >= curUtc;
+                return eold.HasValue && eold >= curUtc;
             })
             .WithMessageAwait(async () => await localizationService.GetResourceAsync("Admin.Fair.Fields.EndsOnUtc.PastDateNotAllowed"));
 
-        RuleFor(x => x.EndsOnUtc)
+        RuleFor(x => x.EndsOnLocalDateTime)
             .Must((fi, endsOnUtc) =>
             {
-                if (endsOnUtc.HasValue && fi.StartsOnUtc.HasValue)
+                if (endsOnUtc.HasValue && fi.StartsOnLocalDateTime.HasValue)
                 {
-                    var fromUtc = fi.StartsOnUtc.Value.AddHours(fairSettings.DefaultMinimumFairLengthInHours);
+                    var fromUtc = fi.StartsOnLocalDateTime.Value.AddHours(fairSettings.DefaultMinimumFairLengthInHours);
                     return endsOnUtc.Value >= fromUtc;
                 }
                 return false;
@@ -57,7 +57,7 @@ public class CreateOrUpdateFairValidator : BaseNopValidator<FairAdminModel>
             });
 
         RuleFor(x => x.Published)
-           .Must((fi, published) => !published || fi.EndsOnUtc.HasValue)
+           .Must((fi, published) => !published || fi.EndsOnLocalDateTime.HasValue)
            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Fair.Fields.Published.EndsOnUtcRequired"));
     }
 }
