@@ -228,13 +228,14 @@ public class FairFactory : IFairFactory
 
         return new FairVendorProductModel
         {
-            Id = map.Id,
+            Id = map?.Id ?? 0,
             Approved = map?.Approved ?? false,
-            DisplayOrder = map.FairAdminDisplayOrder,
+            DisplayOrder = map?.DisplayOrder ?? 0,
             FairId = fairId,
             FormattedPrice = fp,
-            Name = product.Name,
+            ProductPrice = map?.ProductPrice ?? product.Price,
             ProductId = product.Id,
+            ProductName = product.Name,
             VendorId = vendorId,
         };
     }

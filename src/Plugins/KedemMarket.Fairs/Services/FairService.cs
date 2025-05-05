@@ -234,6 +234,10 @@ public class FairService : IFairService
         await _fairVendorMapRepository.UpdateAsync(fairVendorMap);
     }
 
+    public Task<FairVendorProductMap> GetFairVendorProductMapByIdAsync(int id)
+    {
+        return _fairVendorProductMapRepository.GetByIdAsync(id);
+    }
     public async Task<IList<FairVendorProductMap>> GetFairVendorProductMapsAsync(
         Fair fair,
         Vendor vendor,
@@ -259,5 +263,10 @@ public class FairService : IFairService
     public async Task UpdateFairVendorProductMapsAsync(IList<FairVendorProductMap> maps)
     {
         await _fairVendorProductMapRepository.UpdateAsync(maps);
+    }
+
+    public async Task DeleteFairVendorProductMapsAsync(FairVendorProductMap map)
+    {
+        await _fairVendorProductMapRepository.DeleteAsync(map);
     }
 }

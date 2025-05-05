@@ -2,7 +2,7 @@
   "Group": "Kedem Market",
   "FriendlyName": "Kedem Market Fairs plugin",
   "SystemName": "KedemMarket.Fairs",
-  "Version": "1.0.19",
+  "Version": "1.0.22",
   "SupportedVersions": [ "4.80", "4.90" ],
   "Author": "Saturn72",
   "DisplayOrder": 1,

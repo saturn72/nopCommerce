@@ -1,8 +1,7 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using Nop.Services.Catalog;
+﻿using Nop.Services.Catalog;
 using Nop.Services.Media;
 using Nop.Web.Framework.Controllers;
-using static Google.Apis.Requests.RequestError;
+using Nop.Web.Framework.Mvc;
 
 namespace KedemMarket.Fairs.Admin.Controllers;
 [AutoValidateAntiforgeryToken]
@@ -379,9 +378,11 @@ public class FairController : BaseAdminController
                     FairId = fair.Id,
                     VendorId = vendor.Id,
                     ProductId = product.Id,
+                    ProductName = product.Name,
                     Approved = autoApproved,
                     ApprovedOnUtc = approvedOnUtc,
                     IsAutoApproved = autoApproved.Value,
+                    ProductPrice = product.Price,
                 });
             }
 
@@ -401,6 +402,17 @@ public class FairController : BaseAdminController
         return View("Vendors/FairVendorProductAddPopup.cshtml", m);
     }
 
+    [HttpPost]
+    [CheckPermission(FairPermissions.ADMIN_DELETE)]
+    public async Task<IActionResult> DeleteFairVendorProduct(int id)
+    {
+        var map = await _fairService.GetFairVendorProductMapByIdAsync(id);
+        if (map == default)
+            return BadRequest();
+
+        await _fairService.DeleteFairVendorProductMapsAsync(map);
+        return new NullJsonResult();
+    }
     private async Task<IActionResult> FairVendorProductAddPopupErrorViewAsync(AddProductToFairVendorSearchModel model, string resourceKey)
     {
         await _fairFactory.PrepareAddProductToFairVendorSearchModelAsync(model);
@@ -410,6 +422,22 @@ public class FairController : BaseAdminController
         return View("Vendors/FairVendorProductAddPopup.cshtml", model);
     }
 
+    [HttpPost]
+    [CheckPermission(FairPermissions.ADMIN_VIEW)]
+    [CheckPermission(FairPermissions.ADMIN_EDIT)]
+    public virtual async Task<IActionResult> EditFairVendorProduct(FairVendorProductModel model)
+    {
+        var map = await _fairService.GetFairVendorProductMapByIdAsync(model.Id);
+        if (map == default)
+            return BadRequest();
+
+        map.DisplayOrder = model.DisplayOrder;
+        map.ProductName = model.ProductName;
+        map.ProductPrice = model.ProductPrice;
+
+        await _fairService.UpdateFairVendorProductMapsAsync([map]);
+        return new NullJsonResult();
+    }
     #endregion
 
     protected virtual async Task UpdatePictureSeoNamesAsync(Fair fair)

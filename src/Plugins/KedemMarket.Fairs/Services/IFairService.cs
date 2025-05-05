@@ -31,4 +31,6 @@ public interface IFairService
         int pageIndex = 0);
     public Task InsertFairVendorProductMapsAsync(IList<FairVendorProductMap> maps);
     public Task UpdateFairVendorProductMapsAsync(IList<FairVendorProductMap> maps);
+    public Task DeleteFairVendorProductMapsAsync(FairVendorProductMap map);
+    public Task<FairVendorProductMap> GetFairVendorProductMapByIdAsync(int id);
 }
