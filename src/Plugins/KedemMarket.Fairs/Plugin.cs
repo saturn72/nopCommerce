@@ -313,31 +313,31 @@ public class Plugin : BasePlugin
              new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fairs.FairVendorProduct.addnew",
-                ResourceValue = "Add New Product to Fair"
+                ResourceName = "Admin.Fairs.FairVendorProduct.Add",
+                ResourceValue = "Add Product to Fair"
             },
              new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.FairVendorProductModel.Fields.Name",
+                ResourceName = "Admin.FairVendorProduct.Fields.Name",
                 ResourceValue = "Product Name"
             },
              new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.FairVendorProductModel.Fields.Approved",
+                ResourceName = "Admin.FairVendorProduct.Fields.Approved",
                 ResourceValue = "Approved"
             },
              new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.FairVendorProductModel.Fields.DisplayOrder",
+                ResourceName = "Admin.FairVendorProduct.Fields.DisplayOrder",
                 ResourceValue = "Display Order"
             },
              new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.FairVendorProductModel.Fields.Price",
+                ResourceName = "Admin.FairVendorProduct.Fields.Price",
                 ResourceValue = "Price"
             },
         };
