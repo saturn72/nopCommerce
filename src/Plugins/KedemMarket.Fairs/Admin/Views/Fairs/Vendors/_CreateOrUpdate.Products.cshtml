@@ -25,9 +25,9 @@
     EditType = EditType.String
     },
 
-    new ColumnProperty(nameof(FairVendorProductModel.Price))
+    new ColumnProperty(nameof(FairVendorProductModel.Approved))
     {
-    Title = T("Admin.FairVendorProductModel.Fields.Price").Text,
+    Title = T("Admin.FairVendorProductModel.Fields.Approved").Text,
     Width = "100",
     ClassName = NopColumnClassDefaults.CenterAll,
     Render = new RenderBoolean(),
@@ -41,6 +41,10 @@
     ClassName = NopColumnClassDefaults.CenterAll,
     Editable = true,
     EditType = EditType.String
+    },
+    new ColumnProperty(nameof(FairVendorProductModel.FormattedPrice))
+    {
+    Title = T("Admin.FairVendorProductModel.Fields.Price").Text,
     },
     new ColumnProperty(nameof(FairVendorProductModel.Id))
     {

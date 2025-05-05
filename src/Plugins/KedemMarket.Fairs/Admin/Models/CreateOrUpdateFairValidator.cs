@@ -13,7 +13,7 @@ public class CreateOrUpdateFairValidator : BaseNopValidator<FairAdminModel>
     {
         RuleFor(x => x.Name)
             .NotEmpty()
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Fair.Fields.Name.Required"));
+            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Fairs.Fields.Name.Required"));
 
         RuleFor(x => x.Name)
             .MustAwait(async (f, ct) =>
@@ -23,7 +23,7 @@ public class CreateOrUpdateFairValidator : BaseNopValidator<FairAdminModel>
                 return fairs == null || fairs.Count() == 0 || (fairs.Count() == 1 && fairs.First().Id == f.Id);
                 ;
             })
-            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Fair.Fields.Name.Unique"));
+            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Fairs.Fields.Name.Unique"));
 
         var curUtc = timeProvider.GetUtcNow().UtcDateTime;
         RuleFor(x => x.StartsOnLocalDateTime)
@@ -31,14 +31,14 @@ public class CreateOrUpdateFairValidator : BaseNopValidator<FairAdminModel>
             {
                 return sonld.HasValue && sonld >= curUtc;
             })
-            .WithMessageAwait(async () => await localizationService.GetResourceAsync("Admin.Fair.Fields.StartsOnUtc.PastDateNotAllowed"));
+            .WithMessageAwait(async () => await localizationService.GetResourceAsync("Admin.Fairs.Fields.StartsOnUtc.PastDateNotAllowed"));
 
         RuleFor(x => x.EndsOnLocalDateTime)
             .Must((fi, eold) =>
             {
                 return eold.HasValue && eold >= curUtc;
             })
-            .WithMessageAwait(async () => await localizationService.GetResourceAsync("Admin.Fair.Fields.EndsOnUtc.PastDateNotAllowed"));
+            .WithMessageAwait(async () => await localizationService.GetResourceAsync("Admin.Fairs.Fields.EndsOnUtc.PastDateNotAllowed"));
 
         RuleFor(x => x.EndsOnLocalDateTime)
             .Must((fi, endsOnUtc) =>
@@ -52,12 +52,12 @@ public class CreateOrUpdateFairValidator : BaseNopValidator<FairAdminModel>
             })
             .WithMessageAwait(async () =>
             {
-                var format = await localizationService.GetResourceAsync("Admin.Fair.Fields.EndsOnUtc.MinimumLength");
+                var format = await localizationService.GetResourceAsync("Admin.Fairs.Fields.EndsOnUtc.MinimumLength");
                 return string.Format(format, fairSettings.DefaultMinimumFairLengthInHours.ToString());
             });
 
         RuleFor(x => x.Published)
            .Must((fi, published) => !published || fi.EndsOnLocalDateTime.HasValue)
-           .WithMessageAwait(localizationService.GetResourceAsync("Admin.Fair.Fields.Published.EndsOnUtcRequired"));
+           .WithMessageAwait(localizationService.GetResourceAsync("Admin.Fairs.Fields.Published.EndsOnUtcRequired"));
     }
 }

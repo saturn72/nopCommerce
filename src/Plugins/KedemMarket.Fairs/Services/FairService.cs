@@ -245,17 +245,19 @@ public class FairService : IFairService
         var p = _fairCacheSettings.GetFairVendorProductMapCacheKey(fair.Name, vendor.Id, pageIndex, pageSize);
         var cacheKey = _shortTermCacheManager.PrepareKeyForDefaultCache(p);
 
-        return await _shortTermCacheManager.GetAsync(
-            () => _fairVendorProductMapRepository.Table
-                .Where(m => m.FairId == fair.Id && m.VendorId == vendor.Id)
-                .Skip(pageIndex * pageSize)
-                .Take(pageSize)
-                .ToListAsync()
-            , cacheKey);
+        return await _shortTermCacheManager.GetAsync(() => _fairVendorProductMapRepository.Table
+                    .Where(m => m.FairId == fair.Id && m.VendorId == vendor.Id)
+                    .Skip(pageIndex * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync(), cacheKey);
     }
 
-    public async Task InserFairVendorProductMapAsync(FairVendorProductMap map)
+    public async Task InsertFairVendorProductMapsAsync(IList<FairVendorProductMap> maps)
     {
-        await _fairVendorProductMapRepository.InsertAsync(map);
+        await _fairVendorProductMapRepository.InsertAsync(maps);
+    }
+    public async Task UpdateFairVendorProductMapsAsync(IList<FairVendorProductMap> maps)
+    {
+        await _fairVendorProductMapRepository.UpdateAsync(maps);
     }
 }

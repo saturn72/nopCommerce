@@ -1,9 +1,8 @@
-﻿using Nop.Web.Areas.Admin.Models.Catalog;
-using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace KedemMarket.Fairs.Admin.Models.FairVendor;
 
-public partial record FairVendorProductAddPopupListModel : BasePagedListModel<ProductModel>
+public partial record FairVendorProductAddPopupListModel : BasePagedListModel<FairVendorProductModel>
 {
 }
 

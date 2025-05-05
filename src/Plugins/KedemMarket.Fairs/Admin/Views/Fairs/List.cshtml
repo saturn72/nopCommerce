@@ -8,7 +8,7 @@
 @inject IGenericAttributeService genericAttributeService
 
 @{
-    ViewBag.PageTitle = T("Admin.Fair.List").Text;
+    ViewBag.PageTitle = T("Admin.Fairs.List").Text;
     nopHtml.SetActiveMenuItemSystemName("Fair");
 }
 @{
@@ -18,7 +18,7 @@
 
 <div class="content-header clearfix">
     <h1 class="float-left">
-        @T("Admin.Fair.List")
+        @T("Admin.Fairs.List")
     </h1>
     <div class="float-right">
         <a asp-action="Create" class="btn btn-primary">
@@ -120,7 +120,7 @@
                         },
                         new ColumnProperty(nameof(FairAdminModel.Name))
                         {
-                        Title = T("Admin.Fair.Fields.Name").Text,
+                        Title = T("Admin.Fairs.Fields.Name").Text,
                         Width = "100",
                         ClassName = NopColumnClassDefaults.CenterAll,
                         },
@@ -185,7 +185,7 @@
                     <div class="modal-body">
                         <ul class="common-list">
                             <li>
-                                <em>@T("Admin.Fair.List.ImportFromExcelTip")</em>
+                                <em>@T("Admin.Fairs.List.ImportFromExcelTip")</em>
                             </li>
                             <li>
                                 <em>@T("Admin.Common.ImportFromExcel.ManyRecordsWarning")</em>

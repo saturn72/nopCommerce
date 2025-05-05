@@ -12,4 +12,6 @@ public class FairVendorProductMap : BaseEntity
     public bool IsAutoApproved { get; set; }
     public int FairAdminDisplayOrder { get; set; }
     public int FairVendorDisplayOrder { get; set; }
+    public decimal? ProductPrice { get; set; }
+
 }

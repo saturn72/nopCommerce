@@ -1,5 +1,5 @@
-﻿using Nop.Services.Catalog;
-using Nop.Web.Areas.Admin.Models.Catalog;
+﻿using Nop.Core.Domain.Catalog;
+using Nop.Services.Catalog;
 
 namespace KedemMarket.Fairs.Admin.Factories;
 
@@ -12,6 +12,7 @@ public class FairFactory : IFairFactory
     private readonly IVendorService _vendorService;
     private readonly IProductService _productService;
     private readonly FairAdminSettings _fairAdminSettings;
+    private readonly IPriceFormatter _priceFormatter;
 
     public FairFactory(
         IFairService fairService,
@@ -20,7 +21,8 @@ public class FairFactory : IFairFactory
         IBaseAdminModelFactory baseAdminModelFactory,
         IVendorService vendorService,
         IProductService productService,
-        FairAdminSettings fairAdminSettings)
+        FairAdminSettings fairAdminSettings,
+        IPriceFormatter priceFormatter)
     {
         _fairService = fairService;
         _fairSettings = fairSettings;
@@ -29,6 +31,7 @@ public class FairFactory : IFairFactory
         _vendorService = vendorService;
         _productService = productService;
         _fairAdminSettings = fairAdminSettings;
+        _priceFormatter = priceFormatter;
     }
     public Task PrepareFairSearchModelAsync(FairSearchModel searchModel)
     {
@@ -163,33 +166,41 @@ public class FairFactory : IFairFactory
                 return maps.SelectAwait(async m =>
                 {
                     var p = await _productService.GetProductByIdAsync(m.ProductId);
-                    return new FairVendorProductModel
-                    {
-                        Id = m.Id,
-                        FairId = searchModel.FairId,
-                        Name = p.Name,
-                        ProductId = p.Id,
-                        VendorId = searchModel.VendorId,
-                        DisplayOrder = m.FairAdminDisplayOrder,
-                        Price = p.Price
-                    };
+                    return await ToFairVendorProductModel(searchModel.FairId, searchModel.VendorId, p, m);
                 });
             });
         return model;
     }
-    public async Task PrepareAddProductToFairVendorSearchModelAsync(AddProductToFairVendorSearchModel model)
+
+    private async Task<(Fair Fair, Vendor Vendor, FairVendorMap fairVendorMap)> GetFair_Vendor_FairVendorMapOrThrow(int fairId, int vendorId)
     {
-        await _baseAdminModelFactory.PrepareProductTypesAsync(model.AvailableProductTypes ??= []);
-        await _baseAdminModelFactory.PrepareCategoriesAsync(model.AvailableCategories ??= []);
-        await _baseAdminModelFactory.PrepareManufacturersAsync(model.AvailableManufacturers ??= []);
-        model.SetPopupGridPageSize();
+        var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
+        ThrowIfNull(vendor, nameof(vendor));
 
+        var fair = await _fairService.GetFairByIdAsync(fairId);
+        ThrowIfNull(fair, nameof(fair));
 
+        var allFairVendorMaps = await _fairService.GetFairVendorMapsAsync(fair);
+        var fairVendorMap = allFairVendorMaps.FirstOrDefault(c => c.VendorId == vendor.Id);
+        ThrowIfNull(fairVendorMap, nameof(fairVendorMap));
+
+        return (fair, vendor, fairVendorMap);
+    }
+
+    public async Task PrepareAddProductToFairVendorSearchModelAsync(AddProductToFairVendorSearchModel searchModel)
+    {
+        var _ = await GetFair_Vendor_FairVendorMapOrThrow(searchModel.FairId, searchModel.VendorId);
+
+        await _baseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes ??= []);
+        await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories ??= []);
+        await _baseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers ??= []);
+        searchModel.SetPopupGridPageSize();
     }
 
     public async Task<FairVendorProductAddPopupListModel> PrepareAddFairVendorProductAddPopupListAsync(AddProductToFairVendorSearchModel searchModel)
     {
-        ThrowIfNull(searchModel);
+        ThrowIfNull(searchModel, nameof(searchModel));
+        var (fair, vendor, fairVendorMap) = await GetFair_Vendor_FairVendorMapOrThrow(searchModel.FairId, searchModel.VendorId);
 
         var products = await _productService.SearchProductsAsync(showHidden: true,
             categoryIds: new List<int> { searchModel.SearchCategoryId },
@@ -199,9 +210,32 @@ public class FairFactory : IFairFactory
             keywords: searchModel.SearchProductName,
             pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
-        var model = new FairVendorProductAddPopupListModel().PrepareToGrid(searchModel, products, () => products.Select(p => p.ToModel<ProductModel>()));
+        var maps = await _fairService.GetFairVendorProductMapsAsync(fair, vendor);
 
-        return model;
+        return await new FairVendorProductAddPopupListModel().PrepareToGridAsync(
+            searchModel,
+            products,
+            () => products.SelectAwait(async p =>
+            {
+                var m = maps.FirstOrDefault(s => s.ProductId == p.Id);
+                return await ToFairVendorProductModel(fairId: searchModel.FairId, vendorId: searchModel.VendorId, p, m);
+            }));
     }
 
+    private async Task<FairVendorProductModel> ToFairVendorProductModel(int fairId, int vendorId, Product product, FairVendorProductMap map)
+    {
+        var fp = product.ProductType == ProductType.GroupedProduct ? null : await _priceFormatter.FormatPriceAsync(map?.ProductPrice ?? product.Price);
+
+        return new FairVendorProductModel
+        {
+            Id = map.Id,
+            Approved = map?.Approved ?? false,
+            DisplayOrder = map.FairAdminDisplayOrder,
+            FairId = fairId,
+            FormattedPrice = fp,
+            Name = product.Name,
+            ProductId = product.Id,
+            VendorId = vendorId,
+        };
+    }
 }

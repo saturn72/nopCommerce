@@ -45,7 +45,7 @@ public class Plugin : BasePlugin
         new LocaleStringResource
         {
                 LanguageId = languageId,
-                ResourceName = "admin.fair.list",
+                ResourceName = "Admin.Fairs.list",
                 ResourceValue = "Fairs list"
             },
         new LocaleStringResource {
@@ -90,110 +90,110 @@ public class Plugin : BasePlugin
              new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.StartsOnUtc",
+                ResourceName = "Admin.Fairs.Fields.StartsOnUtc",
                 ResourceValue = "Starts On Utc"
             },
              new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.EndsOnUtc",
+                ResourceName = "Admin.Fairs.Fields.EndsOnUtc",
                 ResourceValue = "Ends On Utc"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.EndsOnUtc.MinimumLength",
+                ResourceName = "Admin.Fairs.Fields.EndsOnUtc.MinimumLength",
                 ResourceValue = "Ends On Utc field does not match the minimum length requirements of {0} hours"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.Name",
+                ResourceName = "Admin.Fairs.Fields.Name",
                 ResourceValue = "Name"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.Name.Required",
+                ResourceName = "Admin.Fairs.Fields.Name.Required",
                 ResourceValue = "Name required"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.Name.Unique",
+                ResourceName = "Admin.Fairs.Fields.Name.Unique",
                 ResourceValue = "Fair with same name already exist. Fair names must be unique"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.Published.EndsOnUtcRequired",
+                ResourceName = "Admin.Fairs.Fields.Published.EndsOnUtcRequired",
                 ResourceValue = "Publish event requires valid Ends On Utc value"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.Vendors",
+                ResourceName = "Admin.Fairs.Fields.Vendors",
                 ResourceValue = "Vendors"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.DisplayOrder",
+                ResourceName = "Admin.Fairs.Fields.DisplayOrder",
                 ResourceValue = "Display Order"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.Published",
+                ResourceName = "Admin.Fairs.Fields.Published",
                 ResourceValue = "Published"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.Description",
+                ResourceName = "Admin.Fairs.Fields.Description",
                 ResourceValue = "Description"
             },
 
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.PageSize",
+                ResourceName = "Admin.Fairs.Fields.PageSize",
                 ResourceValue = "PageSize"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.AllowCustomersToSelectPageSize",
+                ResourceName = "Admin.Fairs.Fields.AllowCustomersToSelectPageSize",
                 ResourceValue = "Allow Customers To Select Page Size"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.PageSizeOptions",
+                ResourceName = "Admin.Fairs.Fields.PageSizeOptions",
                 ResourceValue = "Page Size Options"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.Vendors",
+                ResourceName = "Admin.Fairs.Fields.Vendors",
                 ResourceValue = "Vendors"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.Vendors.None",
+                ResourceName = "Admin.Fairs.Fields.Vendors.None",
                 ResourceValue = "-"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.Deleted",
+                ResourceName = "Admin.Fairs.Fields.Deleted",
                 ResourceValue = "Deleted"
             },
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.LimitedToStores",
+                ResourceName = "Admin.Fairs.Fields.LimitedToStores",
                 ResourceValue = "Limited To Stores"
             },
             new LocaleStringResource
@@ -205,7 +205,7 @@ public class Plugin : BasePlugin
             new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fair.Fields.Id.Invalid",
+                ResourceName = "Admin.Fairs.Fields.Id.Invalid",
                 ResourceValue = "Invalid Id Value"
             },
             new LocaleStringResource
@@ -307,8 +307,38 @@ public class Plugin : BasePlugin
              new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "admin.addproducttofairvendor.fields.searchmanufacturerid\r\n\r\n",
+                ResourceName = "admin.addproducttofairvendor.fields.searchmanufacturerid",
                 ResourceValue = "Manufacturer"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.Fairs.FairVendorProduct.addnew",
+                ResourceValue = "Add New Product to Fair"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.FairVendorProductModel.Fields.Name",
+                ResourceValue = "Product Name"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.FairVendorProductModel.Fields.Approved",
+                ResourceValue = "Approved"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.FairVendorProductModel.Fields.DisplayOrder",
+                ResourceValue = "Display Order"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.FairVendorProductModel.Fields.Price",
+                ResourceValue = "Price"
             },
         };
     }

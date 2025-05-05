@@ -1,10 +1,8 @@
-﻿using DocumentFormat.OpenXml.EMMA;
-using KedemMarket.Fairs.Domain;
-using Nop.Core.Domain.Vendors;
+﻿using Microsoft.IdentityModel.Tokens;
 using Nop.Services.Catalog;
 using Nop.Services.Media;
-using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Controllers;
+using static Google.Apis.Requests.RequestError;
 
 namespace KedemMarket.Fairs.Admin.Controllers;
 [AutoValidateAntiforgeryToken]
@@ -291,6 +289,19 @@ public class FairController : BaseAdminController
             FairId = fairId,
             VendorId = vendorId
         };
+        var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
+        if (vendor == default)
+            return await FairVendorProductAddPopupErrorViewAsync(model, "Admin.Fairs.AddProductToFairVendorModel.InvalidVendor");
+
+        var fair = await _fairService.GetFairByIdAsync(model.FairId);
+        if (fair == null)
+            return await FairVendorProductAddPopupErrorViewAsync(model, "Admin.Fairs.AddProductToFairVendorModel.InvalidFair");
+
+        var allFairVendorMaps = await _fairService.GetFairVendorMapsAsync(fair);
+        var fairVendorMap = allFairVendorMaps.FirstOrDefault(c => c.VendorId == vendor.Id);
+        if (fairVendorMap == null)
+            return await FairVendorProductAddPopupErrorViewAsync(model, "Admin.Fairs.AddProductToFairVendorModel.InvalidVendor");
+
         await _fairFactory.PrepareAddProductToFairVendorSearchModelAsync(model);
 
         return View("Vendors/FairVendorProductAddPopup.cshtml", model);
@@ -325,28 +336,59 @@ public class FairController : BaseAdminController
         if (fair == null)
             return await FairVendorProductAddPopupErrorViewAsync(errorModel, "Admin.Fairs.AddProductToFairVendorModel.InvalidFair");
 
+        var allFairVendorMaps = await _fairService.GetFairVendorMapsAsync(fair);
+        var fairVendorMap = allFairVendorMaps.FirstOrDefault(c => c.VendorId == vendor.Id);
+        if (fairVendorMap == null)
+            return await FairVendorProductAddPopupErrorViewAsync(errorModel, "Admin.Fairs.AddProductToFairVendorModel.InvalidVendor");
+
         var productIds = model.SelectedProductIds.ToArray();
         var vendors = await _vendorService.GetVendorsByProductIdsAsync(productIds);
-        if (vendors?.Count != 1 || vendors.FirstOrDefault() != vendor)
+        if (vendors?.Count != 1 || vendors.FirstOrDefault()?.Id != model.VendorId)
             return await FairVendorProductAddPopupErrorViewAsync(errorModel, "Admin.Fairs.AddProductToFairVendorModel.InvalidVendor");
+
+        var autoApproved = default(bool?);
+        var approvedOnUtc = default(DateTime?);
+        if (fairVendorMap.AutoApproveProducts)
+        {
+            autoApproved = true;
+            approvedOnUtc = _timeProvider.GetUtcNow().UtcDateTime;
+        }
 
         var selectedProducts = await _productService.GetProductsByIdsAsync(productIds);
         if (selectedProducts.Any())
         {
             var maps = await _fairService.GetFairVendorProductMapsAsync(fair, vendor);
+            var toInsert = new List<FairVendorProductMap>();
+            var toUpdate = new List<FairVendorProductMap>();
             foreach (var product in selectedProducts)
             {
-                if (maps.FirstOrDefault(m => m.ProductId == product.Id) != null)
+                var existMap = maps.FirstOrDefault(m => m.ProductId == product.Id);
+                if (existMap != null)
+                {
+                    if (existMap.Approved != true && autoApproved == true)
+                    {
+                        existMap.Approved = autoApproved;
+                        existMap.ApprovedOnUtc = approvedOnUtc;
+                        toUpdate.Add(existMap);
+                    }
                     continue;
+                }
 
-                //insert the new product category mapping
-                await _fairService.InserFairVendorProductMapAsync(new FairVendorProductMap
+                toInsert.Add(new()
                 {
                     FairId = fair.Id,
                     VendorId = vendor.Id,
                     ProductId = product.Id,
+                    Approved = autoApproved,
+                    ApprovedOnUtc = approvedOnUtc,
+                    IsAutoApproved = autoApproved.Value,
                 });
             }
+
+            if (toUpdate.Count > 0)
+                await _fairService.UpdateFairVendorProductMapsAsync(toUpdate);
+            if (toInsert.Count > 0)
+                await _fairService.InsertFairVendorProductMapsAsync(toInsert);
         }
 
         ViewBag.RefreshPage = true;

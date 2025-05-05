@@ -29,5 +29,6 @@ public interface IFairService
         bool? isApprovedFilter = null,
         int pageSize = int.MaxValue,
         int pageIndex = 0);
-    public Task InserFairVendorProductMapAsync(FairVendorProductMap map);
+    public Task InsertFairVendorProductMapsAsync(IList<FairVendorProductMap> maps);
+    public Task UpdateFairVendorProductMapsAsync(IList<FairVendorProductMap> maps);
 }

@@ -1,6 +1,4 @@
 ﻿
-using Nop.Web.Areas.Admin.Models.Catalog;
-
 namespace KedemMarket.Fairs.Admin.Factories;
 public interface IFairFactory
 {

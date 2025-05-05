@@ -1,6 +1,5 @@
 ﻿using FluentMigrator;
 using FluentMigrator.Builders.Create.Table;
-using KedemMarket.Domain.User;
 using Nop.Data.Extensions;
 using Nop.Data.Mapping.Builders;
 

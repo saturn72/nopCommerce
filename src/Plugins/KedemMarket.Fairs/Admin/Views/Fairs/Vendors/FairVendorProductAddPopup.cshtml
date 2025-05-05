@@ -5,7 +5,7 @@
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.PageTitle = T("Admin.Fair.FairVenorProduct.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Fairs.FairVenorProduct.AddNew").Text;
 }
 
 @if (ViewBag.RefreshPage == true)
@@ -18,13 +18,14 @@
 }
 else
 {
-    <form asp-controller="Category" asp-action="ProductAddPopup"
-          asp-route-categoryId="@Context.Request.Query["categoryId"]"
+    <form asp-controller="Fair" asp-action="FairVendorProductAddPopup"
+          asp-route-fairId="@Context.Request.Query["fairId"]"
+          asp-route-vendorId="@Context.Request.Query["vendorId"]"
           asp-route-btnId="@Context.Request.Query["btnId"]"
           asp-route-formId="@Context.Request.Query["formId"]">
         <div class="content-header clearfix">
             <h1 class="float-left">
-                @T("Admin.Fair.FairVenorProduct.AddNew")
+                @T("Admin.Fairs.FairVenorProduct.AddNew")
             </h1>
             <div class="float-right">
                 &nbsp;
@@ -112,20 +113,20 @@ else
                             },
                            ColumnCollection = new List<ColumnProperty>
                             {
-                            new ColumnProperty(nameof(ProductModel.Id))
+                            new ColumnProperty(nameof(FairVendorProductModel.ProductId))
                             {
                             IsMasterCheckBox = true,
-                            Render = new RenderCheckBox(nameof(AddProductToCategoryModel.SelectedProductIds)),
+                            Render = new RenderCheckBox(nameof(AddProductToCategoryModel.SelectedProductIds), nameof(FairVendorProductModel.ProductId)),
                             ClassName = NopColumnClassDefaults.CenterAll,
                             Width = "50"
                             },
-                            new ColumnProperty(nameof(ProductModel.Name))
+                            new ColumnProperty(nameof(FairVendorProductModel.Name))
                             {
-                            Title = T("Admin.Catalog.Products.Fields.Name").Text
+                            Title = T("Admin.Fairs.FairVendorProductModel.Fields.Name").Text
                             },
-                            new ColumnProperty(nameof(ProductModel.Published))
+                            new ColumnProperty(nameof(FairVendorProductModel.Approved))
                             {
-                            Title = T("Admin.Catalog.Products.Fields.Published").Text,
+                            Title = T("Admin.Fairs.FairVendorProductModel.Fields.Approved").Text,
                             Width = "100",
                             ClassName = NopColumnClassDefaults.CenterAll,
                             Render = new RenderBoolean()
