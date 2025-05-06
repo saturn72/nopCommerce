@@ -75,10 +75,9 @@ ClassName = NopColumnClassDefaults.Button
     <div class="card-footer">
         <button type="submit" id="btnAddNewProduct"
                 onclick="javascript:OpenWindow('@(Url.Action("FairVendorProductAddPopup", "Fair",
-                    new { fairId = Model.FairId, vendorId = Model.VendorId, btnId = "btnRefreshProducts", formId = "fair-vendor-products-grid" }))', 800, 800, true); return false;"
+                    new { fairId = Model.FairId, vendorId = Model.VendorId, btnId = "btnRefreshProducts", formId = "fair-vendor-form" }))', 800, 800, true); return false;"
                 class="btn btn-primary">
             @T("Admin.Fairs.FairVendor.AddNew")
-
         </button>
         <button type="submit" id="btnRefreshProducts" style="display: none"></button>
         <script>
