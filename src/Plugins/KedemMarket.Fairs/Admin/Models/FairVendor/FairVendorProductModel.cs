@@ -11,4 +11,5 @@ public record FairVendorProductModel : BaseNopEntityModel
     public int DisplayOrder { get; set; }
     public string FormattedPrice { get; set; }
     public decimal ProductPrice { get; set; }
+    public bool PendingApproval { get; set; }
 }

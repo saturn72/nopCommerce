@@ -345,7 +345,7 @@ public class FairController : BaseAdminController
         if (vendors?.Count != 1 || vendors.FirstOrDefault()?.Id != model.VendorId)
             return await FairVendorProductAddPopupErrorViewAsync(errorModel, "Admin.Fairs.AddProductToFairVendorModel.InvalidVendor");
 
-        var autoApproved = default(bool?);
+        var autoApproved = false;
         var approvedOnUtc = default(DateTime?);
         if (fairVendorMap.AutoApproveProducts)
         {
@@ -368,6 +368,7 @@ public class FairController : BaseAdminController
                     {
                         existMap.Approved = autoApproved;
                         existMap.ApprovedOnUtc = approvedOnUtc;
+                        existMap.PendingApproval = !autoApproved;
                         toUpdate.Add(existMap);
                     }
                     continue;
@@ -380,8 +381,9 @@ public class FairController : BaseAdminController
                     ProductId = product.Id,
                     ProductName = product.Name,
                     Approved = autoApproved,
+                    PendingApproval = !autoApproved,
                     ApprovedOnUtc = approvedOnUtc,
-                    IsAutoApproved = autoApproved.Value,
+                    IsAutoApproved = autoApproved,
                     ProductPrice = product.Price,
                 });
             }

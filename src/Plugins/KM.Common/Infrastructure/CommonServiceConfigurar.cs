@@ -1,5 +1,6 @@
 ﻿using KedemMarket.Common.Factories;
 using KedemMarket.Common.Services.Media;
+using KM.Common.Services.Messaging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -11,6 +12,8 @@ public class CommonServiceConfigurar
     {
         services.TryAddScoped<IStorageManager, GcpStorageManager>();
         services.TryAddScoped<IProductApiFactory, ProductApiFactory>();
+        services.TryAddScoped<IMessagingService, MessagingService>();
+
         services.TryAddSingleton<MediaConvertor>();
 
         //do not configure if already configured

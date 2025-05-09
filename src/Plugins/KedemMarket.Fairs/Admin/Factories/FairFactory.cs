@@ -230,6 +230,7 @@ public class FairFactory : IFairFactory
         {
             Id = map?.Id ?? 0,
             Approved = map?.Approved ?? false,
+            PendingApproval = map?.PendingApproval ?? true,
             DisplayOrder = map?.DisplayOrder ?? 0,
             FairId = fairId,
             FormattedPrice = fp,

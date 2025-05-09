@@ -5,7 +5,8 @@ public class FairVendorProductMap : BaseEntity
     public int FairId { get; set; }
     public int VendorId { get; set; }
     public bool? Declined { get; set; }
-    public bool? Approved { get; set; }
+    public bool Approved { get; set; }
+    public bool PendingApproval { get; set; } = true;
     public DateTime? ApprovedOnUtc { get; set; }
     public DateTime? DeclinedOnUtc { get; set; }
     public bool IsAutoApproved { get; set; }

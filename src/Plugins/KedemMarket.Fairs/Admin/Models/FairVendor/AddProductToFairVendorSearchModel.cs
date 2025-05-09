@@ -20,6 +20,7 @@ public record AddProductToFairVendorSearchModel : BaseSearchModel
 
     [NopResourceDisplayName("Admin.AddProductToFairVendor.Fields.SearchManufacturerId")]
     public int SearchManufacturerId { get; set; }
+
     public IList<SelectListItem> AvailableManufacturers { get; set; }
     public int FairId { get; set; }
     public int VendorId { get; set; }

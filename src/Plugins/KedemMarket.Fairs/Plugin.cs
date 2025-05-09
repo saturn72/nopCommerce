@@ -340,6 +340,66 @@ public class Plugin : BasePlugin
                 ResourceName = "Admin.FairVendorProduct.Fields.Price",
                 ResourceValue = "Price"
             },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.Fairs.FairVendor.Fields.Name",
+                ResourceValue = "Name"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.Fairs.FairVendor.Fields.Approved",
+                ResourceValue = "Approved"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.Fairs.FairVendor.Fields.PendingApproval",
+                ResourceValue = "Pending Approval"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.Fairs.FairVendor.Fields.DisplayOrder",
+                ResourceValue = "Display Order"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.Fairs.FairVendor.Fields.Price",
+                ResourceValue = "Price"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.Fairs.FairVendor.Fields.Approved",
+                ResourceValue = "Approved"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.Fairs.FairVendor.Fields.ApproveDecline",
+                ResourceValue = "Approve/Decline"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.Fairs.FairVendor.Fields.Approved",
+                ResourceValue = "Approved"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.Fairs.FairVendor.Fields.Decline",
+                ResourceValue = "Decline"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.Fairs.FairVendor.Fields.Approve",
+                ResourceValue = "Approve"
+            },
         };
     }
 
