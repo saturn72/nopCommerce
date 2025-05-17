@@ -15,6 +15,7 @@ public class FairApiFactory : IFairApiFactory
     private readonly IFairService _fairService;
     private readonly IPictureService _pictureService;
     private readonly IProductService _productService;
+    private readonly IPriceFormatter _priceFormatter;
 
     public FairApiFactory(
         MediaConvertor mediaConvertor,
@@ -23,7 +24,8 @@ public class FairApiFactory : IFairApiFactory
         IRepository<Vendor> vendorRepository,
         IFairService fairService,
         IPictureService pictureService,
-        IProductService productService)
+        IProductService productService,
+        IPriceFormatter priceFormatter)
     {
         _mediaConvertor = mediaConvertor;
         _workContext = workContext;
@@ -32,6 +34,7 @@ public class FairApiFactory : IFairApiFactory
         _fairService = fairService;
         _pictureService = pictureService;
         _productService = productService;
+        _priceFormatter = priceFormatter;
     }
     public async Task<FairListApiModel> PrepareFairApiSlimModelListAsync(IEnumerable<Fair> fairs)
     {
@@ -102,9 +105,14 @@ public class FairApiFactory : IFairApiFactory
             var productMaps = await _fairService.GetFairVendorProductMapsAsync(fair, vendor, showApprovedProductOnly);
             var prodctIds = productMaps?.Select(map => map.ProductId).ToArray() ?? [];
             var vendorProducts = await _productService.GetProductsByIdsAsync(prodctIds);
-            products = await vendorProducts.SelectAwait(async vp => await ToFaiVendorProductApiModelAsync(vp)).ToListAsync();
-        }
+            //var productInfos = await _productApiFactory.ToProductInfoApiModelAsync(vendorProducts);
 
+            products = await productMaps.SelectAwait(async m =>
+            {
+                var pi = vendorProducts.FirstOrDefault(p => p.Id == m.ProductId);
+                return await ToFaiVendorProductApiModelAsync(m, pi);
+            }).ToListAsync();
+        }
         FairApiModel fam = default;
         if (includeFairInfo)
         {
@@ -125,25 +133,26 @@ public class FairApiFactory : IFairApiFactory
         };
     }
 
-    private async Task<FairVendorProductApiModel> ToFaiVendorProductApiModelAsync(Product product)
+    private async Task<FairVendorProductApiModel> ToFaiVendorProductApiModelAsync(FairVendorProductMap map, Product product)
     {
-
-        var gmi = default(GalleryItemModel);
+        var image = default(GalleryItemModel);
         var allProductPictures = await _productService.GetProductPicturesByProductIdAsync(product.Id);
         var productPicture = allProductPictures?.MinBy(x => x.DisplayOrder);
         if (productPicture != null)
         {
             var picture = await _pictureService.GetPictureByIdAsync(productPicture.PictureId);
-            gmi = await _mediaConvertor.ToGalleryItemModelAsync(picture, 0);
+            image = await _mediaConvertor.ToGalleryItemModelAsync(picture, 0);
         }
 
         return new FairVendorProductApiModel
         {
-            Id = product.Id,
-            Name = product.Name,
-            Price = product.Price,
+            Id = map.Id,
+            ProductId = map.ProductId,
             Description = product.FullDescription,
-            Picture = gmi,
+            Name = product.Name,
+            Price = map.ProductPrice,
+            PriceText = await _priceFormatter.FormatPriceAsync(product.Price),
+            Image = image,
         };
     }
 

@@ -14,7 +14,7 @@ public record ProductInfoApiModel
     public decimal? PriceWithDiscount { get; init; }
     public string? PriceWithDiscountText { get; init; }
     public string? FullDescription { get; init; }
-    public IEnumerable<object>? Gallery { get; init; }
+    public IEnumerable<GalleryItemModel>? Gallery { get; init; }
     public string? Gtin { get; init; }
     public string? ShortDescription { get; init; }
     public bool ShowStockQuantity { get; init; }
