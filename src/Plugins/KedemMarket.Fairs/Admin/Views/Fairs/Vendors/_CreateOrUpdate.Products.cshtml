@@ -3,20 +3,16 @@
 {
     <div class="card-body">
         @await Html.PartialAsync("Table", new DataTablesModel
+   {
+       Name = "fair-vendor-products-grid",
+       UrlRead = new DataUrl(nameof(FairController.GetFairVendorProductList), "Fair", new RouteValueDictionary
        {
-           Name = "fair-vendor-products-grid",
-           UrlRead = new DataUrl(nameof(FairController.GetFairVendorProductList), "Fair", new RouteValueDictionary
-           {
-               [nameof(Model.FairVendorProductSearchModel.FairId)] = Model.FairId,
-               [nameof(Model.FairVendorProductSearchModel.VendorId)] = Model.VendorId,
-               [nameof(Model.FairVendorProductSearchModel.Length)] = Model.FairVendorProductSearchModel.Length
-           }),
-           UrlDelete = new DataUrl(nameof(FairController.DeleteFairVendorProduct), "Fair", null),
-           UrlUpdate = new DataUrl(nameof(FairController.EditFairVendorProduct), "Fair", null),
-            @*new RouteValueDictionary
-                {
-                    [nameof(Model.NavbarElementSearchModel.NavbarInfoId)] = Model.Id
-                }),*@
+           [nameof(Model.FairVendorProductSearchModel.FairId)] = Model.FairId,
+           [nameof(Model.FairVendorProductSearchModel.VendorId)] = Model.VendorId,
+           [nameof(Model.FairVendorProductSearchModel.Length)] = Model.FairVendorProductSearchModel.Length
+       }),
+       UrlDelete = new DataUrl(nameof(FairController.DeleteFairVendorProduct), "Fair", null),
+       UrlUpdate = new DataUrl(nameof(FairController.EditFairVendorProduct), "Fair", null),
 Length = Model.FairVendorProductSearchModel.PageSize,
 LengthMenu = Model.FairVendorProductSearchModel.AvailablePageSizes,
 ColumnCollection = new List<ColumnProperty>
@@ -24,7 +20,7 @@ ColumnCollection = new List<ColumnProperty>
 
 new ColumnProperty(nameof(FairVendorProductModel.ProductName))
 {
-Title = T("Admin.Fairs.FairVendor.Fields.Name").Text,
+Title = T("Admin.Fairs.FairVendorProduct.Fields.Name").Text,
 Width = "150",
 ClassName = NopColumnClassDefaults.CenterAll,
 Editable = true,
@@ -33,14 +29,14 @@ EditType = EditType.String
 
 new ColumnProperty(nameof(FairVendorProductModel.Approved))
 {
-Title = T("Admin.Fairs.FairVendor.Fields.Approved").Text,
+Title = T("Admin.Fairs.FairVendorProduct.Fields.Approved").Text,
 Width = "100",
 ClassName = NopColumnClassDefaults.CenterAll,
 Render = new RenderBoolean(),
 },
 new ColumnProperty(nameof(FairVendorProductModel.DisplayOrder))
 {
-Title = T("Admin.Fairs.FairVendor.Fields.DisplayOrder").Text,
+Title = T("Admin.Fairs.FairVendorProduct.Fields.DisplayOrder").Text,
 Width = "150",
 ClassName = NopColumnClassDefaults.CenterAll,
 Editable = true,
@@ -48,7 +44,7 @@ EditType = EditType.Number
 },
 new ColumnProperty(nameof(FairVendorProductModel.FormattedPrice))
 {
-Title = T("Admin.Fairs.FairVendor.Fields.Price").Text,
+Title = T("Admin.Fairs.FairVendorProduct.Fields.Price").Text,
 Data = nameof(FairVendorProductModel.ProductPrice),
 Visible = true,
 Editable = true,
@@ -57,7 +53,7 @@ EditType = EditType.Number,
 
 new ColumnProperty(nameof(FairVendorProductModel.Id))
 {
-Title = T("Admin.Fairs.FairVendor.Fields.ApproveDecline").Text,
+Title = T("Admin.Fairs.FairVendorProduct.Fields.ApproveDecline").Text,
 Width = "100",
 ClassName =  NopColumnClassDefaults.Button,
 Render = new RenderCustom("approveDeclineButton")
@@ -80,56 +76,54 @@ ClassName = NopColumnClassDefaults.Button
 }
 }
 })
-        <div id="approve-decline-fair-vendor-product" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="approve-decline-fair-vendor-product-window-title">
+        <div id="decline-fair-vendor-product" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="decline-fair-vendor-product-window-title">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title" id="approve-decline-fair-vendor-product-window-title">@T("Admin.Common.ImportFromExcel")</h4>
+                        <h4 class="modal-title">@T("Admin.Fairs.FairVendorProduct.DeclineFairVendorProduct")</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
-                    <form asp-controller="Fair" asp-action="ImportFromXlsx" method="post" enctype="multipart/form-data">
-                        <div class="form-horizontal">
-                            <div class="modal-body">
-                                <ul class="common-list">
-                                    <li>
-                                        <em>@T("Admin.Fairs.List.ImportFromExcelTip")</em>
-                                    </li>
-                                    <li>
-                                        <em>@T("Admin.Common.ImportFromExcel.ManyRecordsWarning")</em>
-                                    </li>
-                                </ul>
+                    <div class="modal-header">
+                        <h5 class="modal-title subtitle"></h5>
+                    </div>
+                    <div class="form-horizontal">
+                        <div class="modal-body">
+                            <form id="decline-form" asp-controller="Fair"
+                                  asp-action="DeclineFairVendorProduct" method="post">
                                 <div class="form-group row">
                                     <div class="col-md-2">
                                         <div class="label-wrapper">
                                             <label class="col-form-label">
-                                                @T("Admin.Common.ExcelFile")
+                                                @T("Admin.Fairs.FairVendorProduct.DeclineFairVendorProduct.Reason")
                                             </label>
                                         </div>
                                     </div>
                                     <div class="col-md-10">
-                                        <input type="file" id="approve-decline-fair-vendor-productfile" name="approve-decline-fair-vendor-productfile" class="form-control" />
+                                        <textarea name="decline-reason" class="form-control" rows="8"></textarea>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">
-                                    @T("Admin.Common.ImportFromExcel")
-                                </button>
-                            </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">
+                                        @T("Admin.Fairs.FairVendorProduct.Fields.Decline")
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="card-footer">
             <button type="submit" id="btnAddNewProduct"
                     onclick="javascript:OpenWindow('@(Url.Action("FairVendorProductAddPopup", "Fair",
-                  new { fairId = Model.FairId, vendorId = Model.VendorId, btnId = "btnRefreshProducts", formId = "fair-vendor-form" }))', 800, 800, true); return false;"
+new { fairId = Model.FairId, vendorId = Model.VendorId, btnId = "btnRefreshProducts", formId = "fair-vendor-form" }))', 800, 800, true); return false;"
                     class="btn btn-primary">
                 @T("Admin.Fairs.FairVendor.AddNew")
             </button>
             <button type="submit" id="btnRefreshProducts" style="display: none"></button>
             <script>
+                let productName = '';
+
                 $(function () {
                     $('#btnRefreshProducts').click(function () {
                         updateTable('#fair-vendor-products-grid');
@@ -137,12 +131,21 @@ ClassName = NopColumnClassDefaults.Button
                     });
                 });
 
+                function adClicked(pId, pName) {
+                    productId = pId
+                    productName = pName;
+
+                    $(document, '#decline-fair-vendor-product.modal-dialog').on('show.bs.modal', function (e) {
+                        $('.subtitle').text(productName);
+                    });
+                }
             </script>
         </div>
         <script>
-            const approveButton ='<a type="button" class="btn btn-info" data-toggle="modal" data-target="#approve-decline-fair-vendor-product">@T("Admin.Fairs.FairVendor.Approve").Text</a>';
-            const declineButton ='<a type="button" class="btn btn-warning" data-toggle="modal" data-target="#approve-decline-fair-vendor-product">@T("Admin.Fairs.FairVendor.Decline").Text</a>';
+
             function approveDeclineButton(data, type, row, meta) {
+                const approveButton = '<a type="button" class="btn btn-info" data-toggle="modal" data-target="#decline-fair-vendor-product">@T("Admin.Fairs.FairVendor.Fields.Approve").Text</a>';
+                const declineButton = `<a onclick="adClicked(${row.Id}, '${row.ProductName}')" type="button" class="btn btn-warning" data-toggle="modal" data-target="#decline-fair-vendor-product">@T("Admin.Fairs.FairVendor.Fields.Decline").Text</a>`;
                 return row.Approved ? declineButton : approveButton;
             }
         </script>

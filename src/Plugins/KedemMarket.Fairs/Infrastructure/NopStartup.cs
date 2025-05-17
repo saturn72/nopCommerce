@@ -2,6 +2,7 @@
 using KedemMarket.Common.Infrastructure;
 using KedemMarket.Fairs.Factories;
 using KedemMarket.Fairs.Models;
+using KM.Common.Infrastructure;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace KedemMarket.Fairs.Infrastructure;
@@ -16,7 +17,7 @@ public class NopStartup : INopStartup
 
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-        services.TryAddSingleton(TimeProvider.System);
+        services.TryAddSingleton<TimeProvider, IsraelTimeProvider>();
         services.AddScoped<IFairFactory, FairFactory>();
         services.AddScoped<IFairService, FairService>();
         services.AddSingleton<FairCacheSettings>();

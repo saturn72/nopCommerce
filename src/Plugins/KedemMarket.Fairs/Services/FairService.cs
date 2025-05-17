@@ -66,8 +66,8 @@ public class FairService : IFairService
         bool? isPublished = true,
         bool? isDeleted = null,
         IEnumerable<int> vendorIds = null,
-        DateTime? fromUtc = null,
-        DateTime? untilUtc = null,
+        DateTime? fromLocal = null,
+        DateTime? untilLocal = null,
         int pageSize = int.MaxValue,
         int pageIndex = 0)
     {
@@ -82,11 +82,11 @@ public class FairService : IFairService
             if (isDeleted.HasValue)
                 query = query.Where(f => f.Deleted == isDeleted);
 
-            fromUtc ??= _timeProvider.GetUtcNow().UtcDateTime;
-            query = query.Where(f => fromUtc <= f.StartsOnLocalDateTime);
+            if (fromLocal.HasValue)
+                query = query.Where(f => fromLocal <= f.EndsOnLocalDateTime);
 
-            if (untilUtc.HasValue)
-                query = query.Where(f => untilUtc <= f.EndsOnLocalDateTime);
+            if (untilLocal.HasValue)
+                query = query.Where(f => untilLocal >= f.StartsOnLocalDateTime);
 
             if (vendorIds?.Any() == true)
             {
@@ -241,19 +241,26 @@ public class FairService : IFairService
     public async Task<IList<FairVendorProductMap>> GetFairVendorProductMapsAsync(
         Fair fair,
         Vendor vendor,
-        bool? isApprovedFilter = null,
+        bool? isApprovedFilter = false,
         int pageSize = int.MaxValue,
         int pageIndex = 0)
     {
         //at this point we ignore pagination
-        var p = _fairCacheSettings.GetFairVendorProductMapCacheKey(fair.Name, vendor.Id, pageIndex, pageSize);
+        var p = _fairCacheSettings.GetFairVendorProductMapCacheKey(fair.Name, vendor.Id, isApprovedFilter, pageIndex, pageSize);
         var cacheKey = _shortTermCacheManager.PrepareKeyForDefaultCache(p);
 
         return await _shortTermCacheManager.GetAsync(() => _fairVendorProductMapRepository.Table
-                    .Where(m => m.FairId == fair.Id && m.VendorId == vendor.Id)
-                    .Skip(pageIndex * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync(), cacheKey);
+                .Where(filter)
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize)
+                .ToListAsync(), cacheKey);
+
+        bool filter(FairVendorProductMap fpm)
+        {
+            var res = fpm.FairId == fair.Id && fpm.VendorId == vendor.Id;
+            return res && isApprovedFilter.HasValue ?
+                fpm.Approved == isApprovedFilter.Value : res;
+        }
     }
 
     public async Task InsertFairVendorProductMapsAsync(IList<FairVendorProductMap> maps)

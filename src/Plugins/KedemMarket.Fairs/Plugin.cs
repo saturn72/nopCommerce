@@ -313,12 +313,6 @@ public class Plugin : BasePlugin
              new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fairs.FairVendorProduct.Add",
-                ResourceValue = "Add Product to Fair"
-            },
-             new LocaleStringResource
-            {
-                LanguageId = languageId,
                 ResourceName = "Admin.FairVendorProduct.Fields.Name",
                 ResourceValue = "Product Name"
             },
@@ -343,25 +337,25 @@ public class Plugin : BasePlugin
              new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fairs.FairVendor.Fields.Name",
+                ResourceName = "Admin.Fairs.FairVendorProduct.Fields.Name",
                 ResourceValue = "Name"
             },
              new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fairs.FairVendor.Fields.Approved",
+                ResourceName = "Admin.Fairs.FairVendorProduct.Fields.Approved",
                 ResourceValue = "Approved"
             },
              new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fairs.FairVendor.Fields.PendingApproval",
+                ResourceName = "Admin.Fairs.FairVendorProduct.Fields.PendingApproval",
                 ResourceValue = "Pending Approval"
             },
              new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fairs.FairVendor.Fields.DisplayOrder",
+                ResourceName = "Admin.Fairs.FairVendorProduct.Fields.DisplayOrder",
                 ResourceValue = "Display Order"
             },
              new LocaleStringResource
@@ -385,21 +379,28 @@ public class Plugin : BasePlugin
              new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fairs.FairVendor.Fields.Approved",
-                ResourceValue = "Approved"
-            },
-             new LocaleStringResource
-            {
-                LanguageId = languageId,
                 ResourceName = "Admin.Fairs.FairVendor.Fields.Decline",
                 ResourceValue = "Decline"
             },
              new LocaleStringResource
             {
                 LanguageId = languageId,
-                ResourceName = "Admin.Fairs.FairVendor.Fields.Approve",
-                ResourceValue = "Approve"
+                ResourceName = "Admin.Fairs.FairVendor.Fields.ApproveFairVendorProduct",
+                ResourceValue = "Approve Product"
             },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.Fairs.FairVendor.DeclineFairVendorProduct",
+                ResourceValue = "Decline Product"
+            },
+             new LocaleStringResource
+            {
+                LanguageId = languageId,
+                ResourceName = "Admin.Fairs.FairVendor.DeclineFairVendorProduct.Reason",
+                ResourceValue = "Decline Reason"
+            },
+
         };
     }
 

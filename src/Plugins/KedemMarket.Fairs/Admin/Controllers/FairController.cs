@@ -356,7 +356,7 @@ public class FairController : BaseAdminController
         var selectedProducts = await _productService.GetProductsByIdsAsync(productIds);
         if (selectedProducts.Any())
         {
-            var maps = await _fairService.GetFairVendorProductMapsAsync(fair, vendor);
+            var maps = await _fairService.GetFairVendorProductMapsAsync(fair, vendor, isApprovedFilter: null);
             var toInsert = new List<FairVendorProductMap>();
             var toUpdate = new List<FairVendorProductMap>();
             foreach (var product in selectedProducts)
@@ -440,6 +440,15 @@ public class FairController : BaseAdminController
         await _fairService.UpdateFairVendorProductMapsAsync([map]);
         return new NullJsonResult();
     }
+
+    [HttpPost]
+    [CheckPermission(FairPermissions.ADMIN_VIEW)]
+    [CheckPermission(FairPermissions.ADMIN_EDIT)]
+    public async Task<IActionResult> DeclineFairVendorProduct(FairVendorProductDeclineModel model)
+    {
+        throw new NotImplementedException();
+    }
+
     #endregion
 
     protected virtual async Task UpdatePictureSeoNamesAsync(Fair fair)

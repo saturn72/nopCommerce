@@ -12,9 +12,11 @@ public class FairCacheSettings
         return new CacheKey($"fairvendormaps-{nameof(fairId)}:{fairId}", NopEntityCacheDefaults<Fair>.Prefix);
     }
 
-    public CacheKey GetFairVendorProductMapCacheKey(string fairName, int vendorId, int pageIndex, int pageSize)
+    public CacheKey GetFairVendorProductMapCacheKey(string fairName, int vendorId, bool? isApproved, int pageIndex, int pageSize)
     {
+        var ia = isApproved.HasValue ? isApproved.Value.ToString() : string.Empty;
+
         return new CacheKey(
-            $"fairvendorproductmap-{nameof(fairName)}:{fairName}-{nameof(vendorId)}:{vendorId}.page:{pageIndex}.{nameof(pageSize)}:{pageSize}", NopEntityCacheDefaults<Fair>.Prefix);
+            $"fairvendorproductmap-{nameof(fairName)}:{fairName}-{nameof(vendorId)}:{nameof(isApproved)}{ia}:{vendorId}.page:{pageIndex}.{nameof(pageSize)}:{pageSize}", NopEntityCacheDefaults<Fair>.Prefix);
     }
 }

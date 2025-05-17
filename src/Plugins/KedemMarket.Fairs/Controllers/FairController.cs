@@ -11,17 +11,20 @@ public class FairController : KedemMarketApiControllerBase
     private readonly IFairApiFactory _fairApiFactory;
     private readonly IWorkContext _workContext;
     private readonly IVendorService _vendorService;
+    private readonly TimeProvider _timeProvider;
 
     public FairController(
         IFairService fairService,
         IFairApiFactory fairApiFactory,
         IWorkContext workContext,
-        IVendorService vendorService)
+        IVendorService vendorService,
+        TimeProvider timeProvider)
     {
         _fairService = fairService;
         _fairApiFactory = fairApiFactory;
         _workContext = workContext;
         _vendorService = vendorService;
+        _timeProvider = timeProvider;
     }
 
     [HttpGet]
@@ -32,13 +35,13 @@ public class FairController : KedemMarketApiControllerBase
         [FromQuery] int pageIndex = 0)
     {
         var fairs = await _fairService.GetAllFairsAsync(
-            fromUtc: fromUtc,
-            untilUtc: untilUtc,
+            fromLocal: fromUtc ?? _timeProvider.GetUtcNow().LocalDateTime, //fairs are saved as local time. 
+            untilLocal: untilUtc,
             pageSize: pageSize,
             pageIndex: pageIndex
             );
 
-        var list = await _fairApiFactory.PrepareFairApiModelListAsync(fairs);
+        var list = await _fairApiFactory.PrepareFairApiSlimModelListAsync(fairs);
         return ToJsonResult(list);
     }
 
@@ -49,9 +52,7 @@ public class FairController : KedemMarketApiControllerBase
         if (fair == null)
             return NotFound();
 
-        var vendors = await _fairService.GetVendorsByFairIdAsync(id);
-
-        var data = await _fairApiFactory.PrepareFairApiModelAsync(fair, vendors);
+        var data = await _fairApiFactory.PrepareFairApiModelAsync(fair);
         return ToJsonResult(data);
     }
 
@@ -75,23 +76,16 @@ public class FairController : KedemMarketApiControllerBase
     }
 
     #region vendor
-    [HttpGet("{fairId}/vendor/{vendorId}")]
-    public async Task<IActionResult> GetVendorFairInfoAsync(int fairId, int vendorId)
+    [HttpGet("vendor/{mapId}")]
+    public async Task<IActionResult> GetVendorFairInfoAsync(int mapId)
     {
-        var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
-        if (vendor == default)
+        var map = await _fairService.GetFairVendorMapByIdAsync(mapId);
+        if (map == default)
             return BadRequest();
 
-        var fair = await _fairService.GetFairByIdAsync(fairId);
-        if (fair == null)
-            return BadRequest();
-
-        var maps = await _fairService.GetFairVendorMapsAsync(fair);
-        var m = maps?.FirstOrDefault();
-        if (m == default)
-            return BadRequest();
-
-        var data = await _fairApiFactory.PrepareFairVendorApiModelAsync(fair, vendor);
+        var data = await _fairApiFactory.PrepareFairVendorMapApiModelAsync(map, includeFairInfo: true, includeVendorProducts: true);
+        if (data == default)
+            return NotFound();
         return ToJsonResult(data);
     }
     #endregion

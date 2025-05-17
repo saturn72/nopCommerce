@@ -13,7 +13,11 @@ public class ClearCacheConsumer :
 
     IConsumer<EntityInsertedEvent<FairAddressMap>>,
     IConsumer<EntityUpdatedEvent<FairAddressMap>>,
-    IConsumer<EntityDeletedEvent<FairAddressMap>>
+    IConsumer<EntityDeletedEvent<FairAddressMap>>,
+
+    IConsumer<EntityInsertedEvent<Vendor>>,
+    IConsumer<EntityUpdatedEvent<Vendor>>,
+    IConsumer<EntityDeletedEvent<Vendor>>
 {
     private readonly IShortTermCacheManager _shortTermCacheManager;
     private readonly IStaticCacheManager _staticCacheManager;
@@ -37,6 +41,9 @@ public class ClearCacheConsumer :
     public Task HandleEventAsync(EntityInsertedEvent<FairAddressMap> eventMessage) => ClearFairCacheByPrefixAsync();
     public Task HandleEventAsync(EntityUpdatedEvent<FairAddressMap> eventMessage) => ClearFairCacheByPrefixAsync();
     public Task HandleEventAsync(EntityDeletedEvent<FairAddressMap> eventMessage) => ClearFairCacheByPrefixAsync();
+    public Task HandleEventAsync(EntityInsertedEvent<Vendor> eventMessage) => ClearFairCacheByPrefixAsync();
+    public Task HandleEventAsync(EntityUpdatedEvent<Vendor> eventMessage) => ClearFairCacheByPrefixAsync();
+    public Task HandleEventAsync(EntityDeletedEvent<Vendor> eventMessage) => ClearFairCacheByPrefixAsync();
 
     private async Task ClearFairCacheByPrefixAsync()
     {

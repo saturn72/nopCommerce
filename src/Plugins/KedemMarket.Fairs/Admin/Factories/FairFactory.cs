@@ -74,8 +74,8 @@ public class FairFactory : IFairFactory
         isPublished: searchModel.IsPublished,
         isDeleted: searchModel.IsDeleted,
         vendorIds: searchModel.VendorIds,
-        fromUtc: searchModel.FromUtc,
-        untilUtc: searchModel.UntilUtc,
+        fromLocal: searchModel.FromUtc,
+        untilLocal: searchModel.UntilUtc,
         pageSize: searchModel.PageSize,
         pageIndex: searchModel.Page - 1);
 

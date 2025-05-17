@@ -7,8 +7,8 @@ public interface IFairService
         bool? isPublished = true,
         bool? isDeleted = null,
         IEnumerable<int> vendorIds = null,
-        DateTime? fromUtc = null,
-        DateTime? untilUtc = null,
+        DateTime? fromLocal = null,
+        DateTime? untilLocal = null,
         int pageSize = int.MaxValue,
         int pageIndex = 0);
     Task<Fair> GetFairByIdAsync(int id);
@@ -26,7 +26,7 @@ public interface IFairService
     Task<IList<FairVendorProductMap>> GetFairVendorProductMapsAsync(
         Fair fair,
         Vendor vendor,
-        bool? isApprovedFilter = null,
+        bool? isApprovedFilter = true,
         int pageSize = int.MaxValue,
         int pageIndex = 0);
     public Task InsertFairVendorProductMapsAsync(IList<FairVendorProductMap> maps);

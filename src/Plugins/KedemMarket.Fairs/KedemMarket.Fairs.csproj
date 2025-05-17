@@ -126,11 +126,13 @@
     <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Admin\NewFolder\" />
     <Folder Include="Documents\" />
     <Folder Include="Extensions\" />
     <Folder Include="Mapping\" />
     <Folder Include="Middlewares\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Linq.Expressions" Version="4.1.0" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target -->

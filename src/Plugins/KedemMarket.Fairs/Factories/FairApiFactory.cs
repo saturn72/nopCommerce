@@ -33,7 +33,7 @@ public class FairApiFactory : IFairApiFactory
         _pictureService = pictureService;
         _productService = productService;
     }
-    public async Task<FairListApiModel> PrepareFairApiModelListAsync(IEnumerable<Fair> fairs)
+    public async Task<FairListApiModel> PrepareFairApiSlimModelListAsync(IEnumerable<Fair> fairs)
     {
         var fairIds = fairs.Select(x => x.Id).ToList();
         var favs = await (from f in _fairCustomerFavoriteMapRepository.Table
@@ -45,8 +45,8 @@ public class FairApiFactory : IFairApiFactory
 
         foreach (var fair in fairs)
         {
-            var vendors = await _fairService.GetVendorsByFairIdAsync(fair.Id);
-            var fam = await BuildCustomerFairApiModel(fair, favIds.Contains(fair.Id), vendors);
+            var isFavorite = favIds.Contains(fair.Id);
+            var fam = await ToFairApiModel(fair, [], isFavorite);
             fams.Add(fam);
         }
 
@@ -56,33 +56,71 @@ public class FairApiFactory : IFairApiFactory
         };
     }
 
-    public async Task<FairApiModel> PrepareFairApiModelAsync(Fair fair, IEnumerable<Vendor> vendors)
+    public async Task<FairApiModel> PrepareFairApiModelAsync(Fair fair)
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
         var fav = await _fairCustomerFavoriteMapRepository.Table.FirstOrDefaultAsync(f => f.CustomerId == customer.Id && f.FairId == fair.Id);
-        var fam = await BuildCustomerFairApiModel(fair, isFavorite: fav != null, vendors);
 
-        return fam;
+        var maps = await _fairService.GetFairVendorMapsAsync(fair);
+
+        var vendors = await maps.SelectAwait(async m =>
+        {
+            m.Fair = fair;
+            return await PrepareFairVendorMapApiModelAsync(m,
+                includeFairInfo: false,
+                includeVendorProducts: false);
+        }).ToListAsync();
+
+        return await ToFairApiModel(fair, vendors, fav != default);
     }
 
-    public async Task<FairVendorApiModel> PrepareFairVendorApiModelAsync(Fair fair, Vendor vendor)
+    public async Task<FairVendorMapApiModel> PrepareFairVendorMapApiModelAsync(
+        FairVendorMap map,
+        bool includeFairInfo,
+        bool includeVendorProducts,
+        bool? showApprovedProductOnly = true)
     {
+        if (map == default ||
+            (map.Fair == default && map.FairId <= 0) ||
+            (map.Vendor == default && map.VendorId <= 0))
+            return null;
+
+        var fair = map.Fair ?? await _fairService.GetFairByIdAsync(map.FairId);
+        if (fair == default)
+            return null;
+
+        var vendor = map.Vendor ?? await _vendorRepository.GetByIdAsync(map.VendorId);
+        if (vendor == null)
+            return null;
+
         var pic = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
         var vi = await _mediaConvertor.ToGalleryItemModelAsync(pic, 0);
-        var maps = await _fairService.GetFairVendorProductMapsAsync(fair, vendor);
 
-        var prodctIds = maps?.Select(map => map.ProductId).ToArray() ?? [];
-        var vendorProducts = await _productService.GetProductsByIdsAsync(prodctIds);
-
-        var products = await vendorProducts.SelectAwait(async vp => await ToFaiVendorProductApiModelAsync(vp)).ToListAsync();
-
-        return new FairVendorApiModel
+        var products = Enumerable.Empty<FairVendorProductApiModel>();
+        if (includeVendorProducts)
         {
-            Id = vendor.Id,
+            var productMaps = await _fairService.GetFairVendorProductMapsAsync(fair, vendor, showApprovedProductOnly);
+            var prodctIds = productMaps?.Select(map => map.ProductId).ToArray() ?? [];
+            var vendorProducts = await _productService.GetProductsByIdsAsync(prodctIds);
+            products = await vendorProducts.SelectAwait(async vp => await ToFaiVendorProductApiModelAsync(vp)).ToListAsync();
+        }
+
+        FairApiModel fam = default;
+        if (includeFairInfo)
+        {
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var fav = await _fairCustomerFavoriteMapRepository.Table.FirstOrDefaultAsync(f => f.CustomerId == customer.Id && f.FairId == fair.Id);
+            fam = await ToFairApiModel(fair, [], fav != null);
+        }
+
+        return new FairVendorMapApiModel
+        {
+            Id = map.Id,
             Name = vendor.Name,
             Description = vendor.Description,
             Image = vi,
-            Products = products
+            Products = products,
+            Fair = fam,
             //Url = v.Url
         };
     }
@@ -109,15 +147,8 @@ public class FairApiFactory : IFairApiFactory
         };
     }
 
-    private async Task<FairApiModel> BuildCustomerFairApiModel(Fair fair, bool isFavorite, IEnumerable<Vendor> vendors)
+    private async Task<FairApiModel> ToFairApiModel(Fair fair, IEnumerable<FairVendorMapApiModel> vendors, bool isFavorite)
     {
-        var vs = new List<FairVendorApiModel>();
-        foreach (var v in vendors)
-        {
-            var fvam = await PrepareFairVendorApiModelAsync(fair, v);
-            vs.Add(fvam);
-        }
-
         GalleryItemModel image = null;
         var fairPicture = await _pictureService.GetPictureByIdAsync(fair.PictureId);
         if (fairPicture != null)
@@ -135,7 +166,7 @@ public class FairApiFactory : IFairApiFactory
             IsVirtual = fair.IsVirtual,
             IsFavorite = isFavorite,
             //Url = fair.Url
-            Vendors = vs,
+            Vendors = vendors,
         };
     }
 }
