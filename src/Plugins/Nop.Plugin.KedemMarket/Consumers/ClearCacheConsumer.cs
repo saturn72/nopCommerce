@@ -18,10 +18,14 @@ public class ClearNavbarCacheConsumer :
     IConsumer<EntityInsertedEvent<NavbarElementVendor>>,
     IConsumer<EntityUpdatedEvent<NavbarElementVendor>>,
     IConsumer<EntityDeletedEvent<NavbarElementVendor>>,
-    
+
     IConsumer<EntityInsertedEvent<Product>>,
     IConsumer<EntityUpdatedEvent<Product>>,
-    IConsumer<EntityDeletedEvent<Product>>
+    IConsumer<EntityDeletedEvent<Product>>,
+
+    IConsumer<EntityInsertedEvent<Category>>,
+    IConsumer<EntityUpdatedEvent<Category>>,
+    IConsumer<EntityDeletedEvent<Category>>
 
 {
     private readonly INavbarService _navbarService;
@@ -41,55 +45,63 @@ public class ClearNavbarCacheConsumer :
         await ClearNavbarVendorCacheAsync(eventMessage.Entity?.Id);
 
     public async Task HandleEventAsync(EntityDeletedEvent<VendorAttributeValue> eventMessage) =>
-        await _staticCacheManager.RemoveByPrefixAsync(NavbarCacheSettings.NAVBAR_CACHE_KEY);
+        await _staticCacheManager.RemoveByPrefixAsync(NavbarCacheSettings.CACHE_KEY);
 
     public async Task HandleEventAsync(EntityInsertedEvent<VendorAttributeValue> eventMessage) =>
-        await _staticCacheManager.RemoveByPrefixAsync(NavbarCacheSettings.NAVBAR_CACHE_KEY);
+        await _staticCacheManager.RemoveByPrefixAsync(NavbarCacheSettings.CACHE_KEY);
 
     public async Task HandleEventAsync(EntityUpdatedEvent<VendorAttributeValue> eventMessage) =>
-        await _staticCacheManager.RemoveByPrefixAsync(NavbarCacheSettings.NAVBAR_CACHE_KEY);
+        await _staticCacheManager.RemoveByPrefixAsync(NavbarCacheSettings.CACHE_KEY);
 
     private async Task ClearNavbarVendorCacheAsync(int? vendorId)
     {
         if (vendorId <= 0)
             return;
 
-        await _staticCacheManager.RemoveByPrefixAsync(NavbarCacheSettings.NAVBAR_CACHE_KEY);
+        await _staticCacheManager.RemoveByPrefixAsync(NavbarCacheSettings.CACHE_KEY);
     }
     public async Task HandleEventAsync(EntityInsertedEvent<NavbarInfo> eventMessage) =>
-        await ClearNavbarCacheAsync(eventMessage.Entity);
+        await ClearRelevantCacheAsync(eventMessage.Entity);
     public async Task HandleEventAsync(EntityUpdatedEvent<NavbarInfo> eventMessage) =>
-        await ClearNavbarCacheAsync(eventMessage.Entity);
+        await ClearRelevantCacheAsync(eventMessage.Entity);
 
     public async Task HandleEventAsync(EntityDeletedEvent<NavbarInfo> eventMessage) =>
-        await ClearNavbarCacheAsync(eventMessage.Entity);
+        await ClearRelevantCacheAsync(eventMessage.Entity);
 
     public async Task HandleEventAsync(EntityInsertedEvent<NavbarElement> eventMessage) =>
-        await ClearNavbarCacheAsync(eventMessage.Entity);
+        await ClearRelevantCacheAsync(eventMessage.Entity);
     public async Task HandleEventAsync(EntityUpdatedEvent<NavbarElement> eventMessage) =>
-       await ClearNavbarCacheAsync(eventMessage.Entity);
+       await ClearRelevantCacheAsync(eventMessage.Entity);
     public async Task HandleEventAsync(EntityDeletedEvent<NavbarElement> eventMessage) =>
-       await ClearNavbarCacheAsync(eventMessage.Entity);
+       await ClearRelevantCacheAsync(eventMessage.Entity);
 
     public async Task HandleEventAsync(EntityInsertedEvent<NavbarElementVendor> eventMessage) =>
-        await ClearNavbarCacheAsync(eventMessage.Entity);
+        await ClearRelevantCacheAsync(eventMessage.Entity);
     public async Task HandleEventAsync(EntityUpdatedEvent<NavbarElementVendor> eventMessage) =>
-        await ClearNavbarCacheAsync(eventMessage.Entity);
+        await ClearRelevantCacheAsync(eventMessage.Entity);
     public async Task HandleEventAsync(EntityDeletedEvent<NavbarElementVendor> eventMessage) =>
-        await ClearNavbarCacheAsync(eventMessage.Entity);
+        await ClearRelevantCacheAsync(eventMessage.Entity);
 
     public async Task HandleEventAsync(EntityInsertedEvent<Product> eventMessage) =>
-        await ClearNavbarCacheAsync(eventMessage.Entity);
+        await ClearRelevantCacheAsync(eventMessage.Entity);
     public async Task HandleEventAsync(EntityUpdatedEvent<Product> eventMessage) =>
-        await ClearNavbarCacheAsync(eventMessage.Entity);
+        await ClearRelevantCacheAsync(eventMessage.Entity);
     public async Task HandleEventAsync(EntityDeletedEvent<Product> eventMessage) =>
-        await ClearNavbarCacheAsync(eventMessage.Entity);
+        await ClearRelevantCacheAsync(eventMessage.Entity);
 
-    private async Task ClearNavbarCacheAsync(BaseEntity entity)
+    public async Task HandleEventAsync(EntityInsertedEvent<Category> eventMessage) =>
+        await ClearRelevantCacheAsync(eventMessage.Entity);
+    public async Task HandleEventAsync(EntityUpdatedEvent<Category> eventMessage) =>
+        await ClearRelevantCacheAsync(eventMessage.Entity);
+    public async Task HandleEventAsync(EntityDeletedEvent<Category> eventMessage) =>
+        await ClearRelevantCacheAsync(eventMessage.Entity);
+
+    private async Task ClearRelevantCacheAsync(BaseEntity entity)
     {
         if (entity == null)
             return;
 
-        await _staticCacheManager.RemoveByPrefixAsync(NavbarCacheSettings.NAVBAR_CACHE_KEY);
+        await _staticCacheManager.RemoveByPrefixAsync(NavbarCacheSettings.CACHE_KEY);
+        await _staticCacheManager.RemoveByPrefixAsync(PageCacheSettings.CACHE_KEY_PREFIX);
     }
 }

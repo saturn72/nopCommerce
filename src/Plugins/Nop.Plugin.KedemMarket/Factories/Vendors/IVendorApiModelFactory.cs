@@ -1,5 +1,7 @@
-﻿namespace KedemMarket.Factories.Vendors;
+﻿
+namespace KedemMarket.Factories.Vendors;
 public interface IVendorApiModelFactory
 {
-    Task<VendorApiModel> ToVendorApiModel(Vendor vendor);
+    Task<IList<VendorApiModel>> GetAllVendorsAsync();
+    Task<VendorApiModel> PrepareVendorApiModelAsync(Vendor vendor);
 }

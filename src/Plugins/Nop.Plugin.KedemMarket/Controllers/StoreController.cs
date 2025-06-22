@@ -31,7 +31,7 @@ public class StoreController : KmApiControllerBase
 
         var stores = new List<object>();
         foreach (var v in vvs)
-            stores.Add(await _vendorApiModelFactory.ToVendorApiModel(v));
+            stores.Add(await _vendorApiModelFactory.PrepareVendorApiModelAsync(v));
 
         return ToJsonResult(new { stores });
     }
@@ -47,7 +47,7 @@ public class StoreController : KmApiControllerBase
         if (vendors == default || vendors.Count == 0)
             return Ok();
 
-        var model = await _vendorApiModelFactory.ToVendorApiModel(vendors.ElementAt(0));
+        var model = await _vendorApiModelFactory.PrepareVendorApiModelAsync(vendors.ElementAt(0));
         return ToJsonResult(model);
     }
     [HttpPut]

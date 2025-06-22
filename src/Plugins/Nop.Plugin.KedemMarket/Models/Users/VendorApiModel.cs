@@ -1,7 +1,4 @@
-﻿using KedemMarket.Models.Directory;
-using KedemMarket.Models.Media;
-
-namespace KedemMarket.Models.Users;
+﻿namespace KedemMarket.Models.Users;
 public record VendorApiModel
 {
     public int Id { get; init; }
@@ -13,4 +10,5 @@ public record VendorApiModel
     public string MetaDescription { get; init; }
     public string MetaTitle { get; init; }
     public GalleryItemModel? Image { get; init; }
+    public string Slug { get; set; }
 }

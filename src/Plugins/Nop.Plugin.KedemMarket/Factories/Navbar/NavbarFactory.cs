@@ -38,14 +38,14 @@ public class NavbarFactory : INavbarFactory
         _productApiFactory = productApiFactory;
     }
 
-    public async Task<NavbarAppModel> PrepareNavbarApiModelByNameAsync(string name)
+    public async Task<NavbarModel> PrepareNavbarModelByNameAsync(string name)
     {
-        var key = new CacheKey($"{NavbarCacheSettings.NAVBAR_CACHE_KEY}.{name}", NavbarCacheSettings.NAVBAR_CACHE_KEY)
+        var key = new CacheKey($"{NavbarCacheSettings.CACHE_KEY}.{name}", NavbarCacheSettings.CACHE_KEY)
         {
             CacheTime = NavbarCacheSettings.CACHE_TIME
         };
 
-        var nam = await _staticCacheManager.GetAsync<NavbarAppModel>(key);
+        var nam = await _staticCacheManager.GetAsync<NavbarModel>(key);
         if (nam != null)
             return nam;
 
@@ -128,7 +128,7 @@ public class NavbarFactory : INavbarFactory
             elements.Add(ne);
         }
 
-        nam = new NavbarAppModel
+        nam = new NavbarModel
         {
             Elements = elements,
         };

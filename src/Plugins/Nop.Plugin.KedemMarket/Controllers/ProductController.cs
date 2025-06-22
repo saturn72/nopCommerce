@@ -1,5 +1,4 @@
 ﻿namespace KedemMarket.Controllers;
-
 [Route("api/product")]
 public class ProductController : KmApiControllerBase
 {
@@ -23,6 +22,7 @@ public class ProductController : KmApiControllerBase
     [HttpGet]
     public async Task<IActionResult> Query(
         [FromQuery(Name = "q")] string keywords,
+        [FromQuery] int vendorId = 0,
         [FromQuery] int offset = 0,
         [FromQuery] int pageSize = 50)
     {
@@ -34,6 +34,7 @@ public class ProductController : KmApiControllerBase
         var products = await _productService.SearchProductsAsync(
             offset,
             pageSize,
+            vendorId: vendorId,
             storeId: store.Id,
             keywords: keywords,
             searchDescriptions: true,

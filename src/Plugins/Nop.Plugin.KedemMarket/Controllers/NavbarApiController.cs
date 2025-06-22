@@ -16,7 +16,7 @@ public class NavbarApiController : KmApiControllerBase
         if (name.HasNoValue())
             return BadRequest();
 
-        var data = await _navbarFactory.PrepareNavbarApiModelByNameAsync(name);
+        var data = await _navbarFactory.PrepareNavbarModelByNameAsync(name);
         if (data == null)
             return BadRequest();
         return ToJsonResult(data);

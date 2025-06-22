@@ -36,6 +36,7 @@ public class NopStartup : INopStartup
         services.AddScoped<IShoppingCartFactory, ShoppingCartFactory>();
         services.AddScoped<IOrderApiModelFactory, OrderApiModelFactory>();
         services.AddScoped<IDirectoryFactory, DirectoryFactory>();
+        services.AddScoped<IHomePageFactory, HomePageFactory>();
 
         services.AddScoped<IAnalyticsService, AnalyticsService>();
         services.AddTransient<IValidator<EventDataModel>, EventDataModelValidator>();
