@@ -49,6 +49,8 @@ public class NopStartup : INopStartup
         services.AddTransient<IValidator<NavbarInfoModel>, NavInfoModelValidator>();
         services.AddTransient<IValidator<CreateOrUpdateNavbarElementModel>, CreateNavbarElementPopupModelValidator>();
 
+        services.AddScoped<IEntityToModelFactory, EntityToModelFactory>();
+
         services.TryAddScoped<IProductApiFactory, ProductApiFactory>();
         services.TryAddSingleton<MediaConvertor>();
         services.TryAddSingleton(TimeProvider.System);

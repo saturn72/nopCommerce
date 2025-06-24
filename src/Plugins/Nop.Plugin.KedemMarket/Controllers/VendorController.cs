@@ -14,6 +14,12 @@ public class VendorController : KmApiControllerBase
         _vendorService = vendorService;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAllVendorsAsync()
+    {
+        var vendors = await _vendorApiModelFactory.GetAllVendorsAsync();
+        return ToJsonResult(vendors);
+    }
     [HttpGet("{id}")]
     public async Task<IActionResult> GetVendorByIdAsync(int id)
     {

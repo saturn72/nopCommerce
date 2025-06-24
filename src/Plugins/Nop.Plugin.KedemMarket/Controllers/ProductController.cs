@@ -47,4 +47,5 @@ public class ProductController : KmApiControllerBase
         var data = await _productApiFactory.ToProductInfoApiModelAsync(products);
         return ToJsonResult(new { products = data });
     }
+
 }
