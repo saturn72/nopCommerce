@@ -231,7 +231,8 @@ label, label + * {
 .full-description ul,
 .topic-block ul,
 .topic-page ul,
-.post-body ul {
+.post-body ul,
+.editor-content ul {
   margin: 12px 0;
   padding: 0 0 0 36px;
   list-style: disc;
@@ -242,7 +243,8 @@ label, label + * {
 .full-description ol,
 .topic-block ol,
 .topic-page ol,
-.post-body ol {
+.post-body ol,
+.editor-content ol {
   margin: 12px 0;
   padding: 0 0 0 36px;
   list-style: decimal;
@@ -2221,14 +2223,14 @@ label, label + * {
   display: inline-block;
 }
 
-  .product-review-links.add-review::before {
-    content: "|";
-    padding: 0 5px;
-  }
+.product-review-links.add-review::before {
+  content: "|";
+  padding: 0 5px;
+}
 
-  .add-review.product-no-reviews::before {
-      display: none;
-  }
+.add-review.product-no-reviews::before {
+  display: none;
+}
 
 .product-review-links a {
   text-decoration: underline;
@@ -3939,6 +3941,36 @@ label, label + * {
   color: #4ab2f1;
 }
 
+.order-filters {
+  display: flex;
+  flex-direction: column;
+  padding-inline: 20px;
+  padding-block-end: 20px;
+}
+
+.order-filters__row {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  margin-block-end: 10px;
+  justify-content: end;
+}
+
+.order-filters__label {
+  line-height: 26px;
+  color: #444;
+  margin-inline-end: 10px;
+  min-width: 50px;
+}
+
+.order-filters__input {
+  background-color: #fff;
+  height: 36px;
+  border: 1px solid #ddd;
+  padding: 8px;
+  vertical-align: middle;
+}
+
 .address-list-page .add-button {
   margin: 0 0 20px;
   text-align: center;
@@ -4030,9 +4062,9 @@ label, label + * {
 }
 
 .change-password-recovery-link {
-    text-align: right;
-    font-size: 13px;
-    margin-top: 5px;
+  text-align: right;
+  font-size: 13px;
+  margin-top: 5px;
 }
 
 .avatar-page .page-title {
@@ -4256,7 +4288,7 @@ label, label + * {
   font-size: 0;
 }
 
-.checkout-attributes .option-list>li {
+.checkout-attributes .option-list > li {
   display: inline-block;
   margin: 5px;
   border: 1px solid #ddd;
@@ -4271,7 +4303,7 @@ label, label + * {
   line-height: 0;
 }
 
-.checkout-attributes .option-list>li label {
+.checkout-attributes .option-list > li label {
   display: inline-block;
   margin: 0 0 0 5px;
 }
@@ -4872,9 +4904,9 @@ label, label + * {
   margin-top: 5px;
 }
 
-  .vat-number-warning a {
-    text-decoration: underline;
-  }
+.vat-number-warning a {
+  text-decoration: underline;
+}
 
 .checkout-page .pickup-in-store {
   text-align: center;
@@ -4899,12 +4931,12 @@ label, label + * {
 }
 
 .checkout-page .edit-address-button {
-  float: right; 
+  float: right;
   margin: 20px 10px 10px 12px;
 }
 
 .checkout-page .delete-address-button {
-  float: right; 
+  float: right;
   margin: 20px 0 10px 0;
 }
 
@@ -6608,7 +6640,6 @@ label, label + * {
   padding: 10px;
   font-family: "Courier New", Courier, monospace;
   color: #000;
-
   white-space: pre-wrap;
   word-wrap: break-word;
 }
@@ -6686,6 +6717,10 @@ label, label + * {
   .estimate-shipping-row-item.address-item + .estimate-shipping-row-item.address-item {
     padding-left: 0px;
     padding-top: 8px;
+  }
+
+  .order-filters__row {
+    justify-content: center;
   }
 }
 
@@ -7789,6 +7824,39 @@ label, label + * {
     clear: both;
     text-align: left;
   }
+
+  .post-text code {
+    background-color: #f0f0f0;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 0.9em;
+  }
+
+  .post-text pre {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin-bottom: 1em;
+  }
+
+  .post-text pre code {
+    background: none;
+    padding: 0;
+    font-size: 0.9em;
+  }
+
+  .post-text blockquote {
+    border-left: 4px solid #ccc;
+    padding: 0.5em 10px;
+    color: #666;
+    margin: 0 0 1em 0;
+  }
+
+  .post-text blockquote p {
+    margin-bottom: 0;
+  }
 }
 
 
@@ -8081,7 +8149,7 @@ label, label + * {
     font-size: 0;
   }
 
-  .search-box form{
+  .search-box form {
     justify-content: flex-end;
   }
 
@@ -8290,7 +8358,7 @@ label, label + * {
     width: auto;
     margin: 0 0 20px;
   }
-  
+
   .block .title {
     margin: 0;
     border-bottom: 1px solid #ddd;
@@ -8578,7 +8646,7 @@ label, label + * {
     margin: -30px 0 15px;
   }
 
-  .shopping-cart-page .checkout-attributes .option-list>li {
+  .shopping-cart-page .checkout-attributes .option-list > li {
     margin: 5px 10px 5px 0;
   }
 
@@ -8723,7 +8791,7 @@ label, label + * {
     padding: 20px;
   }
 
-  .forum-edit-page textarea,
+  .forum-edit-page .inputs textarea,
   .private-message-send-page textarea {
     width: 600px;
     height: 250px;

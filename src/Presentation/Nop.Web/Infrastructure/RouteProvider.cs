@@ -95,8 +95,16 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             defaults: new { controller = "Customer", action = "RemoveExternalAssociation" });
 
         endpointRouteBuilder.MapControllerRoute(name: "CustomerOrders",
-            pattern: $"{lang}/order/history",
+            pattern: $"{lang}/order/history/{{limit?}}",
             defaults: new { controller = "Order", action = "CustomerOrders" });
+
+        endpointRouteBuilder.MapControllerRoute(name: "CustomerOrdersPaged",
+            pattern: $"{lang}/order/history/{{limit?}}/page/{{pageNumber:min(0)}}",
+            defaults: new { controller = "Order", action = "CustomerOrders" });
+
+        endpointRouteBuilder.MapControllerRoute(name: "CustomerRecurringPayments",
+            pattern: $"{lang}/customer/recurringpayments",
+            defaults: new { controller = "Order", action = "CustomerRecurringPayments" });
 
         //contact us
         endpointRouteBuilder.MapControllerRoute(name: "ContactUs",
@@ -591,7 +599,7 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             defaults: new { controller = "Boards", action = "PostEdit" });
 
         endpointRouteBuilder.MapControllerRoute(name: "PostDelete",
-            pattern: $"{lang}/boards/postdelete/{{id:min(0)}}",
+            pattern: $"{lang}/boards/postdelete/{{id:int?}}",
             defaults: new { controller = "Boards", action = "PostDelete" });
 
         endpointRouteBuilder.MapControllerRoute(name: "PostCreate",
@@ -607,7 +615,7 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             defaults: new { controller = "Boards", action = "TopicEdit" });
 
         endpointRouteBuilder.MapControllerRoute(name: "TopicDelete",
-            pattern: $"{lang}/boards/topicdelete/{{id:min(0)}}",
+            pattern: $"{lang}/boards/topicdelete/{{id:int?}}",
             defaults: new { controller = "Boards", action = "TopicDelete" });
 
         endpointRouteBuilder.MapControllerRoute(name: "TopicCreate",

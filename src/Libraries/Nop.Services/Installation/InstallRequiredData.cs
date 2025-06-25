@@ -35,6 +35,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
+using Nop.Services.Messages;
 using Nop.Services.Seo;
 
 namespace Nop.Services.Installation;
@@ -1083,10 +1084,35 @@ public partial class InstallationService
                     Body = $"<p>{Environment.NewLine}%ContactUs.Body%{Environment.NewLine}</p>{Environment.NewLine}",
                     IsActive = true,
                     EmailAccountId = eaGeneral.Id
-                }
+                },
+                new() {
+                    Name = MessageTemplateSystemNames.CUSTOMER_FAILED_LOGIN_ATTEMPT_NOTIFICATION,
+                    Subject = "%Store.Name%. Failed Login Attempt",
+                    Body = $"<p>{Environment.NewLine}You have received this notification because we registered a login attempt with invalid authentication on <a href=\"%Store.URL%\">%Store.Name%</a>.{Environment.NewLine}</p>{Environment.NewLine}",
+                    IsActive = true,
+                    EmailAccountId = eaGeneral.Id
+                },
             };
 
         await _dataProvider.BulkInsertEntitiesAsync(messageTemplates);
+    }
+
+    /// <summary>
+    /// Installs a default type of newsletter subscription
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task InstallNewsLetterSubscriptionTypeAsync()
+    {
+        var newsLetterSubscriptionType = new List<NewsLetterSubscriptionType>
+        {
+            new() {
+                Name = NopMessageDefaults.DefaultSubscriptionType,
+                TickedByDefault = true,
+                DisplayOrder = 0
+            }
+        };
+
+        await _dataProvider.BulkInsertEntitiesAsync(newsLetterSubscriptionType);
     }
 
     /// <summary>
@@ -1296,8 +1322,6 @@ public partial class InstallationService
             PopupGridPageSize = 7,
             GridPageSizes = "7, 15, 20, 50, 100",
             RichEditorAdditionalSettings = null,
-            RichEditorAllowJavaScript = false,
-            RichEditorAllowStyleTag = false,
             UseRichEditorForCustomerEmails = false,
             UseRichEditorInMessageTemplates = false,
             CheckLicense = true,
@@ -1477,6 +1501,7 @@ public partial class InstallationService
             ShowCustomersLocation = false,
             ShowCustomersJoinDate = false,
             AllowViewingProfiles = false,
+            NotifyFailedLoginAttempt = false,
             NotifyNewCustomerRegistration = false,
             HideDownloadableProductsTab = false,
             HideBackInStockSubscriptionsTab = false,
@@ -1506,7 +1531,6 @@ public partial class InstallationService
             FaxEnabled = false,
             AcceptPrivacyPolicyEnabled = false,
             NewsletterEnabled = true,
-            NewsletterTickedByDefault = true,
             HideNewsletterBlock = false,
             NewsletterBlockAllowToUnsubscribe = false,
             OnlineCustomerMinutes = 20,
@@ -1546,7 +1570,8 @@ public partial class InstallationService
             PhoneEnabled = true,
             PhoneRequired = true,
             FaxEnabled = true,
-            DefaultCountryId = await GetFirstEntityIdAsync<Country>(c => c.ThreeLetterIsoCode == _installationSettings.RegionInfo.ThreeLetterISORegionName)
+            DefaultCountryId = await GetFirstEntityIdAsync<Country>(c => c.ThreeLetterIsoCode == _installationSettings.RegionInfo.ThreeLetterISORegionName),
+            PrePopulateCountryByCustomer = true
         });
 
         await SaveSettingAsync(dictionary, new MediaSettings
@@ -1570,7 +1595,6 @@ public partial class InstallationService
             DefaultImageQuality = 80,
             MultipleThumbDirectories = false,
             ImportProductImagesUsingHash = true,
-            AzureCacheControlHeader = string.Empty,
             UseAbsoluteImagePath = true,
             AutoOrientImage = false,
             VideoIframeAllow = "fullscreen",
@@ -1624,7 +1648,8 @@ public partial class InstallationService
             PrimaryStoreCurrencyId = (await Table<Currency>().SingleAsync(c => c.CurrencyCode == primaryCurrency)).Id,
             PrimaryExchangeRateCurrencyId = (await Table<Currency>().SingleAsync(c => c.CurrencyCode == primaryCurrency)).Id,
             ActiveExchangeRateProviderSystemName = "CurrencyExchange.ECB",
-            AutoUpdateEnabled = false
+            AutoUpdateEnabled = false,
+            DisplayCurrencySymbolInCurrencySelector = false
         });
 
         var baseDimension = isMetric ? "meters" : "inches";
@@ -1705,7 +1730,8 @@ public partial class InstallationService
             ShowProductThumbnailInOrderDetailsPage = true,
             DisplayCustomerCurrencyOnOrders = false,
             DisplayOrderSummary = true,
-            PlaceOrderWithLock = false
+            PlaceOrderWithLock = false,
+            CustomerOrdersPageSize = 10
         });
 
         await SaveSettingAsync(dictionary, new SecuritySettings
@@ -1783,14 +1809,14 @@ public partial class InstallationService
             EuVatEnabled = isEurope,
             EuVatEnabledForGuests = false,
             EuVatRequired = false,
-            EuVatShopCountryId =
-                isEurope
-                    ? (await GetFirstEntityIdAsync<Country>(x => x.TwoLetterIsoCode == country) ?? 0)
-                    : 0,
+            EuVatShopCountryId = isEurope ? (await GetFirstEntityIdAsync<Country>(x => x.TwoLetterIsoCode == country) ?? 0) : 0,
             EuVatAllowVatExemption = true,
             EuVatUseWebService = false,
             EuVatAssumeValid = false,
             EuVatEmailAdminWhenNewVatSubmitted = false,
+            HmrcApiUrl = "https://api.service.hmrc.gov.uk",
+            HmrcClientId = string.Empty,
+            HmrcClientSecret = string.Empty,
             LogErrors = false
         });
 
@@ -1844,7 +1870,7 @@ public partial class InstallationService
             ActiveDiscussionsPageSize = 50,
             LatestCustomerPostsPageSize = 10,
             ShowCustomersPostCount = true,
-            ForumEditor = EditorType.BBCodeEditor,
+            ForumEditor = EditorType.MarkdownEditor,
             SignaturesEnabled = true,
             AllowPrivateMessages = false,
             ShowAlertForPM = false,
@@ -2570,6 +2596,11 @@ public partial class InstallationService
                     Name = "Add a new widget"
                 },
                 new() {
+                    SystemKeyword = "AddSubscriptionType",
+                    Enabled = true,
+                    Name = "Add a new subscription type"
+                },
+                new() {
                     SystemKeyword = "DeleteActivityLog",
                     Enabled = true,
                     Name = "Delete activity log"
@@ -2753,6 +2784,11 @@ public partial class InstallationService
                     SystemKeyword = "DeleteStore",
                     Enabled = true,
                     Name = "Delete a store"
+                },
+                new() {
+                    SystemKeyword = "DeleteSubscriptionType",
+                    Enabled = true,
+                    Name = "Delete a subscription type"
                 },
                 new() {
                     SystemKeyword = "DeleteSystemLog",
@@ -2960,6 +2996,11 @@ public partial class InstallationService
                     Name = "Edit a store"
                 },
                 new() {
+                    SystemKeyword = "EditSubscriptionType",
+                    Enabled = true,
+                    Name = "Edit a subscription type"
+                },
+                new() {
                     SystemKeyword = "EditTask",
                     Enabled = true,
                     Name = "Edit a task"
@@ -3141,9 +3182,14 @@ public partial class InstallationService
                     Name = "Public store. Add to wishlist"
                 },
                 new() {
-                    SystemKeyword = "PublicStore.Login",
+                    SystemKeyword = "PublicStore.SuccessfulLogin",
                     Enabled = false,
-                    Name = "Public store. Login"
+                    Name = "Public store. Successful login"
+                },
+                new() {
+                    SystemKeyword = "PublicStore.FailedLogin",
+                    Enabled = false,
+                    Name = "Public store. Failed login"
                 },
                 new() {
                     SystemKeyword = "PublicStore.Logout",

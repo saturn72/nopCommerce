@@ -427,8 +427,13 @@ public partial class CheckoutController : BasePublicController
     public virtual async Task<IActionResult> GetAddressById(int addressId)
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
-        var address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
-        ArgumentNullException.ThrowIfNull(address);
+        Address address = null;
+
+        if (addressId != 0)
+        {
+            address = await _customerService.GetCustomerAddressAsync(customer.Id, addressId);
+            ArgumentNullException.ThrowIfNull(address);
+        }
 
         var addressModel = new AddressModel();
 
@@ -1163,10 +1168,7 @@ public partial class CheckoutController : BasePublicController
             (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection && _paymentSettings.SkipPaymentInfoStepForRedirectionPaymentMethods))
         {
             //skip payment info page
-            var paymentInfo = new ProcessPaymentRequest();
-
-            //session save
-            await HttpContext.Session.SetAsync("OrderPaymentInfo", paymentInfo);
+            await _orderProcessingService.SetProcessPaymentRequestAsync(new ProcessPaymentRequest());
 
             return RedirectToRoute("CheckoutConfirm");
         }
@@ -1217,13 +1219,7 @@ public partial class CheckoutController : BasePublicController
             ModelState.AddModelError("", warning);
         if (ModelState.IsValid)
         {
-            //get payment info
-            var paymentInfo = await paymentMethod.GetPaymentInfoAsync(form);
-            //set previous order GUID (if exists)
-            await _orderProcessingService.GenerateOrderGuidAsync(paymentInfo);
-
-            //session save
-            await HttpContext.Session.SetAsync("OrderPaymentInfo", paymentInfo);
+            await _orderProcessingService.SetProcessPaymentRequestAsync(await paymentMethod.GetPaymentInfoAsync(form));
             return RedirectToRoute("CheckoutConfirm");
         }
 
@@ -1298,7 +1294,7 @@ public partial class CheckoutController : BasePublicController
                 throw new Exception(await _localizationService.GetResourceAsync("Checkout.MinOrderPlacementInterval"));
 
             //place order
-            var processPaymentRequest = await HttpContext.Session.GetAsync<ProcessPaymentRequest>("OrderPaymentInfo");
+            var processPaymentRequest = await _orderProcessingService.GetProcessPaymentRequestAsync();
             if (processPaymentRequest == null)
             {
                 //Check whether payment workflow is required
@@ -1307,16 +1303,17 @@ public partial class CheckoutController : BasePublicController
 
                 processPaymentRequest = new ProcessPaymentRequest();
             }
-            await _orderProcessingService.GenerateOrderGuidAsync(processPaymentRequest);
+            
             processPaymentRequest.StoreId = store.Id;
             processPaymentRequest.CustomerId = customer.Id;
             processPaymentRequest.PaymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
                 NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
-            await HttpContext.Session.SetAsync("OrderPaymentInfo", processPaymentRequest);
+            await _orderProcessingService.SetProcessPaymentRequestAsync(processPaymentRequest);
             var placeOrderResult = await _orderProcessingService.PlaceOrderAsync(processPaymentRequest);
             if (placeOrderResult.Success)
             {
-                await HttpContext.Session.SetAsync<ProcessPaymentRequest>("OrderPaymentInfo", null);
+                await _orderProcessingService.SetProcessPaymentRequestAsync(null);
+                
                 var postProcessPaymentRequest = new PostProcessPaymentRequest
                 {
                     Order = placeOrderResult.PlacedOrder
@@ -1450,10 +1447,7 @@ public partial class CheckoutController : BasePublicController
             (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection && _paymentSettings.SkipPaymentInfoStepForRedirectionPaymentMethods))
         {
             //skip payment info page
-            var paymentInfo = new ProcessPaymentRequest();
-
-            //session save
-            await HttpContext.Session.SetAsync("OrderPaymentInfo", paymentInfo);
+            await _orderProcessingService.SetProcessPaymentRequestAsync(new ProcessPaymentRequest());
 
             var confirmOrderModel = await _checkoutModelFactory.PrepareConfirmOrderModelAsync(cart);
             return Json(new
@@ -1969,14 +1963,8 @@ public partial class CheckoutController : BasePublicController
                 ModelState.AddModelError("", warning);
             if (ModelState.IsValid)
             {
-                //get payment info
-                var paymentInfo = await paymentMethod.GetPaymentInfoAsync(form);
-                //set previous order GUID (if exists)
-                await _orderProcessingService.GenerateOrderGuidAsync(paymentInfo);
-
-                //session save
-                await HttpContext.Session.SetAsync("OrderPaymentInfo", paymentInfo);
-
+                await _orderProcessingService.SetProcessPaymentRequestAsync(await paymentMethod.GetPaymentInfoAsync(form));
+                
                 var confirmOrderModel = await _checkoutModelFactory.PrepareConfirmOrderModelAsync(cart);
                 return Json(new
                 {
@@ -2047,7 +2035,7 @@ public partial class CheckoutController : BasePublicController
                     throw new Exception(await _localizationService.GetResourceAsync("Checkout.MinOrderPlacementInterval"));
 
                 //place order
-                var processPaymentRequest = await HttpContext.Session.GetAsync<ProcessPaymentRequest>("OrderPaymentInfo");
+                var processPaymentRequest = await _orderProcessingService.GetProcessPaymentRequestAsync();
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
@@ -2058,16 +2046,16 @@ public partial class CheckoutController : BasePublicController
 
                     processPaymentRequest = new ProcessPaymentRequest();
                 }
-                await _orderProcessingService.GenerateOrderGuidAsync(processPaymentRequest);
+
                 processPaymentRequest.StoreId = store.Id;
                 processPaymentRequest.CustomerId = customer.Id;
                 processPaymentRequest.PaymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
                     NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
-                await HttpContext.Session.SetAsync("OrderPaymentInfo", processPaymentRequest);
+                await _orderProcessingService.SetProcessPaymentRequestAsync(processPaymentRequest);
                 var placeOrderResult = await _orderProcessingService.PlaceOrderAsync(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
-                    await HttpContext.Session.SetAsync<ProcessPaymentRequest>("OrderPaymentInfo", null);
+                    await _orderProcessingService.SetProcessPaymentRequestAsync(null);
                     var postProcessPaymentRequest = new PostProcessPaymentRequest
                     {
                         Order = placeOrderResult.PlacedOrder

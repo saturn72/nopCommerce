@@ -58,7 +58,7 @@
     <Value>Delete selected</Value>
   </LocaleResource>
   <LocaleResource Name="Account.BackInStockSubscriptions.Description">
-    <Value>You will receive an e-mail when a particular product is back in stock.</Value>
+    <Value>You will receive an email when a particular product is back in stock.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.BackInStockSubscriptions.NoSubscriptions">
     <Value>You are not currently subscribed to any Back In Stock notification lists</Value>
@@ -177,6 +177,9 @@
   <LocaleResource Name="Account.CustomerOrders.OrderTotal">
     <Value>Order Total</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.CustomerOrders.Period">
+    <Value>Orders from</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.CustomerOrders.RecurringOrders">
     <Value>Recurring payments</Value>
   </LocaleResource>
@@ -252,6 +255,12 @@
   <LocaleResource Name="Account.CustomerReturnRequests.UploadedFile.Download">
     <Value>Download</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.CustomerRecurringPayments">
+    <Value>Recurring payments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerRecurringPayments.NoPayments">
+    <Value>No payments</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.DownloadableProducts">
     <Value>Downloadable products</Value>
   </LocaleResource>
@@ -265,10 +274,10 @@
     <Value>Your email has been validated</Value>
   </LocaleResource>
   <LocaleResource Name="Account.EmailUsernameErrors.EmailAlreadyExists">
-    <Value>The e-mail address is already in use</Value>
+    <Value>The email address is already in use</Value>
   </LocaleResource>
   <LocaleResource Name="Account.EmailUsernameErrors.EmailTooLong">
-    <Value>E-mail address is too long</Value>
+    <Value>Email address is too long</Value>
   </LocaleResource>
   <LocaleResource Name="Account.EmailUsernameErrors.NewEmailIsNotValid">
     <Value>New email is not valid</Value>
@@ -378,9 +387,6 @@
   <LocaleResource Name="Account.Fields.LastName.Required">
     <Value>Last name is required.</Value>
   </LocaleResource>
-  <LocaleResource Name="Account.Fields.Newsletter">
-    <Value>Newsletter</Value>
-  </LocaleResource>
   <LocaleResource Name="Account.Fields.Password">
     <Value>Password</Value>
   </LocaleResource>
@@ -451,7 +457,7 @@
     <Value>Delete Selected</Value>
   </LocaleResource>
   <LocaleResource Name="Account.ForumSubscriptions.Description">
-    <Value>You will receive an e-mail when a new forum topic/post is created.</Value>
+    <Value>You will receive an email when a new forum topic/post is created.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.ForumSubscriptions.InfoColumn">
     <Value>Forum/Topic</Value>
@@ -675,6 +681,9 @@
   <LocaleResource Name="Account.RewardPoints">
     <Value>Reward points</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.SubscribeToNewsletter">
+    <Value>Subscribe to newsletter</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.UserAgreement">
     <Value>User agreement</Value>
   </LocaleResource>
@@ -819,6 +828,9 @@
   <LocaleResource Name="ActivityLog.AddNewWarehouse">
     <Value>Added a new warehouse (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddSubscriptionType">
+    <Value>Added a new subscription type (ID = {0})</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteActivityLog">
     <Value>Deleted activity log</Value>
   </LocaleResource>
@@ -929,6 +941,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteStore">
     <Value>Deleted a store (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteSubscriptionType">
+    <Value>Deleted a subscription type (ID = {0})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteSystemLog">
     <Value>Deleted system log</Value>
@@ -1059,6 +1074,9 @@
   <LocaleResource Name="ActivityLog.EditStore">
     <Value>Edited a store (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditSubscriptionType">
+    <Value>Edited a subscription type (ID = {0})</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.EditTask">
     <Value>Edited a task (ID = {0})</Value>
   </LocaleResource>
@@ -1158,8 +1176,11 @@
   <LocaleResource Name="ActivityLog.PublicStore.ContactUs">
     <Value>Used contact us form</Value>
   </LocaleResource>
-  <LocaleResource Name="ActivityLog.PublicStore.Login">
-    <Value>Login</Value>
+  <LocaleResource Name="ActivityLog.PublicStore.Login.Success">
+    <Value>Public store. Customer has logged in</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.Login.Fail">
+    <Value>Public store. Customer has failed to log in: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.Logout">
     <Value>Logout</Value>
@@ -1959,11 +1980,23 @@
   <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Published">
     <Value>Published</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName">
+    <Value>Product attribute name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.List.SearchProductAttributeName.Hint">
+    <Value>A product attribute name.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes">
     <Value>Specification attributes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Description">
     <Value>Specification attributes are product features i.e, screen size, number of USB-ports, visible on product details page. Specification attributes can be used for filtering products on the category details page. Unlike product attributes, specification attributes are used for information purposes only. You can add attributes to existing product on a product details page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.List.SearchName">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.List.SearchName.Hint">
+    <Value>Search by specification attribute name.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Added">
     <Value>The new attribute has been added successfully.</Value>
@@ -4487,52 +4520,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings">
     <Value>App settings</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob">
-    <Value>Azure Blob storage configuration</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.AppendContainerName">
-    <Value>Append container name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.AppendContainerName.Hint">
-    <Value>Enable this setting to append the endpoint with the container name when constructing the URL.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.ConnectionString">
-    <Value>Connection string</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.ConnectionString.Hint">
-    <Value>Specify the connection string for Azure Blob storage.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.ContainerName">
-    <Value>Container name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.ContainerName.Hint">
-    <Value>Specify the container name for Azure Blob storage.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysContainerName">
-    <Value>Container name for Data Protection keys</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysContainerName.Hint">
-    <Value>Specify the container name for the Data Protection keys. This should be a private container separate from the Blob container used for media storage.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysVaultId">
-    <Value>Key vault ID</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysVaultId.Hint">
-    <Value>Specify the Azure key vault ID used to encrypt the Data Protection keys.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.EndPoint">
-    <Value>Endpoint</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.EndPoint.Hint">
-    <Value>Specify the endpoint for Azure Blob storage.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.StoreDataProtectionKeys">
-    <Value>Store Data Protection keys</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.StoreDataProtectionKeys.Hint">
-    <Value>Enable this setting to store the Data Protection keys in Azure Blob Storage.</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.AppSettings.Cache">
     <Value>Cache configuration</Value>
   </LocaleResource>
@@ -6905,12 +6893,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterEnabled.Hint">
     <Value>Set if 'Newsletter' is enabled.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NotifyFailedLoginAttempt">
+    <Value>Notify customers about failed login attempts</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault">
-    <Value>Newsletter ticked by default</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault.Hint">
-    <Value>A value indicating whether 'Newsletter' checkbox is ticked by default on the registration page.</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NotifyFailedLoginAttempt.Hint">
+    <Value>Check to enable customer notifications on failed login attempts.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NotifyNewCustomerRegistration">
     <Value>Notify about new customer registration</Value>
@@ -9300,6 +9288,24 @@
   <LocaleResource Name="Admin.Configuration.Settings.Tax.HideZeroTax.Hint">
     <Value>A value indicating whether to hide zero tax in order summary.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.HmrcApiUrl">
+    <Value>HMRC API URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.HmrcApiUrl.Hint">
+    <Value>The base HMRC access API URL.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.HmrcClientId">
+    <Value>HMRC API client ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.HmrcClientId.Hint">
+    <Value>Your HMRC API client ID is a unique identifier which created when you added your application.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.HmrcClientSecret">
+    <Value>HMRC API client secret</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.HmrcClientSecret.Hint">
+    <Value>Your client secret is a unique passphrase that you generate to authorise your application.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.PaymentMethodAdditionalFeeIncludesTax">
     <Value>Payment method additional fee includes tax</Value>
   </LocaleResource>
@@ -10924,7 +10930,7 @@
     <Value>BCC</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.BccEmailAddresses.Hint">
-    <Value>The blind carbon copy (BCC) recipients for this e-mail message.</Value>
+    <Value>The blind carbon copy (BCC) recipients for this email message.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.Body">
     <Value>Body</Value>
@@ -12114,12 +12120,6 @@
   <LocaleResource Name="Admin.Customers.Customers.Fields.MustChangePassword.Hint">
     <Value>Check to require the customer to change their password.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Customers.Fields.Newsletter">
-    <Value>Newsletter</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Customers.Fields.Newsletter.Hint">
-    <Value>Choose stores to subscribe to newsletter.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.Password">
     <Value>Password</Value>
   </LocaleResource>
@@ -13073,6 +13073,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Address.County">
     <Value>County / region</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Orders.Address.CustomAttributes">
+    <Value>Custom Attributes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Address.EditAddress">
     <Value>Edit address</Value>
@@ -14205,6 +14208,12 @@
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Name.Required">
     <Value>Campaign name is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.NewsLetterSubscriptionType">
+    <Value>Limited to subscription types</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.NewsLetterSubscriptionType.Hint">
+    <Value>Choose a subscription type to which this email will be sent.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Store">
     <Value>Limited to store</Value>
   </LocaleResource>
@@ -14577,32 +14586,74 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Updated">
     <Value>The discount has been updated successfully.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions">
-    <Value>Newsletter subscribers</Value>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Added">
+    <Value>The subscription has been added successfully.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Active">
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.AddNew">
+    <Value>Add a new subscription</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.BackToList">
+    <Value>back to subscriptions list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Deleted">
+    <Value>The subscription has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.EditSubscriptionDetails">
+    <Value>Edit subscription</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Updated">
+    <Value>The subscription has been updated successfully.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Active">
     <Value>Active</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn">
-    <Value>Subscribed on</Value>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Active.Hint">
+    <Value>A value indicating whether the subscription is active.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Email">
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.CreatedOn.Hint">
+    <Value>Date/Time the newsletter subscriptions entry was created.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Email">
     <Value>Email</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Email.Required">
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Email.Hint">
+    <Value>Enter the email of subscription.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Email.Required">
     <Value>Email is required.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Store">
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Language">
+    <Value>Language</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Language.Hint">
+    <Value>Choose language to subscribe to newsletter.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Store">
     <Value>Store</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Language">
-    <Value>Language</Value>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.Store.Hint">
+    <Value>Choose store to subscribe to newsletter.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.SubscriptionType">
+    <Value>Subscription type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Fields.SubscriptionType.Hint">
+    <Value>Enter the type of subscription.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscription.Warning">
+    <Value>An entity with this subscription type cannot be added or already exists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions">
+    <Value>Newsletter subscribers</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.ImportEmailsSuccess">
     <Value>{0} emails have been successfully imported</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.CustomerRoles">
-    <Value>Customer roles</Value>
+    <Value>Customer role</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.CustomerRoles.Hint">
     <Value>Search by a specific customer role.</Value>
@@ -14645,6 +14696,63 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.StartDate.Hint">
     <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes">
+    <Value>Subscription type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SubscriptionTypes.Hint">
+    <Value>Limited to subscription types</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType">
+    <Value>Subscription types</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Added">
+    <Value>The subscription type has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.AddNew">
+    <Value>Add a new subscription type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.BackToList">
+    <Value>back to subscription types list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Deleted">
+    <Value>The subscription type has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.EditSubscriptionTypeDetails">
+    <Value>Edit subscription type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.DisplayOrder.Hint">
+    <Value>Display order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.LimitedToStores">
+    <Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.LimitedToStores.Hint">
+    <Value>Option to limit this attribute to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.Name.Hint">
+    <Value>Enter the name of subscription type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.TickedByDefault">
+    <Value>Ticked by default</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Fields.TickedByDefault.Hint">
+    <Value>Check to tick this newsletter subscription type by default.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.NotDeleted">
+    <Value><![CDATA[You cannot delete the only subscription type that is configured. To completely disable the newsletter, deactivate the "'Newsletter enabled" setting on the <a href="{0}">Customer settings</a> page]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptionType.Updated">
+    <Value>The subscription type has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.RecurringPayments">
     <Value>Recurring payments</Value>
@@ -15948,6 +16056,9 @@
   <LocaleResource Name="Admin.System.QueuedEmails.Requeued">
     <Value>The queued email has been requeued successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.RequeueSelected">
+    <Value>Requeue selected</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.Updated">
     <Value>The queued email has been updated successfully.</Value>
   </LocaleResource>
@@ -16064,13 +16175,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.ASPNETInfo.Hint">
     <Value>ASP.NET info.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.AzureBlobStorageEnabled">
-    <Value>Azure Blob Storage enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.AzureBlobStorageEnabled.Hint">
-    <Value>Indicates whether Azure Blob Storage is enabled.</Value>
-  </LocaleResource>
+  </LocaleResource> 
   <LocaleResource Name="Admin.System.SystemInfo.CurrentStaticCacheManager">
     <Value>Static cache manager name</Value>
   </LocaleResource>
@@ -16082,6 +16187,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.CurrentUserTime.Hint">
     <Value>Current user time (based on specified datetime and timezone settings).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.DatabaseCollation">
+    <Value>Database collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.DatabaseCollation.Hint">
+    <Value>The collation defines the rules for sorting and comparing data.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.Headers">
     <Value>Headers</Value>
@@ -16699,7 +16810,7 @@
     <Value>Receive an email when this arrives in stock</Value>
   </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.Tooltip">
-    <Value>You'll receive a onetime e-mail when this product is available for ordering again. We will not send you any other e-mails or add you to our newsletter; you will only be e-mailed about this product!</Value>
+    <Value>You'll receive a onetime email when this product is available for ordering again. We will not send you any other emails or add you to our newsletter; you will only be emailed about this product!</Value>
   </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.Unsubscribe">
     <Value>Unsubscribe</Value>
@@ -17226,6 +17337,9 @@
   <LocaleResource Name="Currency.Selector.Label">
     <Value>Currency selector</Value>
   </LocaleResource>
+  <LocaleResource Name="Currency.Selector.Text.Pattern">
+    <Value>{0}, {1}</Value>
+  </LocaleResource>
   <LocaleResource Name="Customer.FullNameFormat">
     <Value>{0} {1}</Value>
   </LocaleResource>
@@ -17514,6 +17628,9 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.Forums.EditorType.HtmlEditor">
     <Value>Html editor</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Forums.EditorType.MarkdownEditor">
+    <Value>Markdown editor</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Forums.EditorType.SimpleTextBox">
     <Value>Simple textbox</Value>
   </LocaleResource>
@@ -17591,6 +17708,24 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Messages.QueuedEmailPriority.Low">
     <Value>Low</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.OrderHistoryPeriods.All">
+    <Value>all time</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.OrderHistoryPeriods.Day">
+    <Value>the past day</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.OrderHistoryPeriods.Week">
+    <Value>the past week</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.OrderHistoryPeriods.Month">
+    <Value>the past month</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.OrderHistoryPeriods.HalfYear">
+    <Value>the past six months</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Orders.OrderHistoryPeriods.Year">
+    <Value>the past year</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Orders.OrderStatus.Cancelled">
     <Value>Cancelled</Value>
@@ -18170,6 +18305,12 @@
   </LocaleResource>
   <LocaleResource Name="Manufacturers.ViewAll">
     <Value>View all</Value>
+  </LocaleResource>
+  <LocaleResource Name="MarkdownEditor.TabPreview">
+    <Value>Preview</Value>
+  </LocaleResource>
+  <LocaleResource Name="MarkdownEditor.TabWrite">
+    <Value>Write</Value>
   </LocaleResource>
   <LocaleResource Name="Media.Category.ImageAlternateTextFormat">
     <Value>Picture for category {0}</Value>

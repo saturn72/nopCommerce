@@ -85,23 +85,21 @@ public partial class ProductAttributeService : IProductAttributeService
     /// <summary>
     /// Gets all product attributes
     /// </summary>
+    /// <param name="name">Filter by name</param>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the product attributes
     /// </returns>
-    public virtual async Task<IPagedList<ProductAttribute>> GetAllProductAttributesAsync(int pageIndex = 0,
-        int pageSize = int.MaxValue)
+    public virtual async Task<IPagedList<ProductAttribute>> GetAllProductAttributesAsync(string name = null, int pageIndex = 0, int pageSize = int.MaxValue)
     {
-        var productAttributes = await _productAttributeRepository.GetAllPagedAsync(query =>
-        {
-            return from pa in query
-                orderby pa.Name
-                select pa;
-        }, pageIndex, pageSize);
+        var query = _productAttributeRepository.Table;
 
-        return productAttributes;
+        if (!string.IsNullOrWhiteSpace(name))
+            query = query.Where(pa => pa.Name.Contains(name));
+
+        return await query.OrderBy(x => x.Name).ToPagedListAsync(pageIndex, pageSize);
     }
 
     /// <summary>
@@ -313,13 +311,13 @@ public partial class ProductAttributeService : IProductAttributeService
     #region Product attribute value pictures
 
     /// <summary>
-    /// Deletes a product attribute value picture
+    /// Deletes a list of product attribute value picture
     /// </summary>
-    /// <param name="value">Product attribute value picture</param>
+    /// <param name="value">Product attribute value pictures</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public virtual async Task DeleteProductAttributeValuePictureAsync(ProductAttributeValuePicture valuePicture)
+    public virtual async Task DeleteProductAttributeValuePicturesAsync(IList<ProductAttributeValuePicture> valuePictures)
     {
-        await _productAttributeValuePictureRepository.DeleteAsync(valuePicture);
+        await _productAttributeValuePictureRepository.DeleteAsync(valuePictures);
     }
 
     /// <summary>
