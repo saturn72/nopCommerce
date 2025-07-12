@@ -208,7 +208,7 @@ public partial class FirebaseExternalUsersService : IExternalUsersService
         return map;
     }
 
-    public async Task<KmUserCustomerMap> GetUserIdCustomerMapByInternalCustomerId(int customerId)
+    public async Task<KmUserCustomerMap> GetUserIdCustomerMapByNopCustomerId(int customerId)
     {
         var read = false;
         var key = BuildCustomerCacheKey(customerId);

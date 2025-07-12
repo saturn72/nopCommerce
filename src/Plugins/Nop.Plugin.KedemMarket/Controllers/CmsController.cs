@@ -9,23 +9,17 @@ public class CmsController : KmApiControllerBase
     private readonly IWorkContext _workContext;
     private readonly IUrlRecordService _urlRecordService;
     private readonly IEntityToModelFactory _entityToModelFactory;
-    private readonly IOrderService _orderService;
-    private readonly Nop.Web.Areas.Admin.Factories.IOrderModelFactory _orderModelFactory;
 
     public CmsController(
         IHomePageFactory homePageFactory,
         IWorkContext workContext,
         IUrlRecordService urlRecordService,
-        IEntityToModelFactory entityToModelFactory,
-        IOrderService orderService,
-        Nop.Web.Areas.Admin.Factories.IOrderModelFactory orderModelFactory)
+        IEntityToModelFactory entityToModelFactory)
     {
         _homePageFactory = homePageFactory;
         _workContext = workContext;
         _urlRecordService = urlRecordService;
         _entityToModelFactory = entityToModelFactory;
-        _orderService = orderService;
-        _orderModelFactory = orderModelFactory;
     }
 
     [HttpGet("homepage")]
@@ -58,25 +52,5 @@ public class CmsController : KmApiControllerBase
             value = data,
         };
         return ToJsonResult(d);
-    }
-
-
-    [HttpGet("sales")]
-    public async Task<IActionResult> GetVendorSalesAsync(int limit = 20, int page = 0)
-    {
-        var vendor = await _workContext.GetCurrentVendorAsync();
-        if (vendor == default)
-            return BadRequest();
-
-        var sm = new OrderSearchModel
-        {
-            VendorId = vendor.Id,
-            Start = page,
-            Length = limit,
-        };
-        //var orders = await _orderService.SearchOrdersAsync(vendorId: vendor.Id, pageIndex: offset / limit, pageSize: limit);
-
-        var data = await _orderModelFactory.PrepareOrderListModelAsync(sm);
-        return ToJsonResult(data.Data);
     }
 }

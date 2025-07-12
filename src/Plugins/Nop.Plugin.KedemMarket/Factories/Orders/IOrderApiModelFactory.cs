@@ -1,5 +1,5 @@
 ﻿namespace KedemMarket.Factories.Orders;
 public interface IOrderApiModelFactory
 {
-    Task<IEnumerable<OrderInfoModel>> PrepareOrderDetailsModelsAsync(IEnumerable<Order> orders);
+    public Task<IEnumerable<Nop.Web.Areas.Admin.Models.Orders.OrderModel>> PrepareOrderDetailsModelsAsync(IEnumerable<Order> orders);
 }

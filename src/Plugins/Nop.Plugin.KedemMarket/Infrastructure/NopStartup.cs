@@ -1,5 +1,6 @@
 ﻿using KedemMarket.Admin.Models.Navbar;
 using KedemMarket.Middlewares;
+using KedemMarket.Services.Notifications;
 
 namespace KedemMarket.Infrastructure;
 
@@ -23,10 +24,12 @@ public class NopStartup : INopStartup
         });
 
         services.AddMemoryCache();
+        services.AddSignalR();
 
         services.AddScoped<IExternalUsersService, FirebaseExternalUsersService>();
         services.AddTransient<IValidator<CartTransactionApiModel>, CartTransactionApiModelValidator>();
         services.AddScoped<IKmOrderService, KmOrderService>();
+        services.AddScoped<INotifier, Notifier>();
 
         services.AddScoped<IOrderDocumentStore, OrderDocumentStore>();
         services.AddScoped<IUserProfileDocumentStore, UserProfileDocumentStore>();
