@@ -1,6 +1,9 @@
-﻿using KedemMarket.Admin.Models.Navbar;
+﻿using FluentValidation;
+using KedemMarket.Admin.Models.Navbar;
 using KedemMarket.Middlewares;
+using KedemMarket.Models.Vendor;
 using KedemMarket.Services.Notifications;
+using KedemMarket.Services.Vendor;
 
 namespace KedemMarket.Infrastructure;
 
@@ -26,18 +29,22 @@ public class NopStartup : INopStartup
         services.AddMemoryCache();
         services.AddSignalR();
 
-        services.AddScoped<IExternalUsersService, FirebaseExternalUsersService>();
+
+        services.AddTransient<IValidator<ChangeVendorOrderStatusRequest>, ChangeVendorOrderStatusRequestValidator>();
         services.AddTransient<IValidator<CartTransactionApiModel>, CartTransactionApiModelValidator>();
+
+        services.AddScoped<IExternalUsersService, FirebaseExternalUsersService>();
         services.AddScoped<IKmOrderService, KmOrderService>();
         services.AddScoped<INotifier, Notifier>();
 
+        services.AddScoped<IKmVendorService, KmVendorService>();
         services.AddScoped<IOrderDocumentStore, OrderDocumentStore>();
         services.AddScoped<IUserProfileDocumentStore, UserProfileDocumentStore>();
         services.AddScoped(typeof(IDocumentStore<>), typeof(FirebaseDocumentStore<>));
         services.AddSingleton<FirebaseAdapter>();
         services.AddScoped<IVendorApiModelFactory, VendorApiModelFactory>();
         services.AddScoped<IShoppingCartFactory, ShoppingCartFactory>();
-        services.AddScoped<IOrderApiModelFactory, OrderApiModelFactory>();
+        services.AddScoped<Factories.Orders.IOrderModelFactory, Factories.Orders.OrderModelFactory>();
         services.AddScoped<IDirectoryFactory, DirectoryFactory>();
         services.AddScoped<IHomePageFactory, HomePageFactory>();
         services.AddScoped<IAnalyticsService, AnalyticsService>();

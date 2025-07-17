@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Nop.Web.Framework.Validators;
+﻿using Nop.Web.Framework.Validators;
 
 namespace KedemMarket.Models.Checkout;
 

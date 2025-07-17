@@ -1,4 +1,4 @@
-﻿using KedemMarket.Domain.Checkout;
+﻿using KedemMarket.Domain.Ordering;
 using Nop.Core.Domain.Orders;
 
 namespace KedemMarket.Services.Checkout;

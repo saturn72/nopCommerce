@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace KedemMarket.Models.Cart;
+﻿namespace KedemMarket.Models.Cart;
 
 public class ShoppingCartItemApiModelValidator : AbstractValidator<ShoppingCartItemApiModel>
 {

@@ -1,17 +1,19 @@
-﻿namespace KedemMarket.Controllers;
+﻿using KedemMarket.Models.Vendor;
+
+namespace KedemMarket.Controllers;
 
 [Route("api/order")]
 public class OrderController : KmApiControllerBase
 {
     private readonly IWorkContext _workContext;
     private readonly IOrderService _orderService;
-    private readonly IOrderApiModelFactory _orderApiModelFactory;
+    private readonly Factories.Orders.IOrderModelFactory _orderApiModelFactory;
     private readonly IStoreContext _storeContext;
 
     public OrderController(
         IWorkContext workContext,
         IOrderService orderService,
-        IOrderApiModelFactory orderApiModelFactory,
+        Factories.Orders.IOrderModelFactory orderApiModelFactory,
         IStoreContext storeContext)
     {
         _workContext = workContext;
@@ -21,7 +23,7 @@ public class OrderController : KmApiControllerBase
     }
 
     [HttpGet("{orderId}")]
-    public async Task<IActionResult> GetOrderByOrderNumber(int orderId)
+    public async Task<IActionResult> GetCustomerOrderByOrderIdAsync(int orderId)
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (customer == default)
@@ -36,7 +38,7 @@ public class OrderController : KmApiControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetOrders([FromQuery] int pageSize = 25, [FromQuery] int offset = 0)
+    public async Task<IActionResult> GetCustomerOrdersAsync([FromQuery] int pageSize = 25, [FromQuery] int offset = 0)
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (customer == default)

@@ -45,8 +45,6 @@ global using Microsoft.AspNetCore.Routing;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.DependencyInjection.Extensions;
-global using Newtonsoft.Json;
-global using Newtonsoft.Json.Serialization;
 global using Nop.Core;
 global using Nop.Core.Caching;
 global using Nop.Core.Domain.Catalog;

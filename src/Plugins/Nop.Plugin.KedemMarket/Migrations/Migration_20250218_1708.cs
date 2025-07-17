@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using KedemMarket.Domain.Ordering;
 using Nop.Data.Extensions;
 using Nop.Data.Migrations;
 

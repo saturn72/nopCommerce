@@ -1,6 +1,24 @@
 ﻿namespace KedemMarket;
 public class KmConsts
 {
+
+    public static class OrderStatuses
+    {
+        public const string Pending = "pending";
+        public const string Processing = "processing";
+        public const string Complete = "complete";
+        public const string Cancelled = "cancelled";
+        public const string Refunded = "refunded";
+
+        public static readonly string[] All = new[]
+        {
+            Pending,
+            Processing,
+            Complete,
+            Cancelled,
+            Refunded
+        };
+    }
     public sealed class MediaTypes
     {
         public const string Thumbnail = "thumbnail";

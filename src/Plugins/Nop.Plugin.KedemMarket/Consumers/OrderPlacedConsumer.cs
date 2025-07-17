@@ -1,37 +1,34 @@
 ﻿using KedemMarket.Services.Notifications;
+using KedemMarket.Services.Vendor;
+using Nop.Services.Orders;
 
 namespace KedemMarket.Consumers;
-public class OrderPlacedConsumer : IConsumer<EntityInsertedEvent<KmOrder>>
+public class OrderPlacedConsumer : IConsumer<EntityInsertedEvent<Order>>
 {
-    private readonly INotifier _notifier;
-    private readonly IRepository<OrderItem> _orderItemRepository;
-    private readonly IRepository<Product> _productRepository;
+    private readonly IOrderService _orderService;
+    private readonly IKmVendorService _kmVendorService;
 
     public OrderPlacedConsumer(
-        INotifier notifier,
-        IRepository<OrderItem> orderItemRepository,
-        IRepository<Product> productRepository)
+        IOrderService orderService,
+        IKmVendorService kmVendorService)
     {
-        _notifier = notifier;
-        _orderItemRepository = orderItemRepository;
-        _productRepository = productRepository;
+        _orderService = orderService;
+        _kmVendorService = kmVendorService;
     }
-    public async Task HandleEventAsync(EntityInsertedEvent<KmOrder> eventMessage)
+    public async Task HandleEventAsync(EntityInsertedEvent<Order> eventMessage)
     {
-        var orderId = eventMessage.Entity.NopOrderId;
-        if (orderId == 0)
+        var order = eventMessage.Entity;
+        if (order == null)
             return;
 
-        var vendorIds = await (
-                    from oi in _orderItemRepository.Table
-                    join p in _productRepository.Table on oi.ProductId equals p.Id
-                    where oi.OrderId == orderId && p.VendorId != 0
-                    select p.VendorId
-                ).Distinct().ToArrayAsync();
-
-        if (vendorIds.Length == 0)
+        var orderItems = await _orderService.GetOrderItemsAsync(order.Id);
+        if (orderItems == null || orderItems.Count == 0)
             return;
 
-        await _notifier.NotifyVendorsOnNewOrderAsync(vendorIds);
+        var orderItemIds = orderItems.Select(d => d.Id).ToList();
+        if (orderItemIds.Count == 0)
+            return;
+
+        await _kmVendorService.SetOrdersItemStatusAsync(order, orderItemIds, KmConsts.OrderStatuses.Pending);
     }
 }

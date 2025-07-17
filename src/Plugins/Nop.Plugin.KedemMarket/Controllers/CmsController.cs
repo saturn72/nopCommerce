@@ -1,6 +1,4 @@
-﻿using Nop.Web.Areas.Admin.Models.Orders;
-
-namespace KedemMarket.Controllers;
+﻿namespace KedemMarket.Controllers;
 
 [Route("cms")]
 public class CmsController : KmApiControllerBase

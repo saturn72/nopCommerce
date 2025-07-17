@@ -1,4 +1,6 @@
-﻿namespace KedemMarket.Migrations;
+﻿using KedemMarket.Domain.Ordering;
+
+namespace KedemMarket.Migrations;
 
 public partial class KedemMarketNameCompatibility : INameCompatibility
 {
@@ -6,6 +8,7 @@ public partial class KedemMarketNameCompatibility : INameCompatibility
     {
         {typeof(EventData), "km_eventdata" },
 
+        {typeof(OrderItemsStatus), "km_orderitemsstatus" },
         {typeof(KmOrder), "km_order" },
         {typeof(KmUserCustomerMap), "km_usercustomermap" },
 
