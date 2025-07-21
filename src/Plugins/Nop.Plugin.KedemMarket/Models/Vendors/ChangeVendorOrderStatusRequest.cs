@@ -1,4 +1,4 @@
-﻿namespace KedemMarket.Models.Vendor;
+﻿namespace KedemMarket.Models.Vendors;
 public record ChangeVendorOrderStatusRequest
 {
     public int OrderId { get; set; }

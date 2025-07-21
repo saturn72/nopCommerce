@@ -8,7 +8,9 @@ public class KmVendorService : IKmVendorService
     private readonly IRepository<Order> _orderRepository;
     private readonly IRepository<OrderItem> _orderItemRepository;
     private readonly IRepository<Product> _productRepository;
-    private readonly IRepository<OrderItemsStatus> _orderItemStateRepository;
+    private readonly IRepository<OrderItemsStatus> _orderItemStatusRepository;
+    private readonly IShortTermCacheManager _shortTermCacheManager;
+
     private readonly JsonSerializerOptions _jsonSerializerOptions;
 
 
@@ -19,17 +21,19 @@ public class KmVendorService : IKmVendorService
         IRepository<Order> orderRepository,
         IRepository<OrderItem> orderItemRepository,
         IRepository<Product> productRepository,
-        IRepository<OrderItemsStatus> orderItemStateRepository)
+        IRepository<OrderItemsStatus> orderItemStateRepository,
+        IShortTermCacheManager shortTermCacheManager)
     {
         _orderRepository = orderRepository;
         _orderItemRepository = orderItemRepository;
         _productRepository = productRepository;
-        _orderItemStateRepository = orderItemStateRepository;
+        _orderItemStatusRepository = orderItemStateRepository;
         _jsonSerializerOptions = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         };
+        _shortTermCacheManager = shortTermCacheManager;
     }
 
     public Task<int> GetVendorOpenOrdersCountAsync(int vendorId)
@@ -47,9 +51,9 @@ public class KmVendorService : IKmVendorService
     {
         var lcStatus = status.Trim().ToLowerInvariant();
         //how to use another table id?
-        var ois =await (from o in _orderItemStateRepository.Table
-                   where o.OrderId == order.Id
-                   select o).FirstOrDefaultAsync();
+        var ois = await (from o in _orderItemStatusRepository.Table
+                         where o.OrderId == order.Id
+                         select o).FirstOrDefaultAsync();
         var oIIds = orderItemIds.Distinct().ToList();
 
         if (ois == null)
@@ -62,9 +66,9 @@ public class KmVendorService : IKmVendorService
             ois = new OrderItemsStatus
             {
                 OrderId = order.Id,
-                Statuses = JsonSerializer.Serialize(d),
+                StatusDictionary = d,
             };
-            await _orderItemStateRepository.InsertAsync(ois);
+            await _orderItemStatusRepository.InsertAsync(ois);
             return;
         }
 
@@ -96,7 +100,16 @@ public class KmVendorService : IKmVendorService
             statuses[s] = d;
         }
         ois.Statuses = JsonSerializer.Serialize(statuses, _jsonSerializerOptions);
-        await _orderItemStateRepository.UpdateAsync(ois);
+        await _orderItemStatusRepository.UpdateAsync(ois);
 
+    }
+
+    public async Task<OrderItemsStatus> GetOrdersItemsStatusAsync(int orderId)
+    {
+        var ck = _shortTermCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<OrderItemsStatus>.ByIdCacheKey, orderId);
+
+        return await _shortTermCacheManager.GetAsync(
+            () => _orderItemStatusRepository.Table.FirstOrDefaultAsync(c => c.OrderId == orderId),
+            ck);
     }
 }

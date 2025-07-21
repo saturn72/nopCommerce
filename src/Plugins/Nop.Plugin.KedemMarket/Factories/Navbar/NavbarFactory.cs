@@ -5,7 +5,7 @@ public class NavbarFactory : INavbarFactory
 {
     private readonly INavbarService _navbarService;
     private readonly IVendorService _vendorService;
-    private readonly MediaConvertor _mediaConverter;
+    private readonly IMediaManager _mediaConverter;
     private readonly IPictureService _pictureService;
     private readonly IStaticCacheManager _staticCacheManager;
     private readonly IGenericAttributeService _genericAttributeService;
@@ -17,7 +17,7 @@ public class NavbarFactory : INavbarFactory
     public NavbarFactory(
         INavbarService navbarService,
         IVendorService vendorService,
-        MediaConvertor mediaConverter,
+        IMediaManager mediaConverter,
         IPictureService pictureService,
         IStaticCacheManager staticCacheManager,
         IAttributeService<VendorAttribute, VendorAttributeValue> vendorAttributeService,

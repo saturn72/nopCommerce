@@ -1,7 +1,8 @@
-﻿using FluentValidation;
+﻿using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
 using KedemMarket.Admin.Models.Navbar;
 using KedemMarket.Middlewares;
-using KedemMarket.Models.Vendor;
 using KedemMarket.Services.Notifications;
 using KedemMarket.Services.Vendor;
 
@@ -29,6 +30,13 @@ public class NopStartup : INopStartup
         services.AddMemoryCache();
         services.AddSignalR();
 
+        services.TryAddSingleton(new JsonSerializerOptions
+        {
+            AllowTrailingCommas = true,
+            PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase,
+            WriteIndented = false,
+            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All, UnicodeRanges.All),
+        });
 
         services.AddTransient<IValidator<ChangeVendorOrderStatusRequest>, ChangeVendorOrderStatusRequestValidator>();
         services.AddTransient<IValidator<CartTransactionApiModel>, CartTransactionApiModelValidator>();
@@ -61,7 +69,7 @@ public class NopStartup : INopStartup
         services.AddScoped<IEntityToModelFactory, EntityToModelFactory>();
 
         services.TryAddScoped<IProductApiFactory, ProductApiFactory>();
-        services.TryAddSingleton<MediaConvertor>();
+        services.TryAddSingleton<IMediaManager, MediaManager>();
         services.TryAddSingleton(TimeProvider.System);
 
         services.TryAddScoped<IStorageManager, GcpStorageManager>();

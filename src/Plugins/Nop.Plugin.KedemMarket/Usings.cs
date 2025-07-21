@@ -29,6 +29,7 @@ global using KedemMarket.Models.Orders;
 global using KedemMarket.Models.Pages;
 global using KedemMarket.Models.Store;
 global using KedemMarket.Models.Users;
+global using KedemMarket.Models.Vendors;
 global using KedemMarket.Navbar.Widgets;
 global using KedemMarket.Services.Analytics;
 global using KedemMarket.Services.Checkout;

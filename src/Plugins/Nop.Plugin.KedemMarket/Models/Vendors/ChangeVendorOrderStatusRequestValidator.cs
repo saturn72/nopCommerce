@@ -1,6 +1,6 @@
 ﻿using Nop.Web.Framework.Validators;
 
-namespace KedemMarket.Models.Vendor;
+namespace KedemMarket.Models.Vendors;
 
 public class ChangeVendorOrderStatusRequestValidator : AbstractValidator<ChangeVendorOrderStatusRequest>
 {

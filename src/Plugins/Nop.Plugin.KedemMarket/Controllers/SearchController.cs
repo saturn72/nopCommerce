@@ -12,7 +12,7 @@ public class SearchController : KmApiControllerBase
     private readonly CurrencySettings _currencySettings;
     private readonly IPictureService _pictureService;
     private readonly IVideoService _videoService;
-    private readonly MediaConvertor _mediaPreperar;
+    private readonly IMediaManager _mediaPreperar;
     private readonly IWorkContext _workContext;
 
     public SearchController(
@@ -23,7 +23,7 @@ public class SearchController : KmApiControllerBase
         CurrencySettings currencySettings,
         IPictureService pictureService,
         IVideoService videoService,
-        MediaConvertor mediaPreperar,
+        IMediaManager mediaPreperar,
         IWorkContext workContext)
     {
         _productService = productService;

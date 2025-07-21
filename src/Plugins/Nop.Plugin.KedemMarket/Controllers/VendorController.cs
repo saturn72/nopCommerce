@@ -1,6 +1,4 @@
-﻿
-using KedemMarket.Models.Vendor;
-using KedemMarket.Services.Vendor;
+﻿using KedemMarket.Services.Vendor;
 
 namespace KedemMarket.Controllers;
 
@@ -65,7 +63,8 @@ public class VendorController : KmApiControllerBase
             pageIndex: offset / limit,
             pageSize: limit,
             osIds: orderStatus?.ToList());
-        var data = await _orderModelFactory.PrepareOrderDetailsModelsByVendorIdAsync(os, vendor.Id);
+        var data = await _orderModelFactory.PrepareVendorOrderModelsAsync(os, vendor);
+        
         return ToJsonResult(data);
     }
 
@@ -103,6 +102,7 @@ public class VendorController : KmApiControllerBase
 
         var orderItemIds = items.Select(i => i.Id).ToList();
         await _kmVendorService.SetOrdersItemStatusAsync(order, orderItemIds, model.Status);
+
         return NoContent();
     }
 }

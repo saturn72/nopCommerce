@@ -3,7 +3,7 @@
 public class ShoppingCartFactory : ShoppingCartModelFactory, IShoppingCartFactory
 {
     private readonly IProductAttributeParser _productAttributeParser;
-    private readonly MediaConvertor _mediaConvertor;
+    private readonly IMediaManager _mediaConvertor;
 
     public ShoppingCartFactory(
         AddressSettings addressSettings,
@@ -55,7 +55,7 @@ public class ShoppingCartFactory : ShoppingCartModelFactory, IShoppingCartFactor
         TaxSettings taxSettings,
         VendorSettings vendorSettings,
         IProductAttributeParser productAttributeParser,
-        MediaConvertor mediaConvertor) : base(addressSettings, captchaSettings, catalogSettings, commonSettings, customerSettings, addressModelFactory, addressService, checkoutAttributeParser, checkoutAttributeService, checkoutAttributeFormatter, countryService, currencyService, customerService, dateTimeHelper, discountService, downloadService, genericAttributeService, giftCardService, httpContextAccessor, localizationService, orderProcessingService, orderTotalCalculationService, paymentPluginManager, paymentService, permissionService, pictureService, priceFormatter, productAttributeFormatter, productService, shippingService, shoppingCartService, shortTermCacheManager, stateProvinceService, staticCacheManager, storeContext, storeMappingService, taxService, urlRecordService, vendorService, webHelper, workContext, mediaSettings, orderSettings, rewardPointsSettings, shippingSettings, shoppingCartSettings, taxSettings, vendorSettings)
+        IMediaManager mediaConvertor) : base(addressSettings, captchaSettings, catalogSettings, commonSettings, customerSettings, addressModelFactory, addressService, checkoutAttributeParser, checkoutAttributeService, checkoutAttributeFormatter, countryService, currencyService, customerService, dateTimeHelper, discountService, downloadService, genericAttributeService, giftCardService, httpContextAccessor, localizationService, orderProcessingService, orderTotalCalculationService, paymentPluginManager, paymentService, permissionService, pictureService, priceFormatter, productAttributeFormatter, productService, shippingService, shoppingCartService, shortTermCacheManager, stateProvinceService, staticCacheManager, storeContext, storeMappingService, taxService, urlRecordService, vendorService, webHelper, workContext, mediaSettings, orderSettings, rewardPointsSettings, shippingSettings, shoppingCartSettings, taxSettings, vendorSettings)
     {
         _productAttributeParser = productAttributeParser;
         _mediaConvertor = mediaConvertor;

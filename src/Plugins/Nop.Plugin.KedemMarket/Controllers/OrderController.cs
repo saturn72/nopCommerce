@@ -1,6 +1,4 @@
-﻿using KedemMarket.Models.Vendor;
-
-namespace KedemMarket.Controllers;
+﻿namespace KedemMarket.Controllers;
 
 [Route("api/order")]
 public class OrderController : KmApiControllerBase

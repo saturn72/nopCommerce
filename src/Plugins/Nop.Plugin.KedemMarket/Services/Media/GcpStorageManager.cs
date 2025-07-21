@@ -1,12 +1,10 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 using Microsoft.Extensions.Options;
-using Nop.Services.Logging;
 
 namespace KedemMarket.Services.Media;
 public class GcpStorageManager : IStorageManager
 {
-    private readonly ILogger _logger;
     private readonly IOptionsMonitor<GcpOptions> _options;
     private readonly string[] _scopes = new[]
        {
@@ -16,11 +14,9 @@ public class GcpStorageManager : IStorageManager
     private readonly StorageClient _storageClient;
 
     public GcpStorageManager(
-        IOptionsMonitor<GcpOptions> options,
-        ILogger logger)
+        IOptionsMonitor<GcpOptions> options)
     {
         _options = options;
-        _logger = logger;
 
         var cred = GoogleCredential.GetApplicationDefault();
         _ = cred.CreateScoped(_scopes)

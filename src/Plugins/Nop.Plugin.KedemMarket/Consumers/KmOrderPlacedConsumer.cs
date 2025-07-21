@@ -37,6 +37,6 @@ public class KmOrderPlacedConsumer : IConsumer<EntityInsertedEvent<KmOrder>>
         if (vendorIds.Length == 0)
             return;
 
-        await _notifier.NotifyVendorsOnNewOrderAsync(vendorIds);
+        await _notifier.OnNewOrderAsync(eventMessage.Entity.KmUserId, vendorIds, orderId);
     }
 }

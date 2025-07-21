@@ -1,6 +1,4 @@
-﻿using KedemMarket.Services.Notifications;
-using KedemMarket.Services.Vendor;
-using Nop.Services.Orders;
+﻿using KedemMarket.Services.Vendor;
 
 namespace KedemMarket.Consumers;
 public class OrderPlacedConsumer : IConsumer<EntityInsertedEvent<Order>>

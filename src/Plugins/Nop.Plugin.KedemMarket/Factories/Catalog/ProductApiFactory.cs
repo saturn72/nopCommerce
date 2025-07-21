@@ -11,7 +11,7 @@ public class ProductApiFactory : IProductApiFactory
     private readonly IVideoService _videoService;
     private readonly IProductAttributeService _productAttributeService;
     private readonly IProductAttributeParser _productAttributeParser;
-    private readonly MediaConvertor _mediaConvertor;
+    private readonly IMediaManager _mediaConvertor;
     private readonly IProductAttributeFormatter _productAttributeFormatter;
     private readonly IProductModelFactory _productModelFactory;
     private readonly IPriceFormatter _priceFormatter;
@@ -26,7 +26,7 @@ public class ProductApiFactory : IProductApiFactory
         IVideoService videoService,
         IProductAttributeService productAttributeService,
         IProductAttributeParser productAttributeParser,
-        MediaConvertor mediaFactory,
+        IMediaManager mediaFactory,
         IProductAttributeFormatter productAttributeFormatter,
         IProductModelFactory productModelFactory,
         IPriceFormatter priceFormatter,

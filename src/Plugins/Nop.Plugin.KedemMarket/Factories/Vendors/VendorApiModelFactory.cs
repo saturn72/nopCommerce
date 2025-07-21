@@ -5,7 +5,7 @@ public class VendorApiModelFactory : IVendorApiModelFactory
     private readonly IVendorService _vendorService;
     private readonly IPictureService _pictureService;
     private readonly IAddressService _addressService;
-    private readonly MediaConvertor _mediaPreperar;
+    private readonly IMediaManager _mediaPreperar;
     private readonly IAttributeParser<AddressAttribute, AddressAttributeValue> _addressAttributeParser;
     private readonly IAttributeService<AddressAttribute, AddressAttributeValue> _addressAttributeService;
     private readonly IDirectoryFactory _directoryFactory;
@@ -15,7 +15,7 @@ public class VendorApiModelFactory : IVendorApiModelFactory
     public VendorApiModelFactory(
         IPictureService pictureService,
         IAddressService addressService,
-        MediaConvertor mediaPreperar,
+        IMediaManager mediaPreperar,
         IAttributeParser<AddressAttribute, AddressAttributeValue> addressAttributeParser,
         IAttributeService<AddressAttribute, AddressAttributeValue> addressAttributeService,
         IDirectoryFactory directoryFactory,

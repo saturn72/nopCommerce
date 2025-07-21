@@ -1,5 +1,7 @@
-﻿namespace KedemMarket.Services.Notifications;
+﻿
+namespace KedemMarket.Services.Notifications;
 public interface INotifier
 {
-    public Task NotifyVendorsOnNewOrderAsync(IEnumerable<int> vendorIds);
+    public Task NotifyCustomerOnOrderStausChangedAsync(Order order);
+    public Task OnNewOrderAsync(string userId, IEnumerable<int> vendorIds, int orderId);
 }

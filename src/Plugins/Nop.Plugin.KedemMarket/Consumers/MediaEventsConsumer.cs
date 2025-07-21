@@ -1,5 +1,4 @@
 ﻿
-
 namespace KedemMarket.Consumers;
 
 public class MediaEventsConsumer :
@@ -32,14 +31,14 @@ public class MediaEventsConsumer :
     IConsumer<EntityUpdatedEvent<Vendor>>,
     IConsumer<EntityDeletedEvent<Vendor>>
 {
-    private readonly IStorageManager _storageManager;
+    private readonly IMediaManager _mediaConvertor;
     private readonly IPictureService _pictureService;
 
     public MediaEventsConsumer(
-        IStorageManager storageManager,
+        IMediaManager mediaconvertor,
         IPictureService pictureService)
     {
-        _storageManager = storageManager;
+        _mediaConvertor = mediaconvertor;
         _pictureService = pictureService;
     }
 
@@ -68,7 +67,7 @@ public class MediaEventsConsumer :
         var tasks = new[]{
             KmConsts.MediaTypes.Thumbnail,
             KmConsts.MediaTypes.Image
-        }.Select(mt => _storageManager.UploadByKmMediaTypeAsync(mt, pictureBinary)).ToArray();
+        }.Select(mt => _mediaConvertor.UploadByMediaTypeAsync(mt, pictureBinary.PictureId, pictureBinary.BinaryData)).ToArray();
 
         await Task.WhenAll(tasks);
     }
@@ -77,26 +76,17 @@ public class MediaEventsConsumer :
     {
         if (pictureId == 0)
             return;
-        var paths = GetStorageImagePaths(pictureId);
-        await Task.WhenAll(paths.Select(_storageManager.DeleteAsync).ToArray());
+        var paths = await GetStorageImagePaths(pictureId);
+        var tasks = paths.Select(_mediaConvertor.DeleteAsync).ToArray();
+        await Task.WhenAll(tasks);
     }
 
-    private string[] GetStorageImagePaths(int pictureId)
+    private async Task<string[]> GetStorageImagePaths(int pictureId)
     {
-        return new[]
-        {
-            _storageManager.GetWebpPath(KmConsts.MediaTypes.Thumbnail, pictureId),
-            _storageManager.GetWebpPath(KmConsts.MediaTypes.Image, pictureId)
-        };
-    }
-
-    private async Task DeleteVideoFromStorageByVideodAsync(int videoId)
-    {
-        if (videoId == 0)
-            return;
-
-        var path = _storageManager.GetWebpPath(KmConsts.MediaTypes.Video, videoId);
-        await _storageManager.DeleteAsync(path);
+        return await Task.WhenAll(
+           _mediaConvertor.GetThumbnailDownloadLink(pictureId),
+           _mediaConvertor.GetImageDownloadLink(pictureId)
+            );
     }
 
     public async Task HandleEventAsync(EntityInsertedEvent<Manufacturer> eventMessage)
