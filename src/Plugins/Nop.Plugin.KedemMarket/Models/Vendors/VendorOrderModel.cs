@@ -6,4 +6,5 @@ public record VendorOrderModel : BaseNopEntityModel
     public IEnumerable<VendorOrderItemModel> Items { get; set; } = [];
     public string OrderStatus { get; set; }
     public string OrderTotal { get; set; }
+    public string PaymentStatus { get; set; }
 }

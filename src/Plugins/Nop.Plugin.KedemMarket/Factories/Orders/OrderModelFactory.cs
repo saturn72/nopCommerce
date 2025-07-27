@@ -84,6 +84,7 @@ public class OrderModelFactory : IOrderModelFactory
                 OrderStatus = model.OrderStatus,
                 OrderTotal = model.OrderTotal,
                 Items = vendorItems,
+                PaymentStatus = model.PaymentStatus,
             };
             var resOis = new List<string>();
 
