@@ -1,7 +1,7 @@
 ﻿
 
 namespace KedemMarket.Factories.Pages;
-public interface IHomePageFactory
+public interface ICmsPagesFactory
 {
     public Task<HomePageModel> GetHomePageAsync();
 }

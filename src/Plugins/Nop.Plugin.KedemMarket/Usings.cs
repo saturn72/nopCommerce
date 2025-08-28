@@ -103,3 +103,4 @@ global using Nop.Web.Models.Common;
 global using Nop.Web.Models.Order;
 global using Nop.Web.Models.ShoppingCart;
 global using static System.ArgumentNullException;
+global using KedemMarket.Services.Agent;

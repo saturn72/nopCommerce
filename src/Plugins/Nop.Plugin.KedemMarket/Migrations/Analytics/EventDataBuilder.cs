@@ -3,7 +3,7 @@ using FluentMigrator;
 using Nop.Data.Mapping.Builders;
 
 namespace KedemMarket.Migrations.Analytics;
-public class EventDataBuilder : NopEntityBuilder<EventData>
+public class CustomerAgentSessionBuilder : NopEntityBuilder<EventData>
 {
     public override void MapEntity(CreateTableExpressionBuilder table)
     {

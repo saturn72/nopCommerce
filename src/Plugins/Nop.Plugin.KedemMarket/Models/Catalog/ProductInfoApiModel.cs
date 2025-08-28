@@ -14,6 +14,7 @@ public record ProductInfoApiModel
     public string FullDescription { get; init; }
     public IEnumerable<object> Gallery { get; init; }
     public string Gtin { get; init; }
+    public string JsonLd { get; internal set; }
     public string ShortDescription { get; init; }
     public bool ShowStockQuantity { get; init; }
     public string StockAvailability { get; init; }
@@ -23,7 +24,14 @@ public record ProductInfoApiModel
     public string Slug { get; init; }
     public ProductReview Reviews { get; init; }
     public IEnumerable<Variant> Variants { get; init; }
+    public VendorLightModel Vendor { get; init; }
 
+    public record VendorLightModel
+    {
+        public int Id { get; init; }
+        public string Name { get; init; }
+        public string Slug { get; init; }
+    }
     public record ProductBanner
     {
         public int Priority { get; init; }

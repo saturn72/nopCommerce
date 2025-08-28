@@ -111,6 +111,9 @@ public class ProductApiFactory : IProductApiFactory
             Banners = banners,
             DisplayIndex = product.DisplayOrder,
             FullDescription = productDetails.FullDescription,
+            Gallery = gallery,
+            Gtin = productDetails.Gtin,
+            JsonLd = productDetails.JsonLd,
             Mpn = productDetails.ManufacturerPartNumber,
             Name = productDetails.Name,
             Price = productDetails.ProductPrice.PriceValue,
@@ -119,8 +122,6 @@ public class ProductApiFactory : IProductApiFactory
             PriceOldText = productDetails.ProductPrice.OldPrice,
             PriceWithDiscount = productDetails.ProductPrice.PriceWithDiscountValue,
             PriceWithDiscountText = productDetails.ProductPrice.PriceWithDiscount,
-            Gallery = gallery,
-            Gtin = productDetails.Gtin,
             Reviews = reviews,
             ShortDescription = productDetails.ShortDescription,
             ShowOnHomePage = product.ShowOnHomepage,
@@ -129,6 +130,12 @@ public class ProductApiFactory : IProductApiFactory
             Sku = productDetails.Sku,
             Slug = productDetails.SeName,
             Variants = variants,
+            Vendor = new()
+            {
+                Id = productDetails.VendorModel?.Id ?? 0,
+                Name = productDetails.VendorModel?.Name,
+                Slug = productDetails.VendorModel?.SeName
+            }
         };
     }
 

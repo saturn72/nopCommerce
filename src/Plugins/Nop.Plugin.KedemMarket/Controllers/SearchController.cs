@@ -1,6 +1,4 @@
-﻿using Nop.Core;
-
-namespace KedemMarket.Controllers;
+﻿namespace KedemMarket.Controllers;
 
 [Route("api/search")]
 public class SearchController : KmApiControllerBase

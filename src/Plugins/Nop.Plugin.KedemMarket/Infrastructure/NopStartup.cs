@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Unicode;
 using KedemMarket.Admin.Models.Navbar;
 using KedemMarket.Middlewares;
+using KedemMarket.Services.Agent;
 using KedemMarket.Services.Notifications;
 using KedemMarket.Services.Vendor;
 
@@ -45,6 +46,8 @@ public class NopStartup : INopStartup
         services.AddScoped<IKmOrderService, KmOrderService>();
         services.AddScoped<INotifier, Notifier>();
 
+        services.AddScoped<IAgentSessionService, AgentSessionService>();
+
         services.AddScoped<IKmVendorService, KmVendorService>();
         services.AddScoped<IOrderDocumentStore, OrderDocumentStore>();
         services.AddScoped<IUserProfileDocumentStore, UserProfileDocumentStore>();
@@ -54,7 +57,7 @@ public class NopStartup : INopStartup
         services.AddScoped<IShoppingCartFactory, ShoppingCartFactory>();
         services.AddScoped<Factories.Orders.IOrderModelFactory, Factories.Orders.OrderModelFactory>();
         services.AddScoped<IDirectoryFactory, DirectoryFactory>();
-        services.AddScoped<IHomePageFactory, HomePageFactory>();
+        services.AddScoped<ICmsPagesFactory, CmsPagesFactory>();
         services.AddScoped<IAnalyticsService, AnalyticsService>();
         services.AddTransient<IValidator<EventDataModel>, EventDataModelValidator>();
 
@@ -66,9 +69,10 @@ public class NopStartup : INopStartup
         services.AddTransient<IValidator<NavbarInfoModel>, NavInfoModelValidator>();
         services.AddTransient<IValidator<CreateOrUpdateNavbarElementModel>, CreateNavbarElementPopupModelValidator>();
 
-        services.AddScoped<IEntityToModelFactory, EntityToModelFactory>();
+        services.AddScoped<ICmsPageModelFactory, CmsPageModelFactory>();
 
         services.TryAddScoped<IProductApiFactory, ProductApiFactory>();
+        services.TryAddScoped<ICategoryApiModelFactory, CategoryApiModelFactory>();
         services.TryAddSingleton<IMediaManager, MediaManager>();
         services.TryAddSingleton(TimeProvider.System);
 

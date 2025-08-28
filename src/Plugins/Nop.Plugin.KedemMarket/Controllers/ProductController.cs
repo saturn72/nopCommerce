@@ -23,6 +23,7 @@ public class ProductController : KmApiControllerBase
     public async Task<IActionResult> Query(
         [FromQuery(Name = "q")] string keywords,
         [FromQuery] int vendorId = 0,
+        [FromQuery] int categoryId = 0,
         [FromQuery] int offset = 0,
         [FromQuery] int pageSize = 50)
     {
@@ -34,6 +35,7 @@ public class ProductController : KmApiControllerBase
         var products = await _productService.SearchProductsAsync(
             offset,
             pageSize,
+            categoryIds: categoryId > 0?[categoryId]: null,
             vendorId: vendorId,
             storeId: store.Id,
             keywords: keywords,
@@ -47,5 +49,4 @@ public class ProductController : KmApiControllerBase
         var data = await _productApiFactory.ToProductInfoApiModelAsync(products);
         return ToJsonResult(new { products = data });
     }
-
 }

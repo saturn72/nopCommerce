@@ -59,8 +59,11 @@ public sealed class MediaManager : IMediaManager
         };
     }
 
-    public async Task<GalleryItemModel> ToGalleryItemModel(PictureModel picture, int index)
+    public async Task<GalleryItemModel> ToGalleryItemModelAsync(PictureModel picture, int index)
     {
+        if (picture == null)
+            return null;
+
         return new()
         {
             Alt = picture.AlternateText,
@@ -75,6 +78,9 @@ public sealed class MediaManager : IMediaManager
 
     public GalleryItemModel ToGalleryItemModel(Video video, int index)
     {
+        if (video == null)
+            return null;
+
         return new()
         {
             Index = index,

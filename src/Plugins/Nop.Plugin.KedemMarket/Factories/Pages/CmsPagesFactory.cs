@@ -2,7 +2,7 @@
 
 namespace KedemMarket.Factories.Pages;
 
-public class HomePageFactory : IHomePageFactory
+public class CmsPagesFactory : ICmsPagesFactory
 {
     private readonly KedemMarket.Factories.Navbar.INavbarFactory _navbarFactory;
     private readonly IVendorApiModelFactory _vendorFactory;
@@ -10,7 +10,7 @@ public class HomePageFactory : IHomePageFactory
     private readonly ILogger _logger;
     //private readonly IStaticCacheManager _staticCacheManager;
 
-    public HomePageFactory(
+    public CmsPagesFactory(
     KedemMarket.Factories.Navbar.INavbarFactory navbarFactory,
         ILogger logger,
         IVendorApiModelFactory vendorFactory)

@@ -3,33 +3,33 @@
 [Route("cms")]
 public class CmsController : KmApiControllerBase
 {
-    private readonly IHomePageFactory _homePageFactory;
+    private readonly ICmsPagesFactory _cmsPagesFactory;
     private readonly IWorkContext _workContext;
     private readonly IUrlRecordService _urlRecordService;
-    private readonly IEntityToModelFactory _entityToModelFactory;
+    private readonly ICmsPageModelFactory _cmsPageModelFactory;
 
     public CmsController(
-        IHomePageFactory homePageFactory,
+        ICmsPagesFactory cmsPagesFactory,
         IWorkContext workContext,
         IUrlRecordService urlRecordService,
-        IEntityToModelFactory entityToModelFactory)
+        ICmsPageModelFactory entityToModelFactory)
     {
-        _homePageFactory = homePageFactory;
+        _cmsPagesFactory = cmsPagesFactory;
         _workContext = workContext;
         _urlRecordService = urlRecordService;
-        _entityToModelFactory = entityToModelFactory;
+        _cmsPageModelFactory = entityToModelFactory;
     }
 
     [HttpGet("homepage")]
     public async Task<IActionResult> GetHomePageAsync()
     {
-        var model = await _homePageFactory.GetHomePageAsync();
+        var model = await _cmsPagesFactory.GetHomePageAsync();
 
         return ToJsonResult(model);
     }
 
     [HttpGet("slug/{slug}")]
-    public async Task<IActionResult> GetProductBySlugAsync(string slug)
+    public async Task<IActionResult> GetCmsPageBySlugAsync(string slug)
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (customer == default)
@@ -39,7 +39,7 @@ public class CmsController : KmApiControllerBase
         if (ur == null || ur.EntityId <= 0)
             return NotFound();
 
-        var data = await _entityToModelFactory.GetModelEntityByTypeNameAndEntityId(ur.EntityName, ur.EntityId);
+        var data = await _cmsPageModelFactory.GetCmsPageModelEntityByTypeNameAndEntityIdAsync(ur.EntityName, ur.EntityId);
 
         if (data == default)
             return NotFound();

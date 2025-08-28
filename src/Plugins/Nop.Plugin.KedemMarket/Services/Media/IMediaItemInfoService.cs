@@ -1,7 +1,4 @@
-﻿using KedemMarket.Models.Media;
-using Nop.Core.Domain.Media;
-
-namespace KedemMarket.Services.Media;
+﻿namespace KedemMarket.Services.Media;
 
 public interface IMediaItemInfoService
 {

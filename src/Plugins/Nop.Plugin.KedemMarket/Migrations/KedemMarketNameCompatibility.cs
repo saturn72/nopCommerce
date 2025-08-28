@@ -1,4 +1,5 @@
-﻿using KedemMarket.Domain.Ordering;
+﻿using KedemMarket.Domain.Agent;
+using KedemMarket.Domain.Ordering;
 
 namespace KedemMarket.Migrations;
 
@@ -15,6 +16,8 @@ public partial class KedemMarketNameCompatibility : INameCompatibility
         {typeof(NavbarInfo), "km_navbarinfo" },
         {typeof(NavbarElement), "km_navbarelement" },
         {typeof(NavbarElementVendor), "km_navbarelementvendor" },
+        {typeof(CustomerAgentSession), "km_customeragentsession" },
+        {typeof(CustomerAgentSessionMessage), "km_customeragentsessionmessage" },
 
     };
 
