@@ -1,4 +1,6 @@
-﻿namespace KedemMarket.Factories.Catalog;
+﻿using System.Runtime.ConstrainedExecution;
+
+namespace KedemMarket.Factories.Catalog;
 
 public class CategoryApiModelFactory : ICategoryApiModelFactory
 {
@@ -7,36 +9,58 @@ public class CategoryApiModelFactory : ICategoryApiModelFactory
     private readonly IProductApiFactory _productApiFactory;
     private readonly IProductService _productService;
     private readonly IStoreContext _storeContext;
+    private readonly ICategoryService _categoryService;
 
     public CategoryApiModelFactory(
         ICatalogModelFactory catalogModelFactory,
         IMediaManager mediaConverter,
         IProductApiFactory productApiFactory,
         IProductService productService,
-        IStoreContext storeContext)
+        IStoreContext storeContext,
+        ICategoryService categoryService)
     {
         _catalogModelFactory = catalogModelFactory;
         _mediaConverter = mediaConverter;
         _productApiFactory = productApiFactory;
         _productService = productService;
         _storeContext = storeContext;
+        _categoryService = categoryService;
     }
     public async Task<CategoryApiModel> PrepareCategoryApiModelAsync(Category category)
     {
         var model = await _catalogModelFactory.PrepareCategoryModelAsync(category, new CatalogProductsCommand());
+        var breadcrumbs = new List<CategorySlimApiModel>();
+        if (model.CategoryBreadcrumb.NotNullAndNotNotEmpty())
+        {
+            for (var i = 0; i < model.CategoryBreadcrumb.Count; i++)
+            {
+                var cur = model.CategoryBreadcrumb.ElementAt(i);
+                var c = await _categoryService.GetCategoryByIdAsync(cur.Id);
+                breadcrumbs.Add(new()
+                {
+                    Id = cur.Id,
+                    Name = cur.Name,
+                    Slug = cur.SeName,
+                    Description = cur.Description,
+                    ThumbnailUrl = await _mediaConverter.GetDownloadLinkAsync(c.PictureId, KmConsts.MediaTypes.Thumbnail),
+                });
+            }
+        }
 
         var subCategories = new List<CategorySlimApiModel>();
         if (model.SubCategories != null && model.SubCategories.Count > 0)
         {
             foreach (var sc in model.SubCategories)
             {
+                var c = await _categoryService.GetCategoryByIdAsync(sc.Id);
+
                 subCategories.Add(new CategorySlimApiModel
                 {
                     Id = sc.Id,
                     Name = sc.Name,
                     Slug = sc.SeName,
                     Description = sc.Description,
-                    ThumbnailUrl = await _mediaConverter.GetDownloadLinkAsync(category.PictureId, KmConsts.MediaTypes.Thumbnail),
+                    ThumbnailUrl = await _mediaConverter.GetDownloadLinkAsync(c.PictureId, KmConsts.MediaTypes.Thumbnail),
                 });
             }
         }
@@ -53,7 +77,7 @@ public class CategoryApiModelFactory : ICategoryApiModelFactory
         var ps = await _productService.SearchProductsAsync(
             0,
             10,
-            categoryIds: [category.Id] ,
+            categoryIds: [category.Id],
             excludeFeaturedProducts: true,
             storeId: store.Id,
             orderBy: ProductSortingEnum.Position);
@@ -63,18 +87,19 @@ public class CategoryApiModelFactory : ICategoryApiModelFactory
         return new CategoryApiModel
         {
             Id = model.Id,
-            Name = model.Name,
+            Breadcrumbs = breadcrumbs,
             Description = model.Description,
+            FeaturedProducts = featuredProducts,
+            ImageUrl = await _mediaConverter.GetDownloadLinkAsync(category.PictureId, KmConsts.MediaTypes.Image),
+            JsonLd = model.JsonLd,
             MetaKeywords = model.MetaKeywords,
             MetaDescription = model.MetaDescription,
             MetaTitle = model.MetaTitle,
-            ImageUrl = await _mediaConverter.GetDownloadLinkAsync(category.PictureId, KmConsts.MediaTypes.Image),
+            Name = model.Name,
+            Products = products,
             ThumbnailUrl = await _mediaConverter.GetDownloadLinkAsync(category.PictureId, KmConsts.MediaTypes.Thumbnail),
             Slug = model.SeName,
             SubCategories = subCategories,
-            FeaturedProducts = featuredProducts,
-            Products = products,
-            JsonLd = model.JsonLd,
         };
     }
 }

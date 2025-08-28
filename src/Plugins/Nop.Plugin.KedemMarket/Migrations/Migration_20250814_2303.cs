@@ -23,8 +23,9 @@ public class Migration_20250814_2303 : Migration
     /// </summary>
     public override void Up()
     {
-        if (Schema.Table("km_useragentsession").Exists())
-            Delete.Table("km_useragentsession");
+        var tn = _nameCompatibility.TableNames[typeof(CustomerAgentSession)];
+        if (Schema.Table(tn).Exists())
+            Delete.Table(tn);
 
         Create.TableFor<CustomerAgentSession>();
 
