@@ -26,6 +26,15 @@ public class CategoryApiModelFactory : ICategoryApiModelFactory
         _storeContext = storeContext;
         _categoryService = categoryService;
     }
+
+    private async Task<string?> GetCategoryThumbImageAsync(int categoryId)
+    {
+        var category = await _categoryService.GetCategoryByIdAsync(categoryId);
+        return category.PictureId > 0 ?
+        await _mediaConverter.GetDownloadLinkAsync(category.PictureId, KmConsts.MediaTypes.Thumbnail)
+        : default;
+    }
+
     public async Task<CategoryApiModel> PrepareCategoryApiModelAsync(Category category)
     {
         var model = await _catalogModelFactory.PrepareCategoryModelAsync(category, new CatalogProductsCommand());
@@ -35,14 +44,13 @@ public class CategoryApiModelFactory : ICategoryApiModelFactory
             for (var i = 0; i < model.CategoryBreadcrumb.Count; i++)
             {
                 var cur = model.CategoryBreadcrumb.ElementAt(i);
-                var c = await _categoryService.GetCategoryByIdAsync(cur.Id);
                 breadcrumbs.Add(new()
                 {
                     Id = cur.Id,
                     Name = cur.Name,
                     Slug = cur.SeName,
                     Description = cur.Description,
-                    ThumbnailUrl = await _mediaConverter.GetDownloadLinkAsync(c.PictureId, KmConsts.MediaTypes.Thumbnail),
+                    ThumbnailUrl = await GetCategoryThumbImageAsync(cur.Id),
                 });
             }
         }
@@ -51,18 +59,14 @@ public class CategoryApiModelFactory : ICategoryApiModelFactory
         if (model.SubCategories != null && model.SubCategories.Count > 0)
         {
             foreach (var sc in model.SubCategories)
-            {
-                var c = await _categoryService.GetCategoryByIdAsync(sc.Id);
-
                 subCategories.Add(new CategorySlimApiModel
                 {
                     Id = sc.Id,
                     Name = sc.Name,
                     Slug = sc.SeName,
                     Description = sc.Description,
-                    ThumbnailUrl = await _mediaConverter.GetDownloadLinkAsync(c.PictureId, KmConsts.MediaTypes.Thumbnail),
+                    ThumbnailUrl = await GetCategoryThumbImageAsync(sc.Id),
                 });
-            }
         }
 
         var featuredProducts = Enumerable.Empty<ProductSlimApiModel>();
@@ -84,20 +88,25 @@ public class CategoryApiModelFactory : ICategoryApiModelFactory
 
         var products = await _productApiFactory.ToProductInfoApiModelAsync(ps);
 
+        var (imageUrl, thumbUrl) = category.PictureId > 0 ?
+        (await _mediaConverter.GetDownloadLinkAsync(category.PictureId, KmConsts.MediaTypes.Image),
+        await _mediaConverter.GetDownloadLinkAsync(category.PictureId, KmConsts.MediaTypes.Thumbnail))
+        : (default, default);
+
         return new CategoryApiModel
         {
             Id = model.Id,
             Breadcrumbs = breadcrumbs,
             Description = model.Description,
             FeaturedProducts = featuredProducts,
-            ImageUrl = await _mediaConverter.GetDownloadLinkAsync(category.PictureId, KmConsts.MediaTypes.Image),
+            ImageUrl = imageUrl,
             JsonLd = model.JsonLd,
             MetaKeywords = model.MetaKeywords,
             MetaDescription = model.MetaDescription,
             MetaTitle = model.MetaTitle,
             Name = model.Name,
             Products = products,
-            ThumbnailUrl = await _mediaConverter.GetDownloadLinkAsync(category.PictureId, KmConsts.MediaTypes.Thumbnail),
+            ThumbnailUrl = thumbUrl,
             Slug = model.SeName,
             SubCategories = subCategories,
         };
