@@ -6,6 +6,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.FilterLevels;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
@@ -24,6 +25,7 @@ using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport.Help;
+using Nop.Services.FilterLevels;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
@@ -55,6 +57,7 @@ public partial class ImportManager : IImportManager
     protected readonly ICustomNumberFormatter _customNumberFormatter;
     protected readonly INopDataProvider _dataProvider;
     protected readonly IDateRangeService _dateRangeService;
+    protected readonly IFilterLevelValueService _filterLevelValueService;
     protected readonly IGenericAttributeService _genericAttributeService;
     protected readonly IHttpClientFactory _httpClientFactory;
     protected readonly ILanguageService _languageService;
@@ -73,7 +76,6 @@ public partial class ImportManager : IImportManager
     protected readonly IProductTagService _productTagService;
     protected readonly IProductTemplateService _productTemplateService;
     protected readonly IServiceScopeFactory _serviceScopeFactory;
-    protected readonly IShippingService _shippingService;
     protected readonly ISpecificationAttributeService _specificationAttributeService;
     protected readonly IStateProvinceService _stateProvinceService;
     protected readonly IStoreContext _storeContext;
@@ -82,6 +84,7 @@ public partial class ImportManager : IImportManager
     protected readonly ITaxCategoryService _taxCategoryService;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IVendorService _vendorService;
+    protected readonly IWarehouseService _warehouseService;
     protected readonly IWorkContext _workContext;
     protected readonly MediaSettings _mediaSettings;
     protected readonly SecuritySettings _securitySettings;
@@ -103,6 +106,7 @@ public partial class ImportManager : IImportManager
         ICustomNumberFormatter customNumberFormatter,
         INopDataProvider dataProvider,
         IDateRangeService dateRangeService,
+        IFilterLevelValueService filterLevelValueService,
         IGenericAttributeService genericAttributeService,
         IHttpClientFactory httpClientFactory,
         ILanguageService languageService,
@@ -121,7 +125,6 @@ public partial class ImportManager : IImportManager
         IProductTagService productTagService,
         IProductTemplateService productTemplateService,
         IServiceScopeFactory serviceScopeFactory,
-        IShippingService shippingService,
         ISpecificationAttributeService specificationAttributeService,
         IStateProvinceService stateProvinceService,
         IStoreContext storeContext,
@@ -130,6 +133,7 @@ public partial class ImportManager : IImportManager
         ITaxCategoryService taxCategoryService,
         IUrlRecordService urlRecordService,
         IVendorService vendorService,
+        IWarehouseService warehouseService,
         IWorkContext workContext,
         MediaSettings mediaSettings,
         SecuritySettings securitySettings,
@@ -146,6 +150,7 @@ public partial class ImportManager : IImportManager
         _customNumberFormatter = customNumberFormatter;
         _dataProvider = dataProvider;
         _dateRangeService = dateRangeService;
+        _filterLevelValueService = filterLevelValueService;
         _genericAttributeService = genericAttributeService;
         _httpClientFactory = httpClientFactory;
         _fileProvider = fileProvider;
@@ -164,7 +169,6 @@ public partial class ImportManager : IImportManager
         _productTagService = productTagService;
         _productTemplateService = productTemplateService;
         _serviceScopeFactory = serviceScopeFactory;
-        _shippingService = shippingService;
         _specificationAttributeService = specificationAttributeService;
         _stateProvinceService = stateProvinceService;
         _storeContext = storeContext;
@@ -173,6 +177,7 @@ public partial class ImportManager : IImportManager
         _taxCategoryService = taxCategoryService;
         _urlRecordService = urlRecordService;
         _vendorService = vendorService;
+        _warehouseService = warehouseService;
         _workContext = workContext;
         _mediaSettings = mediaSettings;
         _securitySettings = securitySettings;
@@ -559,9 +564,6 @@ public partial class ImportManager : IImportManager
                 case "AutomaticallyCalculatePriceRange":
                     category.ManuallyPriceRange = property.BooleanValue;
                     break;
-                case "IncludeInTopMenu":
-                    category.IncludeInTopMenu = property.BooleanValue;
-                    break;
                 case "IsLimitedToStores":
                     category.LimitedToStores = property.BooleanValue;
                     break;
@@ -585,7 +587,7 @@ public partial class ImportManager : IImportManager
             var importedStores = category.LimitedToStores ? limitedToStoresList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => allStores.FirstOrDefault(store => store.Name == x.Trim())?.Id ?? int.Parse(x.Trim())).ToList() : new List<int>();
 
-            await _categoryService.UpdateCategoryStoreMappingsAsync(category, importedStores);
+            await _storeMappingService.SaveStoreMappingsAsync(category, importedStores);
         }
 
         category.UpdatedOnUtc = DateTime.UtcNow;
@@ -626,7 +628,6 @@ public partial class ImportManager : IImportManager
             category.PageSize = _catalogSettings.DefaultCategoryPageSize;
             category.PageSizeOptions = _catalogSettings.DefaultCategoryPageSizeOptions;
             category.Published = true;
-            category.IncludeInTopMenu = true;
             category.AllowCustomersToSelectPageSize = true;
         }
         else
@@ -2485,7 +2486,7 @@ public partial class ImportManager : IImportManager
                 var oldWarehouseMessage = string.Empty;
                 if (previousWarehouseId > 0)
                 {
-                    var oldWarehouse = await _shippingService.GetWarehouseByIdAsync(previousWarehouseId);
+                    var oldWarehouse = await _warehouseService.GetWarehouseByIdAsync(previousWarehouseId);
                     if (oldWarehouse != null)
                         oldWarehouseMessage = string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.EditWarehouse.Old"), oldWarehouse.Name);
                 }
@@ -2493,7 +2494,7 @@ public partial class ImportManager : IImportManager
                 var newWarehouseMessage = string.Empty;
                 if (product.WarehouseId > 0)
                 {
-                    var newWarehouse = await _shippingService.GetWarehouseByIdAsync(product.WarehouseId);
+                    var newWarehouse = await _warehouseService.GetWarehouseByIdAsync(product.WarehouseId);
                     if (newWarehouse != null)
                         newWarehouseMessage = string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.EditWarehouse.New"), newWarehouse.Name);
                 }
@@ -2626,7 +2627,7 @@ public partial class ImportManager : IImportManager
                 //delete product manufacturers
                 var deletedProductsManufacturers = await manufacturers.Where(manufacturerId => !importedManufacturers.Contains(manufacturerId))
                     .SelectAwait(async manufacturerId => (await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id)).FirstOrDefault(pc => pc.ManufacturerId == manufacturerId)).ToListAsync();
-                
+
                 deletedProductsManufacturers = deletedProductsManufacturers.Where(m => m != null).ToList();
                 await _manufacturerService.DeleteProductManufacturersAsync(deletedProductsManufacturers);
             }
@@ -2656,7 +2657,7 @@ public partial class ImportManager : IImportManager
                 var importedStores = product.LimitedToStores ? limitedToStoresList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => allStores.FirstOrDefault(store => store.Name == x.Trim())?.Id ?? int.Parse(x.Trim())).ToList() : new List<int>();
 
-                await _productService.UpdateProductStoreMappingsAsync(product, importedStores);
+                await _storeMappingService.SaveStoreMappingsAsync(product, importedStores);
             }
 
             var pictureMetaData = new ProductPictureMetadata
@@ -3440,6 +3441,85 @@ public partial class ImportManager : IImportManager
 
         //activity log
         await _customerActivityService.InsertActivityAsync("ImportOrders", string.Format(await _localizationService.GetResourceAsync("ActivityLog.ImportOrders"), metadata.CountOrdersInFile));
+    }
+
+    /// <summary>
+    /// Import filter level values from XLSX file
+    /// </summary>
+    /// <param name="stream">Stream</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    public virtual async Task ImportFilterLevelValuesFromXlsxAsync(Stream stream)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+        using var workbook = new XLWorkbook(stream);
+
+        var languages = await _languageService.GetAllLanguagesAsync(showHidden: true);
+
+        //the columns
+        var metadata = GetWorkbookMetadata<FilterLevelValue>(workbook, languages);
+        var defaultWorksheet = metadata.DefaultWorksheet;
+        var defaultProperties = metadata.DefaultProperties;
+        var localizedProperties = metadata.LocalizedProperties;
+
+        var manager = new PropertyManager<FilterLevelValue>(defaultProperties, _catalogSettings, localizedProperties, languages);
+        var iRow = 2;
+
+        try
+        {
+            var filterLevelValues = await _filterLevelValueService.GetAllFilterLevelValuesAsync();
+
+            while (true)
+            {
+                var allColumnsAreEmpty = manager.GetDefaultProperties
+                    .Select(property => defaultWorksheet.Row(iRow).Cell(property.PropertyOrderPosition))
+                    .All(cell => cell?.Value == null || string.IsNullOrEmpty(cell.Value.ToString()));
+
+                if (allColumnsAreEmpty)
+                    break;
+
+                manager.ReadDefaultFromXlsx(defaultWorksheet, iRow);
+                var filterLevelValue = filterLevelValues.FirstOrDefault(f => f.Id == manager.GetDefaultProperty("Id").IntValue);
+
+                var isNew = filterLevelValue == null;
+                filterLevelValue ??= new FilterLevelValue
+                {
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+
+                foreach (var property in manager.GetDefaultProperties)
+                {
+                    switch (property.PropertyName)
+                    {
+                        case nameof(FilterLevelValue.FilterLevel1Value):
+                            filterLevelValue.FilterLevel1Value = property.StringValue;
+                            break;
+                        case nameof(FilterLevelValue.FilterLevel2Value):
+                            filterLevelValue.FilterLevel2Value = property.StringValue;
+                            break;
+                        case nameof(FilterLevelValue.FilterLevel3Value):
+                            filterLevelValue.FilterLevel3Value = property.StringValue;
+                            break;
+                    }
+                }
+
+                filterLevelValue.UpdatedOnUtc = DateTime.UtcNow;
+
+                await (isNew
+                    ? _filterLevelValueService.InsertFilterLevelValueAsync(filterLevelValue)
+                    : _filterLevelValueService.UpdateFilterLevelValueAsync(filterLevelValue));
+
+                iRow++;
+            }
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("ImportFilterLevelValues",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ImportFilterLevelValues"), iRow - 2));
+        }
+        catch (Exception ex)
+        {
+            await _logger.ErrorAsync("Error while importing filter level values", ex);
+            throw;
+        }
     }
 
     #endregion

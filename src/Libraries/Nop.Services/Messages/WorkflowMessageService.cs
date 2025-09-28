@@ -1234,6 +1234,50 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     }
 
     /// <summary>
+    /// Sends an order cancelled notification to a store owner
+    /// </summary>
+    /// <param name="order">Order instance</param>
+    /// <param name="languageId">Message language identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifier
+    /// </returns>
+    public virtual async Task<IList<int>> SendOrderCancelledStoreOwnerNotificationAsync(Order order, int languageId)
+    {
+        ArgumentNullException.ThrowIfNull(order);
+
+        var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+        languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
+
+        var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ORDER_CANCELLED_STORE_OWNER_NOTIFICATION, store.Id);
+        if (!messageTemplates.Any())
+            return new List<int>();
+
+        //tokens
+        var commonTokens = new List<Token>();
+        await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+        await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+
+        return await messageTemplates.SelectAwait(async messageTemplate =>
+        {
+            //email account
+            var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
+
+            var tokens = new List<Token>(commonTokens);
+            await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
+
+            //event notification
+            await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
+
+            var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
+            var (replyToEmail, replyToName) = await GetCustomerReplyToNameAndEmailAsync(messageTemplate, order);
+
+            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                replyToEmailAddress: replyToEmail, replyToName: replyToName);
+        }).ToListAsync();
+    }
+
+    /// <summary>
     /// Sends an order cancelled notification to a vendor
     /// </summary>
     /// <param name="order">Order instance</param>
@@ -1704,12 +1748,13 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     /// <param name="customerEmail">Customer's email</param>
     /// <param name="friendsEmail">Friend's email</param>
     /// <param name="personalMessage">Personal message</param>
+    /// <param name="wishlistUrl">Wishlist URL</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifier
     /// </returns>
     public virtual async Task<IList<int>> SendWishlistEmailAFriendMessageAsync(Customer customer, int languageId,
-        string customerEmail, string friendsEmail, string personalMessage)
+        string customerEmail, string friendsEmail, string personalMessage, string wishlistUrl)
     {
         ArgumentNullException.ThrowIfNull(customer);
 
@@ -1725,6 +1770,7 @@ public partial class WorkflowMessageService : IWorkflowMessageService
         await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
         commonTokens.Add(new Token("Wishlist.PersonalMessage", personalMessage, true));
         commonTokens.Add(new Token("Wishlist.Email", customerEmail));
+        commonTokens.Add(new Token("Wishlist.URLForCustomer", wishlistUrl, true));
 
         return await messageTemplates.SelectAwait(async messageTemplate =>
         {

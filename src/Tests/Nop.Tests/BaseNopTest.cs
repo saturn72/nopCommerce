@@ -38,6 +38,7 @@ using Nop.Data;
 using Nop.Data.Configuration;
 using Nop.Data.Migrations;
 using Nop.Services.Affiliates;
+using Nop.Services.ArtificialIntelligence;
 using Nop.Services.Attributes;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
@@ -60,6 +61,7 @@ using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
+using Nop.Services.Menus;
 using Nop.Services.Messages;
 using Nop.Services.News;
 using Nop.Services.Orders;
@@ -109,9 +111,9 @@ public partial class BaseNopTest
     {
         var dataProvider = _serviceProvider.GetService<IDataProviderManager>().DataProvider;
 
-        dataProvider.CreateDatabase(null);
+        dataProvider.CreateDatabase();
         dataProvider.InitializeDatabase();
-        
+
         var installationService = _serviceProvider.GetService<IInstallationService>();
 
         installationService.InstallAsync(
@@ -125,7 +127,7 @@ public partial class BaseNopTest
                 CultureInfo = new CultureInfo(NopCommonDefaults.DefaultLanguageCulture),
                 InstallSampleData = true
             }).Wait();
-        
+
         var permissionService = EngineContext.Current.Resolve<IPermissionService>();
         permissionService.InsertPermissionsAsync().Wait();
     }
@@ -290,6 +292,7 @@ public partial class BaseNopTest
         services.AddTransient<IProductAttributeParser, ProductAttributeParser>();
         services.AddTransient<IProductAttributeService, ProductAttributeService>();
         services.AddTransient<IProductService, ProductService>();
+        services.AddTransient<IProductReviewService, ProductReviewService>();
         services.AddTransient<ICopyProductService, CopyProductService>();
         services.AddTransient<ISpecificationAttributeService, SpecificationAttributeService>();
         services.AddTransient<IProductTemplateService, ProductTemplateService>();
@@ -299,6 +302,7 @@ public partial class BaseNopTest
         services.AddTransient<IProductTagService, ProductTagService>();
         services.AddTransient<IAddressService, AddressService>();
         services.AddTransient<IAffiliateService, AffiliateService>();
+        services.AddTransient<IArtificialIntelligenceService, ArtificialIntelligenceService>();
         services.AddTransient<IVendorService, VendorService>();
 
         //attribute services
@@ -330,10 +334,12 @@ public partial class BaseNopTest
         services.AddTransient<ILocalizationService, LocalizationService>();
         services.AddTransient<ILocalizedEntityService, LocalizedEntityService>();
         services.AddTransient(typeof(Lazy<ILocalizationService>));
+        services.AddTransient<ITranslationModelFactory, TranslationModelFactory>();
         services.AddTransient<IInstallationLocalizationService, InstallationLocalizationService>();
         services.AddTransient<ILanguageService, LanguageService>();
         services.AddTransient<IDownloadService, DownloadService>();
         services.AddTransient<IMessageTemplateService, MessageTemplateService>();
+        services.AddScoped<IMenuService, MenuService>();
         services.AddTransient<IQueuedEmailService, QueuedEmailService>();
         services.AddTransient<INewsLetterSubscriptionService, NewsLetterSubscriptionService>();
         services.AddTransient<INewsLetterSubscriptionTypeService, NewsLetterSubscriptionTypeService>();
@@ -354,6 +360,7 @@ public partial class BaseNopTest
         services.AddTransient<IReturnRequestService, ReturnRequestService>();
         services.AddTransient<IRewardPointService, RewardPointService>();
         services.AddTransient<IShoppingCartService, ShoppingCartService>();
+        services.AddTransient<ICustomWishlistService, CustomWishlistService>();
         services.AddTransient<ICustomNumberFormatter, CustomNumberFormatter>();
         services.AddTransient<IPaymentService, PaymentService>();
         services.AddTransient<IEncryptionService, EncryptionService>();
@@ -361,6 +368,8 @@ public partial class BaseNopTest
         services.AddTransient<IUrlRecordService, UrlRecordService>();
         services.AddTransient<IShipmentService, ShipmentService>();
         services.AddTransient<IShippingService, ShippingService>();
+        services.AddTransient<IWarehouseService, WarehouseService>();
+        services.AddTransient<IShippingMethodsService, ShippingMethodsService>();
         services.AddTransient<IDateRangeService, DateRangeService>();
         services.AddTransient<ITaxCategoryService, TaxCategoryService>();
         services.AddTransient<ICheckVatService, CheckVatService>();
@@ -437,22 +446,21 @@ public partial class BaseNopTest
         services
             // add common FluentMigrator services
             .AddFluentMigratorCore()
-            .AddScoped<IProcessorAccessor, TestProcessorAccessor>()
             // set accessor for the connection string
             .AddScoped<IConnectionStringAccessor>(_ => DataSettingsManager.LoadSettings())
             .AddScoped<IMigrationManager, MigrationManager>()
             .AddScoped<Lazy<IMigrationManager>>()
             .AddSingleton<IConventionSet, NopTestConventionSet>()
             .ConfigureRunner(rb =>
-                rb.WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5().AddPostgres().AddSQLite()
+                rb.WithVersionTable(new MigrationVersionInfo()).AddSQLite()
                     // define the assembly containing the migrations
                     .ScanIn(mAssemblies).For.Migrations());
 
         services.AddOptions<GeneratorOptions>().Configure(go => go.CompatibilityMode = CompatibilityMode.LOOSE);
 
-        services.AddTransient<IStoreContext, WebStoreContext>();
+        services.AddScoped<IStoreContext, WebStoreContext>();
         services.AddTransient<Lazy<IStoreContext>>();
-        services.AddTransient<IWorkContext, WebWorkContext>();
+        services.AddScoped<IWorkContext, WebWorkContext>();
         services.AddTransient<Lazy<IWorkContext>>();
         services.AddTransient<IThemeContext, ThemeContext>();
         services.AddTransient<Lazy<ILocalizationService>>();

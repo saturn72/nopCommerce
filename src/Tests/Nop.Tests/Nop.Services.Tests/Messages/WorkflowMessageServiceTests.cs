@@ -68,6 +68,7 @@ public class WorkflowMessageServiceTests : ServiceTest
         var vendorService = GetService<IVendorService>();
         var shipmentService = GetService<IShipmentService>();
         var productService = GetService<IProductService>();
+        var productReviewService = GetService<IProductReviewService>();
         var giftCardService = GetService<IGiftCardService>();
         var blogService = GetService<IBlogService>();
         var newsService = GetService<INewsService>();
@@ -95,7 +96,7 @@ public class WorkflowMessageServiceTests : ServiceTest
             Subject = string.Empty,
             Text = string.Empty
         };
-        _productReview = (await productService.GetAllProductReviewsAsync()).FirstOrDefault();
+        _productReview = (await productReviewService.GetAllProductReviewsAsync()).FirstOrDefault();
         _giftCard = await GetService<INopDataProvider>().InsertEntityAsync(new GiftCard
         {
             GiftCardType = GiftCardType.Virtual,
@@ -367,7 +368,7 @@ public class WorkflowMessageServiceTests : ServiceTest
     public async Task CanSendWishlistEmailAFriendMessage()
     {
         await CheckData(async () =>
-            await _workflowMessageService.SendWishlistEmailAFriendMessageAsync(_customer, 1, NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminEmail, string.Empty));
+            await _workflowMessageService.SendWishlistEmailAFriendMessageAsync(_customer, 1, NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminEmail, string.Empty, string.Empty));
     }
 
     #endregion

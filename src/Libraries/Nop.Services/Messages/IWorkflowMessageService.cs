@@ -276,7 +276,7 @@ public partial interface IWorkflowMessageService
     /// The task result contains the queued email identifier
     /// </returns>
     Task<IList<int>> SendOrderCancelledCustomerNotificationAsync(Order order, int languageId);
-    
+
     /// <summary>
     /// Sends an order cancelled notification to a vendor
     /// </summary>
@@ -288,6 +288,17 @@ public partial interface IWorkflowMessageService
     /// The task result contains the queued email identifier
     /// </returns>
     Task<IList<int>> SendOrderCancelledVendorNotificationAsync(Order order, Vendor vendor, int languageId);
+
+    /// <summary>
+    /// Sends an order cancelled notification to a store owner
+    /// </summary>
+    /// <param name="order">Order instance</param>
+    /// <param name="languageId">Message language identifier</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the queued email identifier
+    /// </returns>
+    Task<IList<int>> SendOrderCancelledStoreOwnerNotificationAsync(Order order, int languageId);
 
     /// <summary>
     /// Sends an order refunded notification to a store owner
@@ -409,12 +420,13 @@ public partial interface IWorkflowMessageService
     /// <param name="customerEmail">Customer's email</param>
     /// <param name="friendsEmail">Friend's email</param>
     /// <param name="personalMessage">Personal message</param>
+    /// <param name="wishlistUrl">Wishlist URL</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the queued email identifier
     /// </returns>
     Task<IList<int>> SendWishlistEmailAFriendMessageAsync(Customer customer, int languageId,
-        string customerEmail, string friendsEmail, string personalMessage);
+        string customerEmail, string friendsEmail, string personalMessage, string wishlistUrl);
 
     #endregion
 

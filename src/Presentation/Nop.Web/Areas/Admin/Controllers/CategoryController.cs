@@ -5,7 +5,6 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
-using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
 using Nop.Services.Localization;
@@ -19,6 +18,8 @@ using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Translation;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -28,22 +29,20 @@ public partial class CategoryController : BaseAdminController
 {
     #region Fields
 
-    protected readonly IAclService _aclService;
     protected readonly ICategoryModelFactory _categoryModelFactory;
     protected readonly ICategoryService _categoryService;
     protected readonly ICustomerActivityService _customerActivityService;
-    protected readonly ICustomerService _customerService;
     protected readonly IDiscountService _discountService;
     protected readonly IExportManager _exportManager;
     protected readonly IImportManager _importManager;
     protected readonly ILocalizationService _localizationService;
     protected readonly ILocalizedEntityService _localizedEntityService;
     protected readonly INotificationService _notificationService;
-    protected readonly IPermissionService _permissionService;
     protected readonly IPictureService _pictureService;
     protected readonly IProductService _productService;
     protected readonly IStaticCacheManager _staticCacheManager;
     protected readonly IStoreMappingService _storeMappingService;
+    protected readonly ITranslationModelFactory _translationModelFactory;
     protected readonly IUrlRecordService _urlRecordService;
     protected readonly IWorkContext _workContext;
 
@@ -51,41 +50,37 @@ public partial class CategoryController : BaseAdminController
 
     #region Ctor
 
-    public CategoryController(IAclService aclService,
-        ICategoryModelFactory categoryModelFactory,
+    public CategoryController(ICategoryModelFactory categoryModelFactory,
         ICategoryService categoryService,
         ICustomerActivityService customerActivityService,
-        ICustomerService customerService,
         IDiscountService discountService,
         IExportManager exportManager,
         IImportManager importManager,
         ILocalizationService localizationService,
         ILocalizedEntityService localizedEntityService,
         INotificationService notificationService,
-        IPermissionService permissionService,
         IPictureService pictureService,
         IProductService productService,
         IStaticCacheManager staticCacheManager,
         IStoreMappingService storeMappingService,
+        ITranslationModelFactory translationModelFactory,
         IUrlRecordService urlRecordService,
         IWorkContext workContext)
     {
-        _aclService = aclService;
         _categoryModelFactory = categoryModelFactory;
         _categoryService = categoryService;
         _customerActivityService = customerActivityService;
-        _customerService = customerService;
         _discountService = discountService;
         _exportManager = exportManager;
         _importManager = importManager;
         _localizationService = localizationService;
         _localizedEntityService = localizedEntityService;
         _notificationService = notificationService;
-        _permissionService = permissionService;
         _pictureService = pictureService;
         _productService = productService;
         _staticCacheManager = staticCacheManager;
         _storeMappingService = storeMappingService;
+        _translationModelFactory = translationModelFactory;
         _urlRecordService = urlRecordService;
         _workContext = workContext;
     }
@@ -209,7 +204,7 @@ public partial class CategoryController : BaseAdminController
             await UpdatePictureSeoNamesAsync(category);
 
             //stores
-            await _categoryService.UpdateCategoryStoreMappingsAsync(category, model.SelectedStoreIds);
+            await _storeMappingService.SaveStoreMappingsAsync(category, model.SelectedStoreIds);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("AddNewCategory",
@@ -308,7 +303,7 @@ public partial class CategoryController : BaseAdminController
             await UpdatePictureSeoNamesAsync(category);
 
             //stores
-            await _categoryService.UpdateCategoryStoreMappingsAsync(category, model.SelectedStoreIds);
+            await _storeMappingService.SaveStoreMappingsAsync(category, model.SelectedStoreIds);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("EditCategory",
@@ -327,6 +322,27 @@ public partial class CategoryController : BaseAdminController
 
         //if we got this far, something failed, redisplay form
         return View(model);
+    }
+
+    [HttpPost]
+    [CheckPermission(StandardPermission.Catalog.CATEGORIES_CREATE_EDIT_DELETE)]
+    public virtual async Task<IActionResult> PreTranslate(int itemId)
+    {
+        var translationModel = new TranslationModel();
+
+        //try to get a category with the specified id
+        var category = await _categoryService.GetCategoryByIdAsync(itemId);
+        if (category == null || category.Deleted)
+            return Json(translationModel);
+
+        //prepare model
+        var model = await _categoryModelFactory.PrepareCategoryModelAsync(null, category);
+
+        translationModel = await _translationModelFactory.PrepareTranslationModelAsync(model,
+            (nameof(CategoryLocalizedModel.Name), false),
+            (nameof(CategoryLocalizedModel.Description), true));
+
+        return Json(translationModel);
     }
 
     [HttpPost]
