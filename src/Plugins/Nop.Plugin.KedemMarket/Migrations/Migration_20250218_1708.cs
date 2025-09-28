@@ -1,8 +1,5 @@
 ﻿using FluentMigrator;
-<<<<<<< HEAD
-=======
 using KedemMarket.Domain.Ordering;
->>>>>>> dev/get-vendors-sales
 using Nop.Data.Extensions;
 using Nop.Data.Migrations;
 

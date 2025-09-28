@@ -3,7 +3,7 @@
 public record NavbarElementVendorListSearchModel : BaseSearchModel
 {
     [NopResourceDisplayName("Admin.Navbars.Elements.Vendors.List.SearchVendorName")]
-    public string SearchVendorName { get; set; }
+    public string? SearchVendorName { get; set; }
 
     [NopResourceDisplayName("Admin.Navbars.Elements.Vendors.List.SearchNavbarElement")]
     public int SearchNavbarElementId { get; set; }

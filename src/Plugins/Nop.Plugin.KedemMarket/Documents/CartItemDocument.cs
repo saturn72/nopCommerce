@@ -6,7 +6,7 @@ namespace KedemMarket.Documents;
 public class CartItemDocument
 {
     [FirestoreProperty]
-    public string addedOnUtc { get; set; }
+    public string? addedOnUtc { get; set; }
     [FirestoreProperty]
     public int orderedQuantity { get; set; }
     [FirestoreProperty]

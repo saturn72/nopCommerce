@@ -1,25 +1,12 @@
-<<<<<<< HEAD
-﻿namespace KedemMarket.Controllers;
-=======
 ﻿using KedemMarket.Services.Vendor;
 
 namespace KedemMarket.Controllers;
->>>>>>> dev/get-vendors-sales
 
 [Route("api/vendor")]
 public class VendorController : KmApiControllerBase
 {
     private readonly IVendorApiModelFactory _vendorApiModelFactory;
     private readonly IVendorService _vendorService;
-<<<<<<< HEAD
-
-    public VendorController(
-        IVendorApiModelFactory vendorApiModelFactory,
-        IVendorService vendorService)
-    {
-        _vendorApiModelFactory = vendorApiModelFactory;
-        _vendorService = vendorService;
-=======
     private readonly IWorkContext _workContext;
     private readonly Factories.Orders.IOrderModelFactory _orderModelFactory;
     private readonly IOrderService _orderService;
@@ -39,7 +26,6 @@ public class VendorController : KmApiControllerBase
         _orderModelFactory = orderModelFactory;
         _orderService = orderService;
         _kmVendorService = kmVendorService;
->>>>>>> dev/get-vendors-sales
     }
 
     [HttpGet]
@@ -61,8 +47,6 @@ public class VendorController : KmApiControllerBase
         var data = await _vendorApiModelFactory.PrepareVendorApiModelAsync(vendor);
         return ToJsonResult(data);
     }
-<<<<<<< HEAD
-=======
 
     [HttpGet("sales")]
     public async Task<IActionResult> GetVendorSalesAsync(
@@ -121,5 +105,4 @@ public class VendorController : KmApiControllerBase
 
         return NoContent();
     }
->>>>>>> dev/get-vendors-sales
 }

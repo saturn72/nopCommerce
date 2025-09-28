@@ -2,7 +2,7 @@
 public record NavbarInfoSearchModel : BaseSearchModel
 {
     [NopResourceDisplayName("Admin.Navbars.List.SearchNavbarName")]
-    public string SearchNavbarName { get; set; }
+    public string? SearchNavbarName { get; set; }
     [NopResourceDisplayName("Admin.Navbars.List.SearchPublished")]
     public int SearchPublishedId { get; set; }
     public IList<SelectListItem> AvailablePublishedOptions { get; set; } = new List<SelectListItem>();

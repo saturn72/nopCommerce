@@ -2,7 +2,7 @@
 
 public class DirectoryFactory : IDirectoryFactory
 {
-    public string ProcessPhoneNumber(string sourcePhone)
+    public string? ProcessPhoneNumber(string sourcePhone)
     {
         if (sourcePhone == null)
             return null;

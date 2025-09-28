@@ -29,10 +29,7 @@ global using KedemMarket.Models.Orders;
 global using KedemMarket.Models.Pages;
 global using KedemMarket.Models.Store;
 global using KedemMarket.Models.Users;
-<<<<<<< HEAD
-=======
 global using KedemMarket.Models.Vendors;
->>>>>>> dev/get-vendors-sales
 global using KedemMarket.Navbar.Widgets;
 global using KedemMarket.Services.Analytics;
 global using KedemMarket.Services.Checkout;
@@ -49,11 +46,6 @@ global using Microsoft.AspNetCore.Routing;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.DependencyInjection.Extensions;
-<<<<<<< HEAD
-global using Newtonsoft.Json;
-global using Newtonsoft.Json.Serialization;
-=======
->>>>>>> dev/get-vendors-sales
 global using Nop.Core;
 global using Nop.Core.Caching;
 global using Nop.Core.Domain.Catalog;
@@ -111,7 +103,4 @@ global using Nop.Web.Models.Common;
 global using Nop.Web.Models.Order;
 global using Nop.Web.Models.ShoppingCart;
 global using static System.ArgumentNullException;
-<<<<<<< HEAD
-=======
 global using KedemMarket.Services.Agent;
->>>>>>> dev/get-vendors-sales

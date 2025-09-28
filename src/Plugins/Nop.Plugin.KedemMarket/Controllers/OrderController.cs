@@ -5,21 +5,13 @@ public class OrderController : KmApiControllerBase
 {
     private readonly IWorkContext _workContext;
     private readonly IOrderService _orderService;
-<<<<<<< HEAD
-    private readonly IOrderApiModelFactory _orderApiModelFactory;
-=======
     private readonly Factories.Orders.IOrderModelFactory _orderApiModelFactory;
->>>>>>> dev/get-vendors-sales
     private readonly IStoreContext _storeContext;
 
     public OrderController(
         IWorkContext workContext,
         IOrderService orderService,
-<<<<<<< HEAD
-        IOrderApiModelFactory orderApiModelFactory,
-=======
         Factories.Orders.IOrderModelFactory orderApiModelFactory,
->>>>>>> dev/get-vendors-sales
         IStoreContext storeContext)
     {
         _workContext = workContext;
@@ -29,11 +21,7 @@ public class OrderController : KmApiControllerBase
     }
 
     [HttpGet("{orderId}")]
-<<<<<<< HEAD
-    public async Task<IActionResult> GetOrderByOrderNumber(int orderId)
-=======
     public async Task<IActionResult> GetCustomerOrderByOrderIdAsync(int orderId)
->>>>>>> dev/get-vendors-sales
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (customer == default)
@@ -43,21 +31,12 @@ public class OrderController : KmApiControllerBase
         if (order == null || order.CustomerId != customer.Id)
             return NotFound();
 
-<<<<<<< HEAD
-        var data = await _orderApiModelFactory.PrepareOrderDetailsModelAsync(order);
-        return ToJsonResult(data);
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetOrders([FromQuery] int pageSize = 25, [FromQuery] int offset = 0)
-=======
         var d = await _orderApiModelFactory.PrepareOrderDetailsModelsAsync([order]);
         return ToJsonResult(d.FirstOrDefault());
     }
 
     [HttpGet]
     public async Task<IActionResult> GetCustomerOrdersAsync([FromQuery] int pageSize = 25, [FromQuery] int offset = 0)
->>>>>>> dev/get-vendors-sales
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (customer == default)

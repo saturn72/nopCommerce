@@ -27,7 +27,7 @@ public partial class FirebaseExternalUsersService : IExternalUsersService
         _cache = cache;
     }
 
-    public async Task<IEnumerable<KmUserCustomerMap>> ProvisionUsersAsync(IEnumerable<string> userIds)
+    public async Task<IEnumerable<KmUserCustomerMap>?> ProvisionUsersAsync(IEnumerable<string>? userIds)
     {
         userIds = userIds?.Distinct();
         userIds.ThrowIfNullOrEmpty(nameof(userIds));
@@ -68,13 +68,13 @@ public partial class FirebaseExternalUsersService : IExternalUsersService
     private CacheKey BuildUserCacheKey(string uid)
     {
         var key = string.Format("external-user:kedemmarket:uid:{0}", uid);
-        var ck = new CacheKey(key, "external-user:kedemmarket:uid", "external-user:kedemmarket", "external-user");
+        var ck = new CacheKey(key);
         return _cache.PrepareKeyForDefaultCache(ck);
     }
     private CacheKey BuildCustomerCacheKey(int customerId)
     {
         var key = string.Format("external-user:kedemmarket:customerid:{0}", customerId);
-        var ck = new CacheKey(key, "external-user:kedemmarket:customerid", "external-user:kedemmarket", "external-user");
+        var ck = new CacheKey(key);
         return _cache.PrepareKeyForDefaultCache(ck);
     }
     private async Task<KmUserCustomerMap> CreateOrUpdateCustomerAndMap(UserRecord user)
@@ -162,11 +162,7 @@ public partial class FirebaseExternalUsersService : IExternalUsersService
                 if (!customerRoles.TryGetValue(role, out var cr))
                     continue;
 
-<<<<<<< HEAD
-                if (currentCustomerRoles.Any(c => c.SystemName.Equals(role, StringComparison.OrdinalIgnoreCase)))
-=======
                 if (currentCustomerRoles.Any(c => c.SystemName == role))
->>>>>>> dev/get-vendors-sales
                     continue;
 
                 var roleMapping = new CustomerCustomerRoleMapping
@@ -177,18 +173,6 @@ public partial class FirebaseExternalUsersService : IExternalUsersService
                 await _customerRoleMapRepository.InsertAsync(roleMapping, false);
             }
 
-<<<<<<< HEAD
-        var guestRoleId = customerRoles[NopCustomerDefaults.GuestsRoleName].Id;
-        var isGuest = currentCustomerRoles.Any(c => c.Id == guestRoleId);
-        if (!isGuest)
-        {
-            var guestRoleMapping = new CustomerCustomerRoleMapping
-            {
-                CustomerId = map.CustomerId,
-                CustomerRoleId = guestRoleId,
-            };
-            await _customerRoleMapRepository.InsertAsync(guestRoleMapping, false);
-=======
         var registeredRoleId = customerRoles[NopCustomerDefaults.RegisteredRoleName].Id;
         var isRegistered = currentCustomerRoles.Any(c => c.Id == registeredRoleId);
         if (!isRegistered)
@@ -199,7 +183,6 @@ public partial class FirebaseExternalUsersService : IExternalUsersService
                 CustomerRoleId = registeredRoleId,
             };
             await _customerRoleMapRepository.InsertAsync(registeredRoleMapping, false);
->>>>>>> dev/get-vendors-sales
         }
     }
 
@@ -225,11 +208,7 @@ public partial class FirebaseExternalUsersService : IExternalUsersService
         return map;
     }
 
-<<<<<<< HEAD
-    public async Task<KmUserCustomerMap> GetUserIdCustomerMapByInternalCustomerId(int customerId)
-=======
     public async Task<KmUserCustomerMap> GetUserIdCustomerMapByNopCustomerId(int customerId)
->>>>>>> dev/get-vendors-sales
     {
         var read = false;
         var key = BuildCustomerCacheKey(customerId);

@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-﻿using FluentValidation;
-using Nop.Web.Framework.Validators;
-=======
 ﻿using Nop.Web.Framework.Validators;
->>>>>>> dev/get-vendors-sales
 
 namespace KedemMarket.Models.Checkout;
 

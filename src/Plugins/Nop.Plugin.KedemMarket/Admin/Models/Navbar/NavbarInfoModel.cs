@@ -4,9 +4,9 @@ public partial record NavbarInfoModel : BaseNopEntityModel
     [NopResourceDisplayName("Admin.Navbar.Fields.Elements")]
     public IList<NavbarElementModel> Elements { get; set; }
     [NopResourceDisplayName("Admin.Navbar.Fields.Name")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
     [NopResourceDisplayName("Admin.Navbars.Fields.Description")]
-    public string Description { get; set; }
+    public string? Description { get; set; }
     [NopResourceDisplayName("Admin.Navbar.Fields.DisplayOrder")]
     public int DisplayOrder { get; set; }
     [NopResourceDisplayName("Admin.Navbar.Fields.Published")]

@@ -1,26 +1,17 @@
-<<<<<<< HEAD
-﻿using Nop.Core;
-
-namespace KedemMarket.Controllers;
-=======
 ﻿namespace KedemMarket.Controllers;
->>>>>>> dev/get-vendors-sales
 
 [Route("api/search")]
 public class SearchController : KmApiControllerBase
 {
     private readonly IProductService _productService;
+    private readonly IProductReviewService _productReviewService;
     private readonly IUrlRecordService _urlRecordService;
     private readonly ILanguageService _languageService;
     private readonly ICurrencyService _currencyService;
     private readonly CurrencySettings _currencySettings;
     private readonly IPictureService _pictureService;
     private readonly IVideoService _videoService;
-<<<<<<< HEAD
-    private readonly MediaConvertor _mediaPreperar;
-=======
     private readonly IMediaManager _mediaPreperar;
->>>>>>> dev/get-vendors-sales
     private readonly IWorkContext _workContext;
 
     public SearchController(
@@ -31,12 +22,9 @@ public class SearchController : KmApiControllerBase
         CurrencySettings currencySettings,
         IPictureService pictureService,
         IVideoService videoService,
-<<<<<<< HEAD
-        MediaConvertor mediaPreperar,
-=======
         IMediaManager mediaPreperar,
->>>>>>> dev/get-vendors-sales
-        IWorkContext workContext)
+        IWorkContext workContext,
+        IProductReviewService productReviewService)
     {
         _productService = productService;
         _urlRecordService = urlRecordService;
@@ -47,6 +35,7 @@ public class SearchController : KmApiControllerBase
         _currencySettings = currencySettings;
         _mediaPreperar = mediaPreperar;
         _workContext = workContext;
+        _productReviewService = productReviewService;
     }
 
     [HttpGet]
@@ -129,7 +118,7 @@ public class SearchController : KmApiControllerBase
 
     private async Task<IEnumerable<object>> GetProductReviewsAsync(Product p)
     {
-        var reviews = await _productService.GetAllProductReviewsAsync(productId: p.Id, approved: true);
+        var reviews = await _productReviewService.GetAllProductReviewsAsync(productId: p.Id, approved: true);
         return reviews.Select(r => new
         {
             title = r.Title,

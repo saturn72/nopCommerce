@@ -15,10 +15,7 @@ public record ProductSlimApiModel
     public string? PriceWithDiscountText { get; init; }
     public IEnumerable<ProductInfoApiModel.Variant>? Variants { get; init; }
     public string? Slug { get; init; }
-<<<<<<< HEAD
-=======
     public string? ShortDescription { get;init; }
     public string? Description { get;init; }
->>>>>>> dev/get-vendors-sales
     public IEnumerable<TierPriceApiModel>? TierPrices { get; init; }
 }

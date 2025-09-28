@@ -1,9 +1,6 @@
 ﻿using FluentMigrator;
 using FluentMigrator.Builders.Create.Table;
-<<<<<<< HEAD
-=======
 using KedemMarket.Domain.Ordering;
->>>>>>> dev/get-vendors-sales
 using Nop.Data.Mapping.Builders;
 
 namespace KedemMarket.Migrations.User;

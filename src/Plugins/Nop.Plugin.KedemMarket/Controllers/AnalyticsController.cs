@@ -34,11 +34,7 @@ public class AnalyticsController : KmApiControllerBase
             return BadRequest();
 
         var customer = await _workContext.GetCurrentCustomerAsync();
-<<<<<<< HEAD
-        var map = customer != default ? await _externalUsersService.GetUserIdCustomerMapByInternalCustomerId(customer.Id) : default;
-=======
         var map = customer != default ? await _externalUsersService.GetUserIdCustomerMapByNopCustomerId(customer.Id) : default;
->>>>>>> dev/get-vendors-sales
 
         var eventData = new EventData
         {

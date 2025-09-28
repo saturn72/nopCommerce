@@ -14,8 +14,11 @@ public sealed class MediaManager : IMediaManager
         _storageManager = storageManager;
         _staticCache = staticCache;
     }
-    public async Task DeleteAsync(string mediaType, int mediaId)
+    public async Task DeleteAsync(string? mediaType, int mediaId)
     {
+        if (string.IsNullOrEmpty(mediaType) || mediaId <= 0)
+            return;
+
         var path = _storageManager.GetWebpPath(mediaType, mediaId);
         await _storageManager.DeleteAsync(path);
         _ = DeleteFromCacheInternal(path);
@@ -26,8 +29,11 @@ public sealed class MediaManager : IMediaManager
         await _staticCache.RemoveAsync(key);
     }
 
-    public async Task<string> GetDownloadLinkAsync(int mediaItemId, string mediaType)
+    public async Task<string?> GetDownloadLinkAsync(int mediaItemId, string? mediaType)
     {
+        if (string.IsNullOrEmpty(mediaType) || mediaItemId <= 0)
+            return null;
+
         var path = _storageManager.GetWebpPath(mediaType, mediaItemId);
         var key = new CacheKey(path)
         {
@@ -36,15 +42,18 @@ public sealed class MediaManager : IMediaManager
 
         return await _staticCache.GetAsync(key, async () => await _storageManager.CreateDownloadLinkAsync(path));
     }
-    public async Task UploadByMediaTypeAsync(string mediaType, int pictureId, byte[] pictureBinary)
+    public async Task UploadByMediaTypeAsync(string? mediaType, int pictureId, byte[]? pictureBinary)
     {
+        if (string.IsNullOrEmpty(mediaType) || pictureId <= 0 || pictureBinary.IsNullOrEmpty())
+            return;
+
         await _storageManager.UploadByKmMediaTypeAsync(mediaType, pictureId, pictureBinary);
         var path = _storageManager.GetWebpPath(mediaType, pictureId);
         await DeleteFromCacheInternal(path);
         _ = GetDownloadLinkAsync(pictureId, mediaType);
     }
 
-    public async Task<GalleryItemModel> ToGalleryItemModel(Picture picture, int index)
+    public async Task<GalleryItemModel?> ToGalleryItemModel(Picture? picture, int index)
     {
         picture.ThrowArgumentNullException(nameof(picture));
 
@@ -59,7 +68,7 @@ public sealed class MediaManager : IMediaManager
         };
     }
 
-    public async Task<GalleryItemModel> ToGalleryItemModelAsync(PictureModel picture, int index)
+    public async Task<GalleryItemModel?> ToGalleryItemModelAsync(PictureModel? picture, int index)
     {
         if (picture == null)
             return null;
@@ -76,7 +85,7 @@ public sealed class MediaManager : IMediaManager
     }
 
 
-    public GalleryItemModel ToGalleryItemModel(Video video, int index)
+    public GalleryItemModel? ToGalleryItemModel(Video? video, int index)
     {
         if (video == null)
             return null;

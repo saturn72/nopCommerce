@@ -6,16 +6,16 @@ namespace KedemMarket.Documents;
 public record AddressDocument : IDocument
 {
     [FirestoreProperty]
-    public string id { get; set; }
+    public string? id { get; set; }
     [FirestoreProperty]
-    public string address { get; set; }
+    public string? address { get; set; }
 
     [FirestoreProperty]
-    public string city { get; set; }
+    public string? city { get; set; }
     [FirestoreProperty]
-    public string email { get; set; }
+    public string? email { get; set; }
     [FirestoreProperty]
-    public string fullName { get; set; }
+    public string? fullName { get; set; }
     [FirestoreProperty]
-    public string phoneNumber { get; set; }
+    public string? phoneNumber { get; set; }
 }

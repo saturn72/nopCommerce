@@ -8,7 +8,7 @@ public record NavbarElementVendorModel : BaseNopEntityModel
     [NopResourceDisplayName("Admin.NavbarElement.Vendors.Fields.IsFeaturedVendor")]
     public bool IsFeaturedVendor { get; set; }
     [NopResourceDisplayName("Admin.NavbarElement.Vendors.Fields.VendorName")]
-    public string VendorName { get; set; }
+    public string? VendorName { get; set; }
     [NopResourceDisplayName("Admin.NavbarElement.Vendors.Fields.Published")]
     public bool Published { get; set; }
     [NopResourceDisplayName("Admin.NavbarElement.Vendors.Fields.PublishPhone")]

@@ -11,11 +11,7 @@ public class ProductApiFactory : IProductApiFactory
     private readonly IVideoService _videoService;
     private readonly IProductAttributeService _productAttributeService;
     private readonly IProductAttributeParser _productAttributeParser;
-<<<<<<< HEAD
-    private readonly MediaConvertor _mediaConvertor;
-=======
     private readonly IMediaManager _mediaConvertor;
->>>>>>> dev/get-vendors-sales
     private readonly IProductAttributeFormatter _productAttributeFormatter;
     private readonly IProductModelFactory _productModelFactory;
     private readonly IPriceFormatter _priceFormatter;
@@ -30,11 +26,7 @@ public class ProductApiFactory : IProductApiFactory
         IVideoService videoService,
         IProductAttributeService productAttributeService,
         IProductAttributeParser productAttributeParser,
-<<<<<<< HEAD
-        MediaConvertor mediaFactory,
-=======
         IMediaManager mediaFactory,
->>>>>>> dev/get-vendors-sales
         IProductAttributeFormatter productAttributeFormatter,
         IProductModelFactory productModelFactory,
         IPriceFormatter priceFormatter,
@@ -119,12 +111,9 @@ public class ProductApiFactory : IProductApiFactory
             Banners = banners,
             DisplayIndex = product.DisplayOrder,
             FullDescription = productDetails.FullDescription,
-<<<<<<< HEAD
-=======
             Gallery = gallery,
             Gtin = productDetails.Gtin,
             JsonLd = productDetails.JsonLd,
->>>>>>> dev/get-vendors-sales
             Mpn = productDetails.ManufacturerPartNumber,
             Name = productDetails.Name,
             Price = productDetails.ProductPrice.PriceValue,
@@ -133,11 +122,6 @@ public class ProductApiFactory : IProductApiFactory
             PriceOldText = productDetails.ProductPrice.OldPrice,
             PriceWithDiscount = productDetails.ProductPrice.PriceWithDiscountValue,
             PriceWithDiscountText = productDetails.ProductPrice.PriceWithDiscount,
-<<<<<<< HEAD
-            Gallery = gallery,
-            Gtin = productDetails.Gtin,
-=======
->>>>>>> dev/get-vendors-sales
             Reviews = reviews,
             ShortDescription = productDetails.ShortDescription,
             ShowOnHomePage = product.ShowOnHomepage,
@@ -146,15 +130,12 @@ public class ProductApiFactory : IProductApiFactory
             Sku = productDetails.Sku,
             Slug = productDetails.SeName,
             Variants = variants,
-<<<<<<< HEAD
-=======
             Vendor = new()
             {
                 Id = productDetails.VendorModel?.Id ?? 0,
                 Name = productDetails.VendorModel?.Name,
                 Slug = productDetails.VendorModel?.SeName
             }
->>>>>>> dev/get-vendors-sales
         };
     }
 

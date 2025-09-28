@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-﻿using Nop.Services.Logging;
-=======
 ﻿using KedemMarket.Domain.Ordering;
 using Nop.Services.Logging;
->>>>>>> dev/get-vendors-sales
 
 namespace KedemMarket.Services.Checkout;
 public class KmOrderService : IKmOrderService

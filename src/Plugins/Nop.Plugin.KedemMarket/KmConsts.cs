@@ -1,8 +1,6 @@
 ﻿namespace KedemMarket;
 public class KmConsts
 {
-<<<<<<< HEAD
-=======
 
     public static class OrderStatuses
     {
@@ -21,7 +19,6 @@ public class KmConsts
             Refunded
         };
     }
->>>>>>> dev/get-vendors-sales
     public sealed class MediaTypes
     {
         public const string Thumbnail = "thumbnail";

@@ -1,8 +1,5 @@
 ﻿using KedemMarket.Documents;
-<<<<<<< HEAD
-=======
 using KedemMarket.Domain.Ordering;
->>>>>>> dev/get-vendors-sales
 using KedemMarket.Services.Orders;
 using Nop.Services.Logging;
 using Nop.Services.ScheduleTasks;

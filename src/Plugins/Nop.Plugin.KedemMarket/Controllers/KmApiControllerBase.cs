@@ -1,10 +1,7 @@
 ﻿
-<<<<<<< HEAD
-=======
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
->>>>>>> dev/get-vendors-sales
 namespace KedemMarket.Controllers;
 
 [ApiController]

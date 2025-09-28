@@ -1,18 +1,10 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 using Microsoft.Extensions.Options;
-<<<<<<< HEAD
-using Nop.Services.Logging;
-=======
->>>>>>> dev/get-vendors-sales
 
 namespace KedemMarket.Services.Media;
 public class GcpStorageManager : IStorageManager
 {
-<<<<<<< HEAD
-    private readonly ILogger _logger;
-=======
->>>>>>> dev/get-vendors-sales
     private readonly IOptionsMonitor<GcpOptions> _options;
     private readonly string[] _scopes = new[]
        {
@@ -22,17 +14,9 @@ public class GcpStorageManager : IStorageManager
     private readonly StorageClient _storageClient;
 
     public GcpStorageManager(
-<<<<<<< HEAD
-        IOptionsMonitor<GcpOptions> options,
-        ILogger logger)
-    {
-        _options = options;
-        _logger = logger;
-=======
         IOptionsMonitor<GcpOptions> options)
     {
         _options = options;
->>>>>>> dev/get-vendors-sales
 
         var cred = GoogleCredential.GetApplicationDefault();
         _ = cred.CreateScoped(_scopes)
@@ -72,5 +56,5 @@ public class GcpStorageManager : IStorageManager
         return path;
     }
 
-    public string GetWebpPath(string mediaType, int pictureId) => $"/{mediaType}/{pictureId}.webp";
+    public string? GetWebpPath(string mediaType, int pictureId) => $"/{mediaType}/{pictureId}.webp";
 }

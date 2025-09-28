@@ -5,11 +5,7 @@ public class NavbarFactory : INavbarFactory
 {
     private readonly INavbarService _navbarService;
     private readonly IVendorService _vendorService;
-<<<<<<< HEAD
-    private readonly MediaConvertor _mediaConverter;
-=======
     private readonly IMediaManager _mediaConverter;
->>>>>>> dev/get-vendors-sales
     private readonly IPictureService _pictureService;
     private readonly IStaticCacheManager _staticCacheManager;
     private readonly IGenericAttributeService _genericAttributeService;
@@ -21,11 +17,7 @@ public class NavbarFactory : INavbarFactory
     public NavbarFactory(
         INavbarService navbarService,
         IVendorService vendorService,
-<<<<<<< HEAD
-        MediaConvertor mediaConverter,
-=======
         IMediaManager mediaConverter,
->>>>>>> dev/get-vendors-sales
         IPictureService pictureService,
         IStaticCacheManager staticCacheManager,
         IAttributeService<VendorAttribute, VendorAttributeValue> vendorAttributeService,
@@ -48,7 +40,7 @@ public class NavbarFactory : INavbarFactory
 
     public async Task<NavbarModel> PrepareNavbarModelByNameAsync(string name)
     {
-        var key = new CacheKey($"{NavbarCacheSettings.CACHE_KEY}.{name}", NavbarCacheSettings.CACHE_KEY)
+        var key = new CacheKey($"{NavbarCacheSettings.CACHE_KEY}.{name}")
         {
             CacheTime = NavbarCacheSettings.CACHE_TIME
         };

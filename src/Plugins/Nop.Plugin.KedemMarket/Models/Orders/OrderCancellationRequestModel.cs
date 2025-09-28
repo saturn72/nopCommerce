@@ -3,5 +3,5 @@
 public record OrderCancellationRequestModel
 {
     public int OrderId { get; set; }
-    public string CancellationReason { get; set; }
+    public string? CancellationReason { get; set; }
 }

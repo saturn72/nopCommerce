@@ -8,5 +8,5 @@ public partial record NavbarElementSearchModel : BaseSearchModel
     public bool AllowCustomersToSelectPageSize { get; set; }
 
     [NopResourceDisplayName("Admin.Navbars.Fields.PageSizeOptions")]
-    public string PageSizeOptions { get; set; }
+    public string? PageSizeOptions { get; set; }
 }

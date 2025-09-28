@@ -16,7 +16,7 @@ public class OrderItemsStatus : BaseEntity
     };
 
     public int OrderId { get; set; }
-    public string Statuses
+    public string? Statuses
     {
         get => _statuses;
         set

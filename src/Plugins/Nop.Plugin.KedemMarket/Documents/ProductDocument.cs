@@ -6,9 +6,9 @@ namespace KedemMarket.Documents;
 public class ProductDocument
 {
     [FirestoreProperty]
-    public string id { get; set; }
+    public string? id { get; set; }
     [FirestoreProperty]
-    public string name { get; set; }
+    public string? name { get; set; }
     [FirestoreProperty]
-    public string description { get; set; }
+    public string? description { get; set; }
 }
