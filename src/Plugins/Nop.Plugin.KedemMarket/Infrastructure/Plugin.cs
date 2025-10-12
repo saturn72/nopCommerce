@@ -471,9 +471,6 @@ public class Plugin : BasePlugin, IWidgetPlugin
 
     public Type GetWidgetViewComponent(string widgetZone)
     {
-        if (widgetZone == AdminWidgetZones.VendorDetailsBlock)
-            return typeof(VendorAddRemoveTags);
-
-        throw new ArgumentOutOfRangeException(widgetZone);
+        return typeof(VendorAddRemoveTags);
     }
 }

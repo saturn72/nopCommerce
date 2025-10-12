@@ -1,0 +1,20 @@
+﻿namespace KedemMarket.Admin.Models.Navbar;
+
+public record NavbarElementVendorModel : BaseNopEntityModel
+{
+    [NopResourceDisplayName("Admin.NavbarElement.Vendors.Fields.DisplayOrder")]
+    public int DisplayOrder { get; set; }
+
+    [NopResourceDisplayName("Admin.NavbarElement.Vendors.Fields.IsFeaturedVendor")]
+    public bool IsFeaturedVendor { get; set; }
+    [NopResourceDisplayName("Admin.NavbarElement.Vendors.Fields.VendorName")]
+    public string VendorName { get; set; }
+    [NopResourceDisplayName("Admin.NavbarElement.Vendors.Fields.Published")]
+    public bool Published { get; set; }
+    [NopResourceDisplayName("Admin.NavbarElement.Vendors.Fields.PublishPhone")]
+    public bool PublishPhone { get; set; }
+    [NopResourceDisplayName("Admin.NavbarElement.Vendors.Fields.PublishWhatsapp")]
+    public bool PublishWhatsapp { get; set; }
+    public int NavbarElementId { get; set; }
+    public int VendorId { get; set; }
+}

@@ -1,5 +1,15 @@
-﻿namespace KedemMarket.Consumers;
+﻿using Nop.Core.Domain.Blogs;
+
+namespace KedemMarket.Consumers;
 public class ClearNavbarCacheConsumer :
+    IConsumer<EntityInsertedEvent<BlogPost>>,
+    IConsumer<EntityUpdatedEvent<BlogPost>>,
+    IConsumer<EntityDeletedEvent<BlogPost>>,
+
+    IConsumer<EntityInsertedEvent<Category>>,
+    IConsumer<EntityUpdatedEvent<Category>>,
+    IConsumer<EntityDeletedEvent<Category>>,
+
     IConsumer<EntityUpdatedEvent<Vendor>>,
     IConsumer<EntityDeletedEvent<Vendor>>,
 
@@ -21,23 +31,41 @@ public class ClearNavbarCacheConsumer :
 
     IConsumer<EntityInsertedEvent<Product>>,
     IConsumer<EntityUpdatedEvent<Product>>,
-    IConsumer<EntityDeletedEvent<Product>>,
-
-    IConsumer<EntityInsertedEvent<Category>>,
-    IConsumer<EntityUpdatedEvent<Category>>,
-    IConsumer<EntityDeletedEvent<Category>>
-
+    IConsumer<EntityDeletedEvent<Product>>
 {
-    private readonly INavbarService _navbarService;
     private IStaticCacheManager _staticCacheManager;
+    private readonly TimeProvider _timeProvider;
 
     public ClearNavbarCacheConsumer(
-        INavbarService navbarService,
-        IStaticCacheManager staticCacheManager)
+        IStaticCacheManager staticCacheManager,
+        TimeProvider timeProvider
+        )
     {
-        _navbarService = navbarService;
         _staticCacheManager = staticCacheManager;
+        _timeProvider = timeProvider;
     }
+
+    public async Task HandleEventAsync(EntityInsertedEvent<BlogPost> eventMessage)
+    {
+        await ClearHomepageCacheAsync(eventMessage.Entity);
+    }
+    public async Task HandleEventAsync(EntityUpdatedEvent<BlogPost> eventMessage)
+    {
+        await ClearHomepageCacheAsync(eventMessage.Entity);
+    }
+    public async Task HandleEventAsync(EntityDeletedEvent<BlogPost> eventMessage)
+    {
+        await ClearHomepageCacheAsync(eventMessage.Entity);
+    }
+
+    private async Task ClearHomepageCacheAsync(BlogPost? blog)
+    { 
+        if (blog == null || blog.StartDateUtc >  _timeProvider.GetUtcNow().DateTime)
+            return;
+        await _staticCacheManager.RemoveByPrefixAsync(PageCacheSettings.HOME_CACHE_KEY);
+    }
+
+
     public async Task HandleEventAsync(EntityUpdatedEvent<Vendor> eventMessage) =>
         await ClearNavbarVendorCacheAsync(eventMessage.Entity?.Id);
 

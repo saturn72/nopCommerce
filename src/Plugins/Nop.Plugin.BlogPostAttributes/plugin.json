@@ -1,0 +1,10 @@
+{
+  "Group": "Saturn72",
+  "FriendlyName": "Blog Post Extensions",
+  "SystemName": "Saturn72.BlogPostExtensions",
+  "Version": "1.0.1",
+  "SupportedVersions": [ "4.90" ],
+  "Author": "Saturn Technologies",
+  "DisplayOrder": 1,
+  "FileName": "Saturn72.BlogPostExtensions.dll"
+}

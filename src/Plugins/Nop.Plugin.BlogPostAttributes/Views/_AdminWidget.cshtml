@@ -1,0 +1,70 @@
+@using Saturn72.BlogPostExtensions.Models
+@using Saturn72.BlogPostExtensions
+@model BlogPostAttributesModel
+
+<div class="card" id="blogpost-attributes-widget">
+    <div class="card-header">Blog Post Attributes</div>
+    <div class="card-body">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Subtitle" />
+            </div>
+            <div class="col-md-9">
+                <input type="text" id="Subtitle" name="Subtitle" class="form-control" maxlength="@Model.MaxSubtitleLength" minlength="@Model.MinSubtitleLength"  value="@Model.Subtitle" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="SelectedAuthorIds" />
+            </div>
+            <div class="col-md-9">
+                <div class="input-group-append">
+                    <div class="input-group">
+                        <nop-select asp-for="SelectedAuthorIds" asp-items="Model.SelectedAuthorIds" asp-multiple="true" />
+                    </div>
+                </div>
+                <script>
+                    $(function() {
+                        var categoryIdsInput = $('#@Html.IdFor(model => model.SelectedAuthorIds)').select2({
+                            closeOnSelect: false,
+                            @if (!Model.AvailableAuthors.Any())
+                            {
+                                <text>
+                                disabled: true,
+                                    placeholder: '@T("Plugins.BlogPostAttributes.Fields.Authors.NoAuthorsAvailable")',
+                                </text>
+                            }
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="PictureId" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="PictureId" />
+                <span asp-validation-for="PictureId"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function() {
+        // Listen for submit on the parent form
+        var $widget = $('#blogpost-attributes-widget');
+        var $form = $widget.closest('form');
+        $form.on('submit', function(e) {
+            console.log('Blog post form submit button clicked!');
+        });
+
+        $('#SelectedAuthorIds').select2({
+            closeOnSelect: false,
+            placeholder: 'Select authors',
+            width: '100%'
+        });
+    });
+</script>
