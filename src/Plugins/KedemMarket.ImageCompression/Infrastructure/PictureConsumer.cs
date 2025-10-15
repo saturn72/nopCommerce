@@ -53,7 +53,7 @@ public class PictureConsumer :
         {
 
             var newBytes = ProcessAndCompressData(bytes);
-            if (newBytes == null)
+            if (newBytes == null|| bytes.SequenceEqual(newBytes))
                 return;
 
             picture.MimeType = WEBP_MIME_TYPE;
