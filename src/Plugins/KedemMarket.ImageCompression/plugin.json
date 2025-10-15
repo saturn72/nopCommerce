@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Kedem Market",
+  "FriendlyName": "Kedem Market Image Compression Plugin",
+  "SystemName": "KedemMarket ImageCompression",
+  "Version": "4.90.1",
+  "SupportedVersions": [ "4.90" ],
+  "Author": "Saturn Technologies",
+  "DisplayOrder": 1,
+  "FileName": "KedemMarket.ImageCompression.dll",
+  "Description": "Image comparison plugin"
+}

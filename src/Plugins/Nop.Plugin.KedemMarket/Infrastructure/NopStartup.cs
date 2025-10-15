@@ -2,8 +2,6 @@
 using System.Text.Json;
 using System.Text.Unicode;
 using KedemMarket.Admin.Models.Navbar;
-using KedemMarket.Middlewares;
-using KedemMarket.Services.Agent;
 using KedemMarket.Services.Notifications;
 using KedemMarket.Services.Vendor;
 
@@ -11,7 +9,7 @@ namespace KedemMarket.Infrastructure;
 
 public class NopStartup : INopStartup
 {
-    private const string CorsPolicy = "kedemmarket-api-cors";
+    private const string CORS_POLICY = "kedemmarket-api-cors";
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         var origins = configuration.GetRequiredSection("cors:origins")
@@ -22,7 +20,7 @@ public class NopStartup : INopStartup
 
         services.AddCors(options =>
         {
-            options.AddPolicy(CorsPolicy,
+            options.AddPolicy(CORS_POLICY,
                 policy => policy.WithOrigins(origins)
                 .AllowAnyHeader()
                 .AllowAnyMethod());
@@ -92,10 +90,10 @@ public class NopStartup : INopStartup
 
     public void Configure(IApplicationBuilder application)
     {
-        application.UseCors(CorsPolicy);
-        application.UseWhen(
-            ctx => ctx.Request.Path.StartsWithSegments("/api") || ctx.Request.Path.StartsWithSegments("/cms"),
-            appBuilder => appBuilder.UseMiddleware<KedemMarketAuthenticationMiddleware>());
+        application.UseCors(CORS_POLICY);
+        //application.UseWhen(
+        //    ctx => ctx.Request.Path.StartsWithSegments("/api") || ctx.Request.Path.StartsWithSegments("/cms"),
+        //    appBuilder => appBuilder.UseMiddleware<KedemMarketAuthenticationMiddleware>());
     }
 
     public int Order => 10;
