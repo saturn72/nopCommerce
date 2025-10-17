@@ -37,7 +37,6 @@ public class BrandController : BaseAdminController
     public virtual async Task<IActionResult> List()
     {
         var model = await _brandModelFactory.PrepareBrandSearchModelAsync(new BrandSearchModel());
-
         return View("List.cshtml", model);
     }
 

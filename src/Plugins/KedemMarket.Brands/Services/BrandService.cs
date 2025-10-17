@@ -16,13 +16,13 @@ public class BrandService : IBrandService
 
         var brandsQuery = _brandRepository.Table;
 
-        if (names != null && names.Any())
-            brandsQuery = brandsQuery.Where(b => names.Contains(b.Name, StringComparer.OrdinalIgnoreCase));
-        var brands = await brandsQuery.OrderBy(b => b.DisplayOrder).ThenBy(b => b.Name)
-            .Skip(pageIndex * pageSize)
-            .Take(pageSize)
+        var tNames = names?.Where(n => !string.IsNullOrEmpty(n) && !string.IsNullOrWhiteSpace(n)).Select(n => n.Trim()).ToArray();
+        if (tNames != null && tNames.Any())
+            brandsQuery = brandsQuery.Where(b => tNames.Any(n => b.Name.Contains(n, StringComparison.OrdinalIgnoreCase)));
+        var brands = await brandsQuery
+            .OrderBy(b => b.DisplayOrder)
+            .ThenBy(b => b.Name)
             .ToListAsync();
-
 
         return new PagedList<Brand>(brands, pageIndex, pageSize);
     }

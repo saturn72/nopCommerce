@@ -100,10 +100,10 @@
                                     <div class="col-md-5">
                                         <div class="form-group row">
                                             <div class="col-md-4">
-                                                <nop-label asp-for="SearchBrandNames" />
+                                                <nop-label asp-for="SearchBrandName" />
                                             </div>
                                             <div class="col-md-8">
-                                                <nop-editor asp-for="SearchBrandNames" />
+                                                <nop-editor asp-for="SearchBrandName" />
                                             </div>
                                         </div>
                                     </div>
@@ -125,49 +125,49 @@
                             @await Html.PartialAsync("Table", new DataTablesModel
                             {
                                 Name = "brands-grid",
-                                UrlRead = new DataUrl("BrandList", "Brand", null),
-                                SearchButtonId = "search-brands",
-                                Length = Model.PageSize,
-                                LengthMenu = Model.AvailablePageSizes,
-                                Filters = new List<FilterParameter>
-                                {
-                                    // new FilterParameter(nameof(Model.SearchBrandNames))
-                                },
-                                ColumnCollection = new List<ColumnProperty>
-                                {
-                                    new ColumnProperty(nameof(BrandModel.Id))
-                                    {
-                                        IsMasterCheckBox = true,
-                                        Render = new RenderCheckBox("checkbox_brands"),
-                                        ClassName =  NopColumnClassDefaults.CenterAll,
-                                        Width = "50"
-                                    },
-                                    new ColumnProperty(nameof(BrandModel.Name))
-                                    {
-                                        Title = T("Admin.Catalog.Brands.Fields.Name").Text,
-                                        Width = "100",
-                                    },
-                                    new ColumnProperty(nameof(BrandModel.SeName))
-                                    {
-                                        Title = T("Admin.Catalog.Brands.Fields.SeName").Text,
-                                        Width = "100"
-                                    },
-                                    new ColumnProperty(nameof(BrandModel.LogoUrl))
-                                    {
-                                        Title = T("Admin.Catalog.Brands.Fields.Logo").Text,
-                                        Width = "100",
-                                        ClassName = NopColumnClassDefaults.CenterAll,
-                                        Render = new RenderPicture(width: 100)
-                                    },
-                                    new ColumnProperty(nameof(BrandModel.Id))
-                                    {
-                                        Title = T("Admin.Common.Edit").Text,
-                                        Width = "80",
-                                        ClassName = NopColumnClassDefaults.Button,
-                                        Render = new RenderButtonEdit(new DataUrl("~/Admin/Brand/Edit"))
-                                    }
-                                }
-                            })
+                                                        UrlRead = new DataUrl("BrandList", "Brand", null),
+                                                        SearchButtonId = "search-brands",
+                                                        Length = Model.PageSize,
+                                                        LengthMenu = Model.AvailablePageSizes,
+                                                        Filters = new List<FilterParameter>
+                                                        {
+                                                          new FilterParameter(nameof(Model.SearchBrandName))
+                                                        },
+                                                        ColumnCollection = new List<ColumnProperty>
+                                                        {
+                                                        new ColumnProperty(nameof(BrandModel.Id))
+                                                        {
+                                                        IsMasterCheckBox = true,
+                                                        Render = new RenderCheckBox("checkbox_brands"),
+                                                        ClassName =  NopColumnClassDefaults.CenterAll,
+                                                        Width = "50"
+                                                        },
+                                                        new ColumnProperty(nameof(BrandModel.Name))
+                                                        {
+                                                        Title = T("Admin.Catalog.Brands.Fields.Name").Text,
+                                                        Width = "100",
+                                                        },
+                                                        new ColumnProperty(nameof(BrandModel.SeName))
+                                                        {
+                                                        Title = T("Admin.Catalog.Brands.Fields.SeName").Text,
+                                                        Width = "100"
+                                                        },
+                                                        new ColumnProperty(nameof(BrandModel.LogoUrl))
+                                                        {
+                                                        Title = T("Admin.Catalog.Brands.Fields.Logo").Text,
+                                                        Width = "100",
+                                                        ClassName = NopColumnClassDefaults.CenterAll,
+                                                        Render = new RenderPicture(width: 100)
+                                                        },
+                                                        new ColumnProperty(nameof(BrandModel.Id))
+                                                        {
+                                                        Title = T("Admin.Common.Edit").Text,
+                                                        Width = "80",
+                                                        ClassName = NopColumnClassDefaults.Button,
+                                                        Render = new RenderButtonEdit(new DataUrl("~/Admin/Brand/Edit"))
+                                                        }
+                                                        }
+                                                        })
 
                             <script>
 

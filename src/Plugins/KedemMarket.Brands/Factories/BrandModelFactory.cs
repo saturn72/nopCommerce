@@ -35,6 +35,7 @@ public class BrandModelFactory : IBrandModelFactory
         var vendor = await _workContext.GetCurrentVendorAsync();
         searchModel.IsLoggedInAsVendor = vendor != null;
         searchModel.AllowVendorsToImportBrands = _settings.AllowVendorsToImportBrands;
+        searchModel.SetGridPageSize();
 
         return searchModel;
     }
@@ -46,7 +47,7 @@ public class BrandModelFactory : IBrandModelFactory
         var brands = await _brandService.GetAllBrandsAsync(
             pageIndex: searchModel.Page - 1,
             pageSize: searchModel.PageSize,
-            names: searchModel.SearchBrandNames);
+            names: [searchModel.SearchBrandName]);
 
         return await new BrandListModel().PrepareToGridAsync(
             searchModel,

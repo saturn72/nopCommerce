@@ -6,7 +6,7 @@ public record class BrandSearchModel : BaseSearchModel
 {
 
     [NopResourceDisplayName("Admin.Catalog.Brands.SearchBrandName")]
-    public string[]? SearchBrandNames { get; set; }
+    public string? SearchBrandName { get; set; }
 
     public bool IsLoggedInAsVendor { get; set; }
     public bool AllowVendorsToImportBrands { get; set; }

@@ -26,9 +26,11 @@ public class Plugin : BasePlugin
     {
         Dictionary<string, string> resources = new()
         {
+            {"Admin.Brands.NoBrands", "No Brands found."},
             {"Admin.Catalog.Brands", "Brands"},
-            {"Admin.Catalog.Brands.SearchBrandName", "Brand Name" },
             {"Admin.Catalog.Brands.BulkEdit", "Bulk Edit" },
+            { "Admin.Catalog.Brands.List.ImportFromJsonTip", "Placeholder for a comment related to importing json file"},
+            {"Admin.Catalog.Brands.SearchBrandName", "Brand Name" },
             {"Admin.Catalog.Brands.Fields.Comment", "Comment" },
             {"Admin.Catalog.Brands.Fields.DisplayOrder", "Display Order" },
             {"Admin.Catalog.Brands.Fields.Logo", "Logo" },
