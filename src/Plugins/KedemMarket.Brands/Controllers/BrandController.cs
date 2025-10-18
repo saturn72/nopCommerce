@@ -28,7 +28,7 @@ public class BrandController : BaseAdminController
     }
 
     public override ViewResult View(string viewName, object model) =>
-        base.View(Consts.VIEW_PATH + viewName, model);
+        base.View(Consts.VIEW_PATH_BRAND + viewName, model);
 
     public virtual IActionResult Index() =>
         RedirectToAction(nameof(List));
@@ -51,7 +51,7 @@ public class BrandController : BaseAdminController
     [CheckPermission(BrandsPermissions.BRANDS_CREATE_EDIT_DELETE)]
     public virtual async Task<IActionResult> Create()
     {
-        var model = await _brandModelFactory.PrepareBrandModelAsync(null, null);
+        var model = await _brandModelFactory.PrepareBrandProductAdminModelAsync(null, new Brand());
         return View("Create.cshtml", model);
     }
 

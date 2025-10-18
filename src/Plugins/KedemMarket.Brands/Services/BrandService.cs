@@ -1,12 +1,18 @@
-﻿namespace KedemMarket.Brands.Services;
+﻿
+namespace KedemMarket.Brands.Services;
 
 public class BrandService : IBrandService
 {
     private readonly IRepository<Brand> _brandRepository;
+    private readonly IRepository<BrandProductMap> _brandProductMapRepository;
 
-    public BrandService(IRepository<Brand> brandRepository)
+    public BrandService(
+        IRepository<Brand> brandRepository,
+        IRepository<BrandProductMap> brandProductMapRepository
+        )
     {
         _brandRepository = brandRepository;
+        _brandProductMapRepository = brandProductMapRepository;
     }
 
     public async Task<PagedList<Brand>> GetAllBrandsAsync(int pageIndex = 0, int pageSize = int.MaxValue, string[]? names = null)
@@ -25,5 +31,15 @@ public class BrandService : IBrandService
             .ToListAsync();
 
         return new PagedList<Brand>(brands, pageIndex, pageSize);
+    }
+
+    public async Task<IList<Brand>> GetProductBrandsByProductIdAsync(int productId)
+    {
+        var q = from pb in _brandProductMapRepository.Table
+                where pb.ProductId == productId
+                join b in _brandRepository.Table on pb.BrandId equals b.Id
+                select b;
+
+        return await q.ToListAsync();
     }
 }

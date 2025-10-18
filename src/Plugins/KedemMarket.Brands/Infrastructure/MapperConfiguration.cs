@@ -6,7 +6,7 @@ public class MapperConfiguration : Profile, IOrderedMapperProfile
 {
     public MapperConfiguration()
     {
-        CreateMap<Brand, BrandModel>()
+        CreateMap<Brand, BrandProductAdminModel>()
             .ReverseMap();
     }
     public int Order => 10;

@@ -1,0 +1,23 @@
+﻿@model IEnumerable<BrandProductModel>
+
+<div class="brand-list-container">
+    @if (Model != null)
+    {
+        @foreach (var brand in Model)
+        {
+            <a href="@brand.SeName" title="@brand.Name">
+
+                @if (brand.Logo != null)
+                {
+                    <div class="brand-image">
+                        <img src="@brand.Logo.ThumbImageUrl"
+                             alt="@brand.Logo.AlternateText"
+                             title="@brand.Logo.Title"
+                             loading="lazy" />
+                    </div>
+                }
+                <strong class="brand-name">@brand.Name.ToUpper()</strong>
+            </a>
+        }
+    }
+</div>

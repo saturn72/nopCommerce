@@ -2,7 +2,7 @@
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace KedemMarket.Brands.Models;
-public record BrandModel : BaseNopEntityModel
+public record BrandProductAdminModel : BaseNopEntityModel
 {
     [NopResourceDisplayName("Admin.Catalog.Brands.Fields.Comment")]
     public string Comment { get; init; }

@@ -1,12 +1,25 @@
-﻿using Nop.Services.Configuration;
+﻿using KedemMarket.Brands.Components;
+using Nop.Services.Configuration;
 using Nop.Services.Localization;
 
 namespace KedemMarket.Brands;
 
-public class Plugin : BasePlugin
+public class Plugin : BasePlugin, IWidgetPlugin
 {
     private readonly ILocalizationService _localizationService;
     private readonly ISettingService _settingsService;
+
+    private static readonly IReadOnlyDictionary<string, Type> _widgetViewComponents = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase)
+    {
+        {
+            AdminWidgetZones.ProductDetailsBlock,
+            typeof(WidgetsAdminProductBrandViewComponent)
+        },
+        {
+            PublicWidgetZones.ProductDetailsOverviewTop,
+            typeof(WidgetsProductDetailsBrandViewComponent)
+        }
+    };
 
     public Plugin(
         ILocalizationService localizationService,
@@ -15,6 +28,18 @@ public class Plugin : BasePlugin
         _localizationService = localizationService;
         _settingsService = settingsService;
     }
+
+    public bool HideInWidgetList => throw new NotImplementedException();
+
+    public Type GetWidgetViewComponent(string widgetZone)
+    {
+        _ = _widgetViewComponents.TryGetValue(widgetZone, out var type);
+        return type;
+    }
+
+
+    public Task<IList<string>> GetWidgetZonesAsync() =>
+        Task.FromResult<IList<string>>(_widgetViewComponents.Keys.ToList());
 
     public override async Task InstallAsync()
     {

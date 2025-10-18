@@ -2,4 +2,5 @@
 public interface IBrandService
 {
     public Task<PagedList<Brand>> GetAllBrandsAsync(int pageIndex = 0, int pageSize = int.MaxValue, string[]? names = null);
+    public Task<IList<Brand>> GetProductBrandsByProductIdAsync(int productId);
 }

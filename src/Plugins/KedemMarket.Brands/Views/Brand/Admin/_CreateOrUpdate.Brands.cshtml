@@ -1,25 +1,14 @@
-﻿@model SpecificationAttributeModel
+﻿@model IEnumerable<BrandModel>
 
-@{
-    const string hideInfoBlockAttributeName = "SpecificationAttributePage.HideInfoBlock";
-    var customer = await workContext.GetCurrentCustomerAsync();
-    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
-
-    const string hideOptionsBlockAttributeName = "SpecificationAttributePage.HideOptionsBlock";
-    var hideOptionsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideOptionsBlockAttributeName, defaultValue: true);
-
-    const string hideUsedByProductsBlockAttributeName = "SpecificationAttributePage.HideUsedByProductsBlock";
-    var hideUsedByProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideUsedByProductsBlockAttributeName, defaultValue: true);
-}
-
+            ADMIN BRNDS GOES HERE + @Model.Count()
+            @*
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 
 <section class="content">
     <div class="container-fluid">
         <div class="form-horizontal">
-
-            <nop-cards id="specification-attribute-cards">
+                <nop-cards id="specification-attribute-cards">
                 <nop-card asp-name="specification-attribute-options" asp-icon="fas fa-object-group"
                           asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options")"
                           asp-hide-block-attribute-name="@hideOptionsBlockAttributeName" asp-hide="@hideOptionsBlock"
@@ -33,7 +22,8 @@
                     @await Html.PartialAsync($"{Consts.VIEW_PATH}_CreateOrUpdateBrandSpecificationAttribute.UsedByProducts.cshtml", Model)
                 </nop-card>
                 @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsBlock, additionalData = Model })
-            </nop-cards>
+            </nop-cards> 
         </div>
     </div>
 </section>
+            *@

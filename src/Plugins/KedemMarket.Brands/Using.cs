@@ -1,4 +1,6 @@
-﻿global using Microsoft.AspNetCore.Mvc;
+﻿global using static System.ArgumentNullException;
+
+global using Microsoft.AspNetCore.Mvc;
 global using Nop.Web.Areas.Admin.Controllers;
 global using Nop.Web.Framework;
 global using Nop.Web.Framework.Mvc.Filters;
@@ -28,3 +30,7 @@ global using Nop.Core;
 global using Nop.Services.Seo;
 global using Nop.Core.Domain.Media;
 global using Nop.Services.Media;
+global using Nop.Web.Models.Media;
+global using Nop.Core.Caching;
+global using KedemMarket.Brands.Infrastructure;
+global using Nop.Web.Framework.Models.Extensions;
