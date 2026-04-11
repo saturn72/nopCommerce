@@ -34,6 +34,9 @@ public class PictureConsumer :
 
     private async Task HandleEventAsync(PictureBinary? pictureBinary)
     {
+        if (pictureBinary == null || pictureBinary.PictureId <= 0)
+            return;
+
         var picture = await _pictureRepository.GetByIdAsync(pictureBinary?.PictureId);
         if (picture == null)
             return;
@@ -51,7 +54,6 @@ public class PictureConsumer :
 
         try
         {
-
             var newBytes = ProcessAndCompressData(bytes);
             if (newBytes == null|| bytes.SequenceEqual(newBytes))
                 return;

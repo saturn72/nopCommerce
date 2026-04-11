@@ -1,17 +1,17 @@
 ﻿using Nop.Web.Framework.Components;
 
-namespace KedemMarket.Brands.Components;
+namespace KedemMarket.Brands.Admin.Components;
 public class WidgetsAdminProductBrandViewComponent : NopViewComponent
 {
     private readonly IBrandService _brandService;
-    private readonly IBrandModelFactory _brandModelFactory;
+    private readonly IBrandModelAdminFactory _brandModelAdminFactory;
 
     public WidgetsAdminProductBrandViewComponent(
         IBrandService brandService, 
-        IBrandModelFactory brandModelFactory)
+        IBrandModelAdminFactory brandModelAdminFactory)
     {
         _brandService = brandService;
-        _brandModelFactory = brandModelFactory;
+        _brandModelAdminFactory = brandModelAdminFactory;
     }
 
     public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
@@ -21,7 +21,7 @@ public class WidgetsAdminProductBrandViewComponent : NopViewComponent
             return Content("");
 
         var brands= await _brandService.GetProductBrandsByProductIdAsync(pm.Id);
-        var model = await _brandModelFactory.PrepareBrandProductAdminModelsAsync(brands);
+        var model = await _brandModelAdminFactory.PrepareBrandProductAdminModelsAsync(brands);
 
         return View($"{Consts.VIEW_PATH_BRAND_ADMIN}_CreateOrUpdate.Brands.cshtml", model);
     }

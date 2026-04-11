@@ -1,8 +1,8 @@
-﻿using KedemMarket.Brands.Controllers;
+﻿using KedemMarket.Brands.Admin.Controllers;
 using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Menu;
 
-namespace KedemMarket.Brands;
+namespace KedemMarket.Brands.Admin;
 public class AdminMenuEventConsumer : IConsumer<AdminMenuCreatedEvent>
 {
     public Task HandleEventAsync(AdminMenuCreatedEvent eventMessage)

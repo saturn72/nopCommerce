@@ -33,6 +33,9 @@ public class BrandService : IBrandService
         return new PagedList<Brand>(brands, pageIndex, pageSize);
     }
 
+    public async Task<Brand> GetBrandByIdAsync(int brandId) =>
+        await _brandRepository.GetByIdAsync(brandId);
+
     public async Task<IList<Brand>> GetProductBrandsByProductIdAsync(int productId)
     {
         var q = from pb in _brandProductMapRepository.Table

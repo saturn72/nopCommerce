@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using KedemMarket.Brands.Admin.Models;
 using Nop.Core.Infrastructure.Mapper;
 
 namespace KedemMarket.Brands.Infrastructure;

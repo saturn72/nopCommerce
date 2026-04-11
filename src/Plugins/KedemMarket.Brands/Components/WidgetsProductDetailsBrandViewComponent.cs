@@ -14,6 +14,9 @@ public class WidgetsProductDetailsBrandViewComponent : NopViewComponent
     public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
     {
         var pm = additionalData as ProductDetailsModel;
+        if (pm == null || pm.Id == 0)
+            return Content("");
+
         var model = await _brandFactory.PrepareProductBrandProductModelsAsync(pm.Id);
         return View($"{Consts.VIEW_PATH_BRAND}_ProductDetails.Brands.cshtml", model);
     }

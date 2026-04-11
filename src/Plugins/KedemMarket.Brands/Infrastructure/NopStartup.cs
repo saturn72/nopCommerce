@@ -16,6 +16,7 @@ public class NopStartup : INopStartup
     public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IBrandService, BrandService>();
+        services.AddScoped<IBrandModelAdminFactory, BrandModelAdminFactory>();
         services.AddScoped<IBrandModelFactory, BrandModelFactory>();
         services.AddScoped<IBrandImportExportManager, BrandImportExportManager>();
 

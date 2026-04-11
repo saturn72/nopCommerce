@@ -1,4 +1,5 @@
-﻿using KedemMarket.Brands.Components;
+﻿using KedemMarket.Brands.Admin.Components;
+using KedemMarket.Brands.Components;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 
